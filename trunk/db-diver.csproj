@@ -53,6 +53,8 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,12 +71,15 @@
     <Compile Include="Src\Gui\Boxes\CompoundBox.cs" />
     <Compile Include="Src\Gui\Boxes\NullBox.cs" />
     <Compile Include="Src\Gui\Button.cs" />
-    <Compile Include="Src\Gui\ClippedSpriteBatch.cs" />
+    <Compile Include="Src\Gui\Graphics.cs" />
     <Compile Include="Src\Gui\Container.cs" />
     <Compile Include="Src\Gui\Enums.cs" />
     <Compile Include="Src\Gui\GuiManager.cs" />
     <Compile Include="Src\Gui\Widget.cs" />
     <Compile Include="Src\Program.cs" />
+    <Compile Include="Src\Room.cs" />
+    <Compile Include="Src\SpriteGrid.cs" />
+    <Compile Include="Src\TileMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
