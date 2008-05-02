@@ -91,7 +91,7 @@ namespace DB.Diver
 
         void PlaySound(Button sender, int x, int y, MouseButton button)
         {
-            audioClip.Play(1.0f, 0.5f, 0.2f);
+            audioClip.Play();
         }
 
         /// <summary>
