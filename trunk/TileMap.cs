@@ -69,5 +69,16 @@ namespace DB.Diver.Src
                 w.WriteLine(line);
             }
         }
+
+        public void Draw(Gui.Graphics g)
+        {
+            for (int y = 0; y < Width; y++)
+            {
+                for (int x = 0; x < Height; x++)
+                {
+                    TileSet.Draw(g, new Point(x * TileSize.X, y * TileSize.Y), this[x, y]);
+                }
+            }
+        }
     }
 }
