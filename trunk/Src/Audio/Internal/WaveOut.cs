@@ -148,6 +148,7 @@ namespace DB.Audio.Internal
             WaveOutHelper.Try(WaveNative.waveOutOpen(out m_WaveOut, device, format, m_BufferProc, 0, WaveNative.CALLBACK_FUNCTION));
             AllocateBuffers(bufferSize, bufferCount);
             m_Thread = new Thread(new ThreadStart(ThreadProc));
+            m_Thread.Priority = ThreadPriority.Highest;
             m_Thread.Start();
         }
         ~WaveOutPlayer()
