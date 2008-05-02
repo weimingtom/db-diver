@@ -48,6 +48,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="speedy_walking.bmp">
+      <Name>speedy_walking</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="tileset.png">
       <Name>tileset</Name>
       <Importer>TextureImporter</Importer>

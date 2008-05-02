@@ -20,7 +20,7 @@ namespace DB.Diver
     /// </summary>
     public class DiverGame : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
+        GraphicsDeviceManager graphicsDeviceManager;
         SpriteBatch spriteBatch;
         GuiManager guiManager = new GuiManager();
         SpriteFont font;
@@ -28,15 +28,24 @@ namespace DB.Diver
         AudioMixer audioMixer;
         AudioClip audioClip;
         Room room;
+        SpeedyDiver speedyDiver;
+        FattyDiver fattyDiver;
+        TinyDiver tinyDiver;
+        Diver diver;
+        Graphics graphics;
+        public static ContentManager DefaultContent;
+        RenderTarget2D renderTarget;
 
         public DiverGame()
         {
-            graphics = new GraphicsDeviceManager(this);
+            DefaultContent = Content;
+            graphicsDeviceManager = new GraphicsDeviceManager(this);
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
             audioDevice = new AudioDevice();
-            audioMixer = new AudioMixer(audioDevice);
+            audioMixer = new AudioMixer(audioDevice);       
         }
 
         /// <summary>
@@ -48,6 +57,10 @@ namespace DB.Diver
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            graphicsDeviceManager.PreferredBackBufferWidth = 640;
+            graphicsDeviceManager.PreferredBackBufferHeight = 480;
+            // graphicsDeviceManager.ToggleFullScreen();
+            graphicsDeviceManager.ApplyChanges();
 
             base.Initialize();
         }
@@ -58,6 +71,9 @@ namespace DB.Diver
         /// </summary>
         protected override void LoadContent()
         {
+            graphics = new Graphics(GraphicsDevice);
+            renderTarget = new RenderTarget2D(GraphicsDevice, 512, 256, 0, SurfaceFormat.Color, MultiSampleType.None, 1);
+         
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -91,6 +107,12 @@ namespace DB.Diver
             room = Room.FromFile(Content.RootDirectory + "/" + "test.room", new SpriteGrid(Content.Load<Texture2D>("tileset"), 4, 4));
 
             // TODO: use this.Content to load your game content here
+
+            speedyDiver = new SpeedyDiver();
+            fattyDiver = new FattyDiver();
+            tinyDiver = new TinyDiver();
+
+            diver = speedyDiver;     
         }
 
         void PlaySound(Button sender, int x, int y, MouseButton button)
@@ -119,6 +141,8 @@ namespace DB.Diver
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+            diver.Update(gameTime);
+
             guiManager.Update(gameTime);
 
             base.Update(gameTime);            
@@ -130,17 +154,30 @@ namespace DB.Diver
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+            graphicsDeviceManager.GraphicsDevice.Clear(Color.CornflowerBlue);
+            graphicsDeviceManager.GraphicsDevice.SetRenderTarget(0, renderTarget);
+            graphics.BeginClip();
 
-            guiManager.Draw(graphics.GraphicsDevice, gameTime);
+            graphics.Begin();
+            diver.Draw(graphics, gameTime);
+            graphics.End();
 
-            Graphics g = new Graphics(GraphicsDevice);
-            g.BeginClip();
-            g.Begin();
-            room.Draw(g);
-            g.End();
-            g.EndClip();
+            guiManager.Draw(graphics, gameTime);
+            
+            GraphicsDevice.SetRenderTarget(0, null);
 
+           
+            graphics.Begin(SpriteBlendMode.None,SpriteSortMode.Immediate, SaveStateMode.SaveState);
+            graphics.GraphicsDevice.SamplerStates[0].MagFilter = TextureFilter.None;
+            graphics.Draw(renderTarget.GetTexture(),
+                          new Rectangle(0, 0, 640, 480),
+                          new Rectangle(0, 0, 320, 240), 
+                          Color.White);
+            graphics.End();
+
+            graphics.EndClip();
+
+  
             base.Draw(gameTime);
         }
     }
