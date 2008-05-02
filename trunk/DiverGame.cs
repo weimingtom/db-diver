@@ -27,6 +27,7 @@ namespace DB.Diver
         AudioDevice audioDevice;
         AudioMixer audioMixer;
         AudioClip audioClip;
+        Room room;
 
         public DiverGame()
         {
@@ -65,6 +66,7 @@ namespace DB.Diver
                                        0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
                                        0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
                                        0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff });
+           
 
             font = Content.Load<SpriteFont>("Font");
 
@@ -86,6 +88,8 @@ namespace DB.Diver
 
             b.Clicked += new Button.ClickedHandler(PlaySound);
 
+            room = Room.FromFile(Content.RootDirectory + "/" + "test.room", new SpriteGrid(Content.Load<Texture2D>("tileset"), 4, 4));
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -100,6 +104,7 @@ namespace DB.Diver
         /// </summary>
         protected override void UnloadContent()
         {
+            Content.Unload();
             audioDevice.Dispose();
         }
 
@@ -116,7 +121,7 @@ namespace DB.Diver
 
             guiManager.Update(gameTime);
 
-            base.Update(gameTime);
+            base.Update(gameTime);            
         }
 
         /// <summary>
@@ -128,6 +133,13 @@ namespace DB.Diver
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             guiManager.Draw(graphics.GraphicsDevice, gameTime);
+
+            Graphics g = new Graphics(GraphicsDevice);
+            g.BeginClip();
+            g.Begin();
+            room.Draw(g);
+            g.End();
+            g.EndClip();
 
             base.Draw(gameTime);
         }

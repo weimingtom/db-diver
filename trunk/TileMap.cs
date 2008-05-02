@@ -34,9 +34,9 @@ namespace DB.Diver
 
         public void Clear(int value)
         {
-            for (int y = 0; y < Width; y++)
+            for (int y = 0; y < Height; y++)
             {
-                for (int x = 0; x < Height; x++)
+                for (int x = 0; x < Width; x++)
                 {
                     this[x, y] = value;
                 }
@@ -45,11 +45,11 @@ namespace DB.Diver
 
         public void Load(TextReader r)
         {
-            for (int y = 0; y < Width; y++)
+            for (int y = 0; y < Height; y++)
             {
                 string line = r.ReadLine();
 
-                for (int x = 0; x < Height; x++)
+                for (int x = 0; x < Width; x++)
                 {
                     this[x, y] = fileFormatMapping.IndexOf(line[x]);
                 }
@@ -58,10 +58,10 @@ namespace DB.Diver
 
         public void Save(TextWriter w)
         {
-            for (int y = 0; y < Width; y++)
+            for (int y = 0; y < Height; y++)
             {
                 StringBuilder line = new StringBuilder();
-                for (int x = 0; x < Height; x++)
+                for (int x = 0; x < Width; x++)
                 {
                     line.Append(fileFormatMapping[this[x, y]]);
                 }
@@ -72,11 +72,14 @@ namespace DB.Diver
 
         public void Draw(Gui.Graphics g)
         {
-            for (int y = 0; y < Width; y++)
+            for (int y = 0; y < Height; y++)
             {
-                for (int x = 0; x < Height; x++)
+                for (int x = 0; x < Width; x++)
                 {
-                    TileSet.Draw(g, new Point(x * TileSize.X, y * TileSize.Y), this[x, y]);
+                    if (this[x, y] != 0)
+                    {
+                        TileSet.Draw(g, new Point(x * TileSize.X, y * TileSize.Y), this[x, y]);
+                    }
                 }
             }
         }
