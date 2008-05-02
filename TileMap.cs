@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using Microsoft.Xna.Framework;
 
-namespace DB.Diver.Src
+namespace DB.Diver
 {
     class TileMap
     {
