@@ -21,12 +21,9 @@ namespace DB.Gui
             set { top = value; top.GuiManager = this; }
         }
 
-        public void Draw(GraphicsDevice device, GameTime gameTime)
-        {
-            Graphics g = new Graphics(device);
-            g.BeginClip();            
+        public void Draw(Graphics g, GameTime gameTime)
+        {                   
             DrawWidgets(g, gameTime, Top);
-            g.EndClip();
         }
 
         private void DrawWidgets(Graphics g, GameTime gameTime, Widget w)
