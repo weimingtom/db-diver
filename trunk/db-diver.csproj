@@ -57,29 +57,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\AudioClip.cs" />
+    <Compile Include="Audio\AudioDevice.cs" />
+    <Compile Include="Audio\AudioMixer.cs" />
+    <Compile Include="Audio\IAudioFX.cs" />
+    <Compile Include="Audio\IAudioSource.cs" />
+    <Compile Include="Audio\Internal\WaveNative.cs" />
+    <Compile Include="Audio\Internal\WaveOut.cs" />
+    <Compile Include="DiverGame.cs" />
+    <Compile Include="Gui\Box.cs" />
+    <Compile Include="Gui\Boxes\BorderBox.cs" />
+    <Compile Include="Gui\Boxes\CompoundBox.cs" />
+    <Compile Include="Gui\Boxes\NullBox.cs" />
+    <Compile Include="Gui\Button.cs" />
+    <Compile Include="Gui\Container.cs" />
+    <Compile Include="Gui\Enums.cs" />
+    <Compile Include="Gui\Graphics.cs" />
+    <Compile Include="Gui\GuiManager.cs" />
+    <Compile Include="Gui\Widget.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Src\Audio\AudioClip.cs" />
-    <Compile Include="Src\Audio\AudioDevice.cs" />
-    <Compile Include="Src\Audio\AudioMixer.cs" />
-    <Compile Include="Src\Audio\IAudioFX.cs" />
-    <Compile Include="Src\Audio\IAudioSource.cs" />
-    <Compile Include="Src\Audio\Internal\WaveNative.cs" />
-    <Compile Include="Src\Audio\Internal\WaveOut.cs" />
-    <Compile Include="Src\DiverGame.cs" />
-    <Compile Include="Src\Gui\Box.cs" />
-    <Compile Include="Src\Gui\Boxes\BorderBox.cs" />
-    <Compile Include="Src\Gui\Boxes\CompoundBox.cs" />
-    <Compile Include="Src\Gui\Boxes\NullBox.cs" />
-    <Compile Include="Src\Gui\Button.cs" />
-    <Compile Include="Src\Gui\Graphics.cs" />
-    <Compile Include="Src\Gui\Container.cs" />
-    <Compile Include="Src\Gui\Enums.cs" />
-    <Compile Include="Src\Gui\GuiManager.cs" />
-    <Compile Include="Src\Gui\Widget.cs" />
-    <Compile Include="Src\Program.cs" />
-    <Compile Include="Src\Room.cs" />
-    <Compile Include="Src\SpriteGrid.cs" />
-    <Compile Include="Src\TileMap.cs" />
+    <Compile Include="Room.cs" />
+    <Compile Include="SpriteGrid.cs" />
+    <Compile Include="TileMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
