@@ -10,7 +10,8 @@ namespace DB.Diver
     {
         public FattyDiver()
         {
-            this.Dimension = new Rectangle(0, 0, 16, 32);
+            Dimension = new Rectangle(0, 0, 16, 32);
+            Speed = 1;
         }
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)

@@ -16,6 +16,7 @@ namespace DB.Diver
         public SpeedyDiver()
         {
             Dimension = new Rectangle(0, 0, 16, 32);
+            Speed = 3;
             walkingGrid = new SpriteGrid("speedy_walking", 6, 1);
         }
 
@@ -29,16 +30,6 @@ namespace DB.Diver
 
         public override void Update(State s)
         {
-            if (s.Input.IsHeld(Input.Action.Right))
-            {
-                Dimension.X++;
-            }
-
-            if (s.Input.IsHeld(Input.Action.Left))
-            {
-                Dimension.X--;
-            }
-
             base.Update(s);
         }
     }
