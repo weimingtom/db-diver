@@ -9,6 +9,7 @@ namespace DB.DoF.Entities
     public abstract class Diver: Entity
     {
         public int Speed;
+        public int Oxygen = 10000;
 
         public override void Update(State s, Room room)
         {
@@ -29,11 +30,23 @@ namespace DB.DoF.Entities
                 velocity.Y -= 3;
             }
 
-            velocity.Y += 1;
+            velocity.Y += 2;
 
             velocity = ResolveCollision(velocity, room);
             Dimension.X += velocity.X;
-            Dimension.Y += velocity.Y; 
+            Dimension.Y += velocity.Y;
+
+            Oxygen--;
+
+            if (Oxygen < 0)
+            {
+                // DIE!!
+            }
+        }
+
+        public void kill()
+        {
+            Oxygen = 0;
         }
     }
 }

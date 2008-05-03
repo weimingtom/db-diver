@@ -44,6 +44,7 @@ namespace DB.DoF
         RenderTarget2D renderTarget;
         State state;
         Texture2D white;
+        Sea sea;
 
         public DiverGame()
         {
@@ -124,7 +125,8 @@ namespace DB.DoF
             tinyDiver = new TinyDiver();
             diver = speedyDiver; 
 
-            room = Room.FromFile(Content.RootDirectory + "/" + "test.room", new SpriteGrid(Content.Load<Texture2D>("tileset"), 4, 4));
+            sea = new Sea("sea", 1, 1);
+            room = sea.GetRoom(0, 0);
 
             room.Diver = diver;
 
