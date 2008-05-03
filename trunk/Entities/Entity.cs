@@ -6,8 +6,6 @@ using DB.Gui;
 
 namespace DB.DoF.Entities
 {
-
-
     public abstract class Entity
     {
         public Rectangle Dimension = Rectangle.Empty;
@@ -50,46 +48,66 @@ namespace DB.DoF.Entities
 
         public Point ResolveCollision(Point velocity, Room room)
         {
-            if (velocity.X > 0)
+            Point newVelocity = velocity;
+
+            if (newVelocity.X > 0)
             {
-
-            }
-            else if (velocity.X > 0)
-            {
-
-            }
-
-            if (velocity.Y > 0)
-            {
-                int yStart = (Dimension.Y + Dimension.Height) / room.TileMap.TileSize.Y;
-                int yEnd = (Dimension.Y + Dimension.Height + velocity.Y) / room.TileMap.TileSize.Y;
-
-                int xStart = Dimension.X / room.TileMap.TileSize.X;
-                int xEnd = (Dimension.X + Dimension.Width) / room.TileMap.TileSize.X;
+                int x = (Dimension.X + Dimension.Width + newVelocity.X - 1) / room.TileMap.TileSize.X;
+             
+                int yStart = Dimension.Y / room.TileMap.TileSize.Y;
+                int yEnd = (Dimension.Y + Dimension.Height + newVelocity.Y) / room.TileMap.TileSize.Y;
 
                 for (int y = yStart; y < yEnd; y++)
                 {
-                    for (int x = xStart; x < xEnd; x++)
+                    if (room.TileMap.IsSolid(x, y))
                     {
-                      
-                        if (room.TileMap.IsSolid(x, y))
-                        {
-                            System.Console.WriteLine("Solid");
-                       
-                        }
-
-                        //rectangle.Intersects(new Rectangle(x * TileSize, y * TileSize, TileSize, TileSize));
+                        Dimension.X = x * room.TileMap.TileSize.X - room.TileMap.TileSize.X;
+                        newVelocity.X = 0;
+                        break;
                     }
                 }
-
-               
             }
-            else if (velocity.Y < 0)
+            else if (newVelocity.X < 0)
+            {
+                int x = (Dimension.X + newVelocity.X + 1) / room.TileMap.TileSize.X;
+
+                int yStart = Dimension.Y / room.TileMap.TileSize.Y;
+                int yEnd = (Dimension.Y + Dimension.Height + newVelocity.Y) / room.TileMap.TileSize.Y;
+
+                for (int y = yStart; y < yEnd; y++)
+                {
+                    if (room.TileMap.IsSolid(x, y))
+                    {
+                        Dimension.X = Dimension.Width + x * room.TileMap.TileSize.X;
+                        newVelocity.X = 0;
+                        break;
+                    }
+                }
+            }
+
+            if (newVelocity.Y > 0)
+            {
+                int y = (Dimension.Y + Dimension.Height + newVelocity.Y) / room.TileMap.TileSize.Y;
+
+                int xStart = (Dimension.X + newVelocity.X) / room.TileMap.TileSize.X;
+                int xEnd = (Dimension.X + Dimension.Width + newVelocity.X - 1) / room.TileMap.TileSize.X;
+
+                for (int x = xStart; x <= xEnd; x++)
+                {
+                    if (room.TileMap.IsSolid(x, y))
+                    {   
+                        Dimension.Y = y * room.TileMap.TileSize.Y - Dimension.Height;
+                        newVelocity.Y = 0;
+                        break;       
+                    }
+                }
+            }
+            else if (newVelocity.Y < 0)
             {
 
             }
 
-            return velocity;
+            return newVelocity;
         }
 
         public abstract void Draw(Graphics g, GameTime gameTime, Room.Layer layer);
