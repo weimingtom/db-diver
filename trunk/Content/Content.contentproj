@@ -87,6 +87,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="mappaper.png">
+      <Name>mappaper</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="panel.bmp">
       <Name>panel</Name>
       <Importer>TextureImporter</Importer>
@@ -104,6 +111,18 @@
       <Name>sea_boat</Name>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="bubble.bmp">
+      <Name>bubble</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="bubblesmall.bmp">
+      <Name>bubblesmall</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="sea.bmp">

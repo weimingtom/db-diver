@@ -31,6 +31,11 @@ namespace DB.DoF
             g.Draw(texture, new Vector2(position.X, position.Y), GetRectangle(frame), Color.White, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
         }
 
+        public void Draw(Gui.Graphics g, Point position, int frame, Color color)
+        {
+            g.Draw(texture, position, GetRectangle(frame), color);
+        }
+
         public void Draw(Gui.Graphics g, Point position, int frame)
         {
             g.Draw(texture, position, GetRectangle(frame), Color.White);

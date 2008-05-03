@@ -19,7 +19,8 @@ namespace DB.DoF
             Left,
             Right,
             Up,
-            Down
+            Down,
+            Map
         }
 
         public Input()
@@ -31,6 +32,7 @@ namespace DB.DoF
             keyBindings.Add(Action.Right, Keys.Right);
             keyBindings.Add(Action.Up, Keys.Up);
             keyBindings.Add(Action.Down, Keys.Down);
+            keyBindings.Add(Action.Map, Keys.Tab);
         }
 
         public void Update()
