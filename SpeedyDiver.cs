@@ -27,19 +27,19 @@ namespace DB.Diver
                 walkingGridFrame++;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(State s)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            if (s.Input.IsHeld(Input.Action.Right))
             {
                 Dimension.X++;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            if (s.Input.IsHeld(Input.Action.Left))
             {
                 Dimension.X--;
             }
 
-            base.Update(gameTime);
+            base.Update(s);
         }
     }
 }

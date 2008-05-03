@@ -8,6 +8,6 @@ namespace DB.Diver
 {
     public abstract class Diver: Entity
     {
-        public override void Update(GameTime gameTime) { }
+        public override void Update(State s) { }
     }
 }

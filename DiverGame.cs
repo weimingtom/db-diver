@@ -15,6 +15,12 @@ using DB.Audio;
 
 namespace DB.Diver
 {
+    public class State
+    {
+        public Input Input;
+        public GameTime Time;
+    }
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -35,6 +41,7 @@ namespace DB.Diver
         Graphics graphics;
         public static ContentManager DefaultContent;
         RenderTarget2D renderTarget;
+        State state;
 
         public DiverGame()
         {
@@ -45,7 +52,9 @@ namespace DB.Diver
             IsMouseVisible = true;
 
             audioDevice = new AudioDevice();
-            audioMixer = new AudioMixer(audioDevice);       
+            audioMixer = new AudioMixer(audioDevice);
+            state = new State();
+            state.Input = new Input();
         }
 
         /// <summary>
@@ -142,7 +151,10 @@ namespace DB.Diver
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            diver.Update(gameTime);
+            state.Input.Update();
+            state.Time = gameTime;
+
+            diver.Update(state);
 
             guiManager.Update(gameTime);
 

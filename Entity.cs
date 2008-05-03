@@ -50,6 +50,6 @@ namespace DB.Diver
 
         public abstract void Draw(Graphics g, GameTime gameTime, Room.Layer layer);
 
-        public virtual void Update(GameTime gameTime) { }
+        public virtual void Update(State s) { }
     }
 }

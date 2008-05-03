@@ -78,6 +78,7 @@
     <Compile Include="Gui\GuiManager.cs" />
     <Compile Include="Gui\Widget.cs" />
     <Compile Include="Diver.cs" />
+    <Compile Include="Input.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Room.cs" />
