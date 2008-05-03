@@ -124,12 +124,16 @@ namespace DB.DoF
         {
             foreach (Layer layer in Enum.GetValues(typeof(Layer)))
             {
-                if(layer == Layer.Player)
+                if (layer == Layer.Player)
+                {
+                    diver.Draw(g, gt, layer);
                     TileMap.Draw(g);
+                }
 
                 foreach (Entity entity in entities)
                 {
-                    entity.Draw(g, gt, layer);
+                    if (entity != diver)
+                        entity.Draw(g, gt, layer);
                 }
             }
 
@@ -195,6 +199,16 @@ namespace DB.DoF
         public bool IsUpdateNeeded()
         {
             return false;
+        }
+
+        public void RemoveEntity(Entity entity)
+        {
+            entities.Remove(entity);
+        }
+
+        public void AddEntity(Entity entity)
+        {
+            entities.Add(entity);
         }
 
         public delegate void LeftRoomHandler(Entity entity);
