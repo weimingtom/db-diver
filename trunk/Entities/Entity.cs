@@ -8,122 +8,128 @@ namespace DB.DoF.Entities
 {
     public abstract class Entity
     {
-        public Rectangle Dimension = Rectangle.Empty;
+        public const int Resolution = 256;
+        public Point Size;
+        Point position;
+        public Point Velocity;
 
         public int X
         {
-            get { return Dimension.X; }
-            set { Dimension.X = value; }
+            get { return position.X / Resolution; }
+            set { position.X = value * Resolution; }
         }
 
         public int Y
         {
-            get { return Dimension.Y; }
-            set { Dimension.Y = value; }
+            get { return position.Y / Resolution; }
+            set { position.Y = value * Resolution; }
         }
 
         public int Width
         {
-            get { return Dimension.Width; }
-            set { Dimension.Width = value; }
+            get { return Size.X; }
+            set { Size.X = value; }
         }
 
         public int Height
         {
-            get { return Dimension.Height; }
-            set { Dimension.Height = value; }
+            get { return Size.Y; }
+            set { Size.Y = value; }
         }
 
         public Point Position
         {
-            get { return new Point(Dimension.X, Dimension.Y); }
-            set { Dimension.X = value.X; Dimension.Y = value.Y; }
+            get { return new Point(X, Y); }
+            set { X = value.X; Y = value.Y; }
         }
 
-        public Point Size
+        public Rectangle Dimension
         {
-            get { return new Point(Dimension.Width, Dimension.Height); }
-            set { Dimension.Width = value.X; Dimension.Height = value.Y; }
+            get { return new Rectangle(X, Y, Width, Height); }
         }
 
-        public Point ResolveCollision(Point velocity, Room room)
+        public void MoveWithCollision(Room room)
         {
-            Point newVelocity = velocity;
-
-            if (newVelocity.X > 0)
+            if (Velocity.X > 0)
             {
-                int x = (Dimension.X + Dimension.Width + newVelocity.X) / room.TileMap.TileSize.X;
+                int x = ((position.X + Velocity.X) / Resolution + Width) / room.TileMap.TileSize.X;
              
-                int yStart = (Dimension.Y) / room.TileMap.TileSize.Y;
-                int yEnd = (Dimension.Y + Dimension.Height - 2) / room.TileMap.TileSize.Y;
+                int yStart = Y / room.TileMap.TileSize.Y;
+                int yEnd = (Y + Height - 2) / room.TileMap.TileSize.Y;
 
                 for (int y = yStart; y <= yEnd; y++)
                 {
                     if (room.TileMap.IsSolid(x, y))
                     {
-                        Dimension.X = x * room.TileMap.TileSize.X - room.TileMap.TileSize.X;
-                        newVelocity.X = 0;
+                        X = x * room.TileMap.TileSize.X - room.TileMap.TileSize.X;
+                        Velocity.X = 0;
                         break;
                     }
                 }
             }
-            else if (newVelocity.X < 0)
+            else if (Velocity.X < 0)
             {
-                int x = (Dimension.X + newVelocity.X - 1) / room.TileMap.TileSize.X;
+                int x = ((position.X + Velocity.X) / Resolution) / room.TileMap.TileSize.X;
 
-                int yStart = Dimension.Y / room.TileMap.TileSize.Y;
-                int yEnd = (Dimension.Y + Dimension.Height - 2) / room.TileMap.TileSize.Y;
+                int yStart = Y / room.TileMap.TileSize.Y;
+                int yEnd = (Y + Height - 2) / room.TileMap.TileSize.Y;
 
                 for (int y = yStart; y <= yEnd; y++)
                 {
                     if (room.TileMap.IsSolid(x, y))
                     {
-                        Dimension.X = Dimension.Width + x * room.TileMap.TileSize.X;
-                        newVelocity.X = 0;
+                        X = Dimension.Width + x * room.TileMap.TileSize.X;
+                        Velocity.X = 0;
                         break;
                     }
                 }
             }
 
-            if (newVelocity.Y > 0)
+            if (Velocity.Y > 0)
             {
-                int y = (Dimension.Y + Dimension.Height + newVelocity.Y) / room.TileMap.TileSize.Y;
+                int y = ((position.Y + Velocity.Y) / Resolution + Height) / room.TileMap.TileSize.Y;
 
-                int xStart = (Dimension.X + newVelocity.X) / room.TileMap.TileSize.X;
-                int xEnd = (Dimension.X + Dimension.Width + newVelocity.X - 1) / room.TileMap.TileSize.X;
+                int xStart = ((position.X + Velocity.X) / Resolution) / room.TileMap.TileSize.X;
+                int xEnd = ((position.X + Velocity.X) / Resolution + Width - 1) / room.TileMap.TileSize.X;
 
                 for (int x = xStart; x <= xEnd; x++)
                 {
                     if (room.TileMap.IsSolid(x, y))
                     {   
-                        Dimension.Y = y * room.TileMap.TileSize.Y - Dimension.Height;
-                        newVelocity.Y = 0;
+                        Y = y * room.TileMap.TileSize.Y - Dimension.Height;
+                        Velocity.Y = 0;
                         break;       
                     }
                 }
             }
-            else if (newVelocity.Y < 0)
+            else if (Velocity.Y < 0)
             {
-                int y = (Dimension.Y + newVelocity.Y - 1) / room.TileMap.TileSize.Y;
+                int y = ((position.Y + Velocity.Y) / Resolution - 1) / room.TileMap.TileSize.Y;
 
-                int xStart = (Dimension.X + newVelocity.X) / room.TileMap.TileSize.X;
-                int xEnd = (Dimension.X + Dimension.Width + newVelocity.X - 1) / room.TileMap.TileSize.X;
+                int xStart = ((position.X + Velocity.X) / Resolution) / room.TileMap.TileSize.X;
+                int xEnd = ((position.X + Velocity.X) / Resolution + Width - 1) / room.TileMap.TileSize.X;
 
                 for (int x = xStart; x <= xEnd; x++)
                 {
                     if (room.TileMap.IsSolid(x, y))
                     {
-                        Dimension.Y = y * room.TileMap.TileSize.Y + room.TileMap.TileSize.Y;
-                        newVelocity.Y = 0;
+                        Y = y * room.TileMap.TileSize.Y + room.TileMap.TileSize.Y;
+                        Velocity.Y = 0;
                         break;
                     }
                 }
             }
 
-            return newVelocity;
+            MoveWithoutCollision();
         }
 
-        public bool isTileSolidBelow(Room room)
+        public void MoveWithoutCollision()
+        {
+            position.X += Velocity.X;
+            position.Y += Velocity.Y;
+        }
+
+        public bool IsTileSolidBelow(Room room)
         {
             int y = (Dimension.Y + Dimension.Height) / room.TileMap.TileSize.Y;
 
@@ -141,7 +147,7 @@ namespace DB.DoF.Entities
             return false;
         }
 
-        public bool isTileSolidAbove(Room room)
+        public bool IsTileSolidAbove(Room room)
         {
             int y = (Dimension.Y - 1) / room.TileMap.TileSize.Y;
 
@@ -159,7 +165,7 @@ namespace DB.DoF.Entities
             return false;
         }
 
-        public bool isTileSolidLeft(Room room)
+        public bool IsTileSolidLeft(Room room)
         {
             int x = (Dimension.X - 1) / room.TileMap.TileSize.X;
 
@@ -177,7 +183,7 @@ namespace DB.DoF.Entities
             return false;
         }
 
-        public bool isTileSolidRight(Room room)
+        public bool IsTileSolidRight(Room room)
         {
             int x = (Dimension.X + Dimension.Width) / room.TileMap.TileSize.X;
 
@@ -195,7 +201,7 @@ namespace DB.DoF.Entities
             return false;
         }
 
-        public bool isTileSolidBelowRight(Room room)
+        public bool IsTileSolidBelowRight(Room room)
         {
             int x = (Dimension.X + Dimension.Width) / room.TileMap.TileSize.X;
             int y = (Dimension.Y + Dimension.Height) / room.TileMap.TileSize.Y;
@@ -203,7 +209,7 @@ namespace DB.DoF.Entities
             return room.TileMap.IsSolid(x, y);
         }
 
-        public bool isTileSolidBelowLeft(Room room)
+        public bool IsTileSolidBelowLeft(Room room)
         {
             int x = (Dimension.X - 1) / room.TileMap.TileSize.X;
             int y = (Dimension.Y + Dimension.Height) / room.TileMap.TileSize.Y;

@@ -10,7 +10,7 @@ namespace DB.DoF.Entities
     {
         public FattyDiver()
         {
-            Dimension = new Rectangle(0, 0, 16, 32);
+            Size = new Point(16, 32);
             Speed = 1;
         }
 
