@@ -42,8 +42,8 @@
       <Name>clip</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="test.room">
-      <Name>test</Name>
+    <None Include="sea_0_0.room">
+      <Name>sea_0_0</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
