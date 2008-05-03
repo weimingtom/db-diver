@@ -26,11 +26,15 @@ namespace DB.DoF.Entities
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
         {
+            g.Begin();
+
             if (layer == Room.Layer.Player)
                 animationGrid.Draw(g, Position, animationGridFrame % sprites);
 
             if (gameTime.TotalGameTime.Milliseconds % 100 == 0)
                 animationGridFrame++;
+
+            g.End();
         }
 
         public override void Update(State s, Room room)

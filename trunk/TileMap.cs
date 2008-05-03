@@ -84,6 +84,7 @@ namespace DB.DoF
 
         public void Draw(Gui.Graphics g)
         {
+            g.Begin();
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
@@ -94,6 +95,7 @@ namespace DB.DoF
                     }
                 }
             }
+            g.End();
         }
     }
 }
