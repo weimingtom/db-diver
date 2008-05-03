@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using DB.Gui;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DB.DoF.Entities
 {
     public abstract class Diver: Entity
     {
+        public const int MaxOxygen = 10000;
         protected int MaxSpeed = 1 * Resolution;
         protected int GroundAcceleration = Resolution;
         protected int AirAcceleration = Resolution / 2;
@@ -18,10 +20,12 @@ namespace DB.DoF.Entities
 
         protected SpriteGrid WalkingGrid;
 
+        SpriteEffects spriteEffects = SpriteEffects.None;
+
         int walkingGridFrame = 3;
         int jumpVelocity;
 
-        public int Oxygen = 10000;
+        public int Oxygen = MaxOxygen;
 
         public override void Update(State s, Room room)
         {
@@ -55,6 +59,7 @@ namespace DB.DoF.Entities
             else
             {
                 walkingGridFrame += Math.Abs(Velocity.X);
+                spriteEffects = Velocity.X > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             }
 
             if (s.Input.WasPressed(Input.Action.Jump) && isOnGround)
@@ -88,7 +93,7 @@ namespace DB.DoF.Entities
             {
                 Point pos = new Point(Position.X - 2, Position.Y);
                 g.Begin();
-                WalkingGrid.Draw(g, pos, walkingGridFrame / WalkAnimationSpeed);
+                WalkingGrid.Draw(g, pos, walkingGridFrame / WalkAnimationSpeed, spriteEffects);
                 g.End();
             }
         }
