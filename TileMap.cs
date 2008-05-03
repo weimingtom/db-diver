@@ -22,8 +22,14 @@ namespace DB.DoF
         {
             get 
             {
-                if (x < 0 || x >= Width || y < 0 || y >= Height)
-                    return 0;
+                if (x < 0)
+                    x= 0;
+                if (x >= Width)
+                    x = Width - 1;
+                if (y < 0)
+                    y = 0;
+                if (y >= Height)
+                    y = Height - 1;
                 
                 return tiles[x + y * Width]; 
             }

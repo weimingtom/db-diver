@@ -145,6 +145,15 @@ namespace DB.DoF
             foreach (Entity entity in entities)
             {
                 entity.Update(s, this);
+
+                if (OnLeftRoom != null
+                    && (IsEntityLeftOfRoom(entity)
+                    || IsEntityRightOfRoom(entity)
+                    || IsEntityAboveRoom(entity)
+                    || IsEntityBelowRoom(entity)))
+                {
+                    OnLeftRoom(entity);
+                }
             }
         }
 
@@ -162,5 +171,33 @@ namespace DB.DoF
 
             return result;
         }
+
+        public bool IsEntityLeftOfRoom(Entity entity)
+        {
+            return entity.X + entity.Width < 0;
+        }
+
+        public bool IsEntityRightOfRoom(Entity entity)
+        {
+            return entity.X > Size.X;
+        }
+
+        public bool IsEntityAboveRoom(Entity entity)
+        {
+            return entity.Y + entity.Height < 0;
+        }
+
+        public bool IsEntityBelowRoom(Entity entity)
+        {
+            return entity.Y > Size.Y;
+        }
+
+        public bool IsUpdateNeeded()
+        {
+            return false;
+        }
+
+        public delegate void LeftRoomHandler(Entity entity);
+        public event LeftRoomHandler OnLeftRoom;
     }
 }

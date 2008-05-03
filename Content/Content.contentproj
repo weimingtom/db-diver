@@ -46,6 +46,10 @@
       <Name>sea_0_0</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="sea_1_0.room">
+      <Name>sea_1_0</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="speedy_walking.bmp">

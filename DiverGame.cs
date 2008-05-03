@@ -12,7 +12,6 @@ using Microsoft.Xna.Framework.Storage;
 using DB.Gui;
 using DB.Gui.Boxes;
 using DB.Audio;
-using DB.DoF.Entities;
 
 namespace DB.DoF
 {
@@ -34,16 +33,11 @@ namespace DB.DoF
         AudioDevice audioDevice;
         AudioMixer audioMixer;
         AudioClip audioClip;
-        Room room;
-        SpeedyDiver speedyDiver;
-        FattyDiver fattyDiver;
-        TinyDiver tinyDiver;
-        Diver diver;
         Graphics graphics;
         public static ContentManager DefaultContent;
         RenderTarget2D renderTarget;
         State state;
-        Texture2D white;
+        public static Texture2D White;
         Sea sea;
 
         public DiverGame()
@@ -93,8 +87,8 @@ namespace DB.DoF
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            white = new Texture2D(GraphicsDevice, 4, 4, 1, TextureUsage.Tiled, SurfaceFormat.Color);
-            white.SetData(new uint[] { 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+            White = new Texture2D(GraphicsDevice, 4, 4, 1, TextureUsage.Tiled, SurfaceFormat.Color);
+            White.SetData(new uint[] { 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
                                        0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
                                        0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
                                        0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff });
@@ -106,9 +100,9 @@ namespace DB.DoF
             guiManager.Top.Size = new Point(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             guiManager.Top.Font = font;
 
-            BorderBox areaDefault = new BorderBox(white, true, Color.Gray, Color.Black, 2);
-            BorderBox areaPressed = new BorderBox(white, true, Color.Black, Color.White, 2);
-            BorderBox areaHover = new BorderBox(white, true, Color.LightGray, Color.Black, 2);
+            BorderBox areaDefault = new BorderBox(White, true, Color.Gray, Color.Black, 2);
+            BorderBox areaPressed = new BorderBox(White, true, Color.Black, Color.White, 2);
+            BorderBox areaHover = new BorderBox(White, true, Color.LightGray, Color.Black, 2);
 
             Button b = new Button("Click me!", areaDefault, areaPressed, areaHover);
             b.X = 10; 
@@ -120,15 +114,7 @@ namespace DB.DoF
 
             b.Clicked += new Button.ClickedHandler(PlaySound);
 
-            speedyDiver = new SpeedyDiver();
-            fattyDiver = new FattyDiver();
-            tinyDiver = new TinyDiver();
-            diver = speedyDiver; 
-
-            sea = new Sea("sea", 1, 1);
-            room = sea.GetRoom(0, 0);
-
-            room.Diver = diver;
+            sea = new Sea("sea", 2, 1, 1, 0);
 
             // TODO: use this.Content to load your game content 
         }
@@ -163,7 +149,7 @@ namespace DB.DoF
             state.Input.Update();
             state.Time = gameTime;
 
-            room.Update(state);
+            sea.Update(state);
 
             guiManager.Update(gameTime);
 
@@ -180,12 +166,9 @@ namespace DB.DoF
             graphicsDeviceManager.GraphicsDevice.Clear(Color.Black);
            
             graphics.BeginClip();
-            graphics.PushClipRectangle(new Rectangle(0, 300 - room.Size.Y - 8, room.Size.X, room.Size.Y));
-            graphics.Begin();
-            graphics.Draw(white, new Rectangle(0, 0, room.Size.X, room.Size.Y), Color.CornflowerBlue);
-            graphics.End();
-            room.Draw(graphics, gameTime);
-            graphics.PopClipRectangle();
+           
+            sea.Draw(graphics, gameTime);
+           
 
             //guiManager.Draw(graphics, gameTime);
             
@@ -204,5 +187,7 @@ namespace DB.DoF
   
             base.Draw(gameTime);
         }
+
+
     }
 }
