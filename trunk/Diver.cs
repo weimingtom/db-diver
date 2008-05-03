@@ -10,24 +10,30 @@ namespace DB.Diver
     {
         public int Speed;
 
-        public override void Update(State s)
+        public override void Update(State s, Room room)
         {
+            Point velocity = new Point();
+
             if (s.Input.IsHeld(Input.Action.Right))
             {
-                Dimension.X+= Speed;
+                velocity.X += Speed;
             }
 
             if (s.Input.IsHeld(Input.Action.Left))
             {
-                Dimension.X-= Speed;
+                velocity.X -= Speed;
             }
 
             if (s.Input.IsHeld(Input.Action.Jump))
             {
-                Dimension.Y -= 3;
+                velocity.Y -= 3;
             }
 
-            Dimension.Y += 1;
+            velocity.Y += 1;
+
+            velocity = ResolveCollision(velocity, room);
+            Dimension.X += velocity.X;
+            Dimension.Y += velocity.Y; 
         }
     }
 }

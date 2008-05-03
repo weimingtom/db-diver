@@ -22,15 +22,16 @@ namespace DB.Diver
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
         {
-            walkingGrid.Draw(g, Position, walkingGridFrame % 6);
+            if (layer == Room.Layer.Player)
+                walkingGrid.Draw(g, Position, walkingGridFrame % 6);
 
             if (gameTime.TotalGameTime.Milliseconds % 100 == 0)
                 walkingGridFrame++;
         }
 
-        public override void Update(State s)
+        public override void Update(State s, Room room)
         {
-            base.Update(s);
+            base.Update(s, room);
         }
     }
 }

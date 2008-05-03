@@ -117,15 +117,16 @@ namespace DB.Diver
 
             b.Clicked += new Button.ClickedHandler(PlaySound);
 
-            room = Room.FromFile(Content.RootDirectory + "/" + "test.room", new SpriteGrid(Content.Load<Texture2D>("tileset"), 4, 4));
-
-            // TODO: use this.Content to load your game content here
-
             speedyDiver = new SpeedyDiver();
             fattyDiver = new FattyDiver();
             tinyDiver = new TinyDiver();
+            diver = speedyDiver; 
 
-            diver = speedyDiver;     
+            room = Room.FromFile(Content.RootDirectory + "/" + "test.room", new SpriteGrid(Content.Load<Texture2D>("tileset"), 4, 4));
+
+            room.Diver = diver;
+
+            // TODO: use this.Content to load your game content 
         }
 
         void PlaySound(Button sender, int x, int y, MouseButton button)
@@ -158,7 +159,7 @@ namespace DB.Diver
             state.Input.Update();
             state.Time = gameTime;
 
-            diver.Update(state);
+            room.Update(state);
 
             guiManager.Update(gameTime);
 
@@ -177,10 +178,7 @@ namespace DB.Diver
             graphics.BeginClip();
 
             graphics.Begin();
-            room.Draw(graphics, gameTime);
-
-            diver.Draw(graphics, gameTime, Room.Layer.Player);
-            
+            room.Draw(graphics, gameTime);            
             graphics.End();
 
            // guiManager.Draw(graphics, gameTime);
