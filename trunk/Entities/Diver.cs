@@ -8,30 +8,56 @@ namespace DB.DoF.Entities
 {
     public abstract class Diver: Entity
     {
-        public int MaxSpeed = 2 * Resolution;
-        public int GroundAcceleration = Resolution;
-        public int AirAcceleration = Resolution / 2;
+        protected int MaxSpeed = 1 * Resolution;
+        protected int GroundAcceleration = Resolution;
+        protected int AirAcceleration = Resolution / 2;
+        protected int JumpPower = Resolution * 3;
+        protected int MaxJumpSpeed = 2 * Resolution;
+        protected int MaxFallSpeed = (3 * Resolution) / 2;
+
+        int jumpVelocity;
 
         public int Oxygen = 10000;
 
         public override void Update(State s, Room room)
         {
-            if (s.Input.IsHeld(Input.Action.Right))
+            bool isOnGround = true;
+            int acceleration = GroundAcceleration;
+
+            if (s.Input.IsHeld(Input.Action.Right) && !s.Input.IsHeld(Input.Action.Left))
             {
-                Velocity.X = Math.Min(Velocity.X + 1, 256 * 2);
+                Velocity.X = Math.Min(Velocity.X + acceleration, MaxSpeed);
+            }
+            else if (s.Input.IsHeld(Input.Action.Left) && !s.Input.IsHeld(Input.Action.Right))
+            {
+                Velocity.X = Math.Max(Velocity.X - acceleration, -MaxSpeed);
+            }
+            else
+            {
+                if (Velocity.X > 0)
+                {
+                    Velocity.X = Math.Max(Velocity.X - acceleration, 0);
+                }
+                else if (Velocity.X < 0)
+                {
+                    Velocity.X = Math.Min(Velocity.X + acceleration, 0);
+                }
             }
 
-            if (s.Input.IsHeld(Input.Action.Left))
+            if (s.Input.WasPressed(Input.Action.Jump) && isOnGround)
             {
-                Velocity.X = Math.Max(Velocity.X - 1, -256 * 2);
+                jumpVelocity = -JumpPower;
+                isOnGround = false;
             }
 
-            if (s.Input.IsHeld(Input.Action.Jump))
+            if (s.Input.WasReleased(Input.Action.Jump) && jumpVelocity < 0)
             {
-                Velocity.Y = -20;
+                jumpVelocity = 0;
             }
 
-            Velocity.Y += 1;
+            jumpVelocity += Resolution / 8;
+
+            Velocity.Y = Math.Max(Math.Min(jumpVelocity, MaxFallSpeed), -MaxJumpSpeed);
 
             MoveWithCollision(room);
 
