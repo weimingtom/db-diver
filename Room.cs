@@ -163,5 +163,20 @@ namespace DB.DoF
                 entity.Update(s, this);
             }
         }
+
+        public IList<Entity> GetCollidingEntities(Entity entity)
+        {
+            IList<Entity> result = new List<Entity>();
+
+            foreach (Entity e in entities)
+            {
+                if (e.Dimension.Intersects(entity.Dimension))
+                {
+                    result.Add(e);
+                }
+            }
+
+            return result;
+        }
     }
 }
