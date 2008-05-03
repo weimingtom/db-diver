@@ -19,11 +19,13 @@ namespace DB.DoF.Entities
         protected int WalkAnimationSpeed = Resolution * 3;
 
         protected SpriteGrid WalkingGrid;
+        protected SpriteGrid JumpingGrid;
 
         SpriteEffects spriteEffects = SpriteEffects.None;
 
         int walkingGridFrame = 3;
         int jumpVelocity;
+        bool isOnGround;
         public bool OxygenDecrease = true;
         public bool OxygenIncrease = false;
 
@@ -31,7 +33,7 @@ namespace DB.DoF.Entities
 
         public override void Update(State s, Room room)
         {
-            bool isOnGround = IsTileSolidBelow(room);
+            isOnGround = IsTileSolidBelow(room);
             int acceleration = isOnGround ? GroundAcceleration : AirAcceleration;
 
             if (s.Input.IsHeld(Input.Action.Right) && !s.Input.IsHeld(Input.Action.Left))
@@ -107,7 +109,10 @@ namespace DB.DoF.Entities
             {
                 Point pos = new Point(Position.X - 2, Position.Y);
                 g.Begin();
-                WalkingGrid.Draw(g, pos, walkingGridFrame / WalkAnimationSpeed, spriteEffects);
+                if (isOnGround)
+                    WalkingGrid.Draw(g, pos, walkingGridFrame / WalkAnimationSpeed, spriteEffects);
+                else
+                    JumpingGrid.Draw(g, new Point(pos.X, pos.Y - (JumpingGrid.FrameSize.Y - Height)), 1, spriteEffects);
                 g.End();
             }
         }

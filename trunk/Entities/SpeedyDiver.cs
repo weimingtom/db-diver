@@ -14,6 +14,7 @@ namespace DB.DoF.Entities
         {
             Size = new Point(16, 32);
             WalkingGrid = new SpriteGrid("speedy_walking", 6, 1);
+            JumpingGrid = new SpriteGrid("speedy_jumping", 1, 1);
         }
 
 
