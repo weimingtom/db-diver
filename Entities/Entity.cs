@@ -54,10 +54,10 @@ namespace DB.DoF.Entities
             {
                 int x = (Dimension.X + Dimension.Width + newVelocity.X - 1) / room.TileMap.TileSize.X;
              
-                int yStart = Dimension.Y / room.TileMap.TileSize.Y;
-                int yEnd = (Dimension.Y + Dimension.Height + newVelocity.Y) / room.TileMap.TileSize.Y;
+                int yStart = (Dimension.Y) / room.TileMap.TileSize.Y;
+                int yEnd = (Dimension.Y + Dimension.Height - 2) / room.TileMap.TileSize.Y;
 
-                for (int y = yStart; y < yEnd; y++)
+                for (int y = yStart; y <= yEnd; y++)
                 {
                     if (room.TileMap.IsSolid(x, y))
                     {
@@ -72,9 +72,9 @@ namespace DB.DoF.Entities
                 int x = (Dimension.X + newVelocity.X + 1) / room.TileMap.TileSize.X;
 
                 int yStart = Dimension.Y / room.TileMap.TileSize.Y;
-                int yEnd = (Dimension.Y + Dimension.Height + newVelocity.Y) / room.TileMap.TileSize.Y;
+                int yEnd = (Dimension.Y + Dimension.Height - 2) / room.TileMap.TileSize.Y;
 
-                for (int y = yStart; y < yEnd; y++)
+                for (int y = yStart; y <= yEnd; y++)
                 {
                     if (room.TileMap.IsSolid(x, y))
                     {
@@ -104,7 +104,22 @@ namespace DB.DoF.Entities
             }
             else if (newVelocity.Y < 0)
             {
+                int y = (Dimension.Y + newVelocity.Y - 1) / room.TileMap.TileSize.Y;
 
+                int xStart = (Dimension.X + newVelocity.X) / room.TileMap.TileSize.X;
+                int xEnd = (Dimension.X + Dimension.Width + newVelocity.X - 1) / room.TileMap.TileSize.X;
+
+                System.Console.WriteLine(xStart + " " + xEnd);
+
+                for (int x = xStart; x <= xEnd; x++)
+                {
+                    if (room.TileMap.IsSolid(x, y))
+                    {
+                        Dimension.Y = y * room.TileMap.TileSize.Y + room.TileMap.TileSize.Y;
+                        newVelocity.Y = 0;
+                        break;
+                    }
+                }
             }
 
             return newVelocity;
