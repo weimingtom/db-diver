@@ -26,6 +26,19 @@ namespace DB.Diver
 
         public TileMap TileMap;
         IList<Entity> entities = new List<Entity>();
+        Diver diver;
+
+        public Diver Diver
+        {
+            set
+            {
+                entities.Remove(diver);
+                diver = value;
+                entities.Add(diver);
+            }
+
+            get { return diver; }
+        }
 
         public Room(SpriteGrid tileSet)
         {
@@ -139,6 +152,14 @@ namespace DB.Diver
                 {
                     entity.Draw(g, gt, layer);
                 }
+            }
+        }
+
+        public void Update(State s)
+        {
+            foreach (Entity entity in entities)
+            {
+                entity.Update(s, this);
             }
         }
     }

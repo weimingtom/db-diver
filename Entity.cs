@@ -48,8 +48,25 @@ namespace DB.Diver
             set { Dimension.Width = value.X; Dimension.Height = value.Y; }
         }
 
+        public Point ResolveCollision(Point velocity, Room room)
+        {
+          
+            if (velocity.X > 0)
+            {
+
+                int yStart = Dimension.Y / room.TileMap.TileSize.Y;
+               // int yEnd = Dimension.Y + 
+            }
+            else if (velocity.X > 0)
+            {
+
+            }
+
+            return velocity;
+        }
+
         public abstract void Draw(Graphics g, GameTime gameTime, Room.Layer layer);
 
-        public virtual void Update(State s) { }
+        public virtual void Update(State s, Room room) { }
     }
 }
