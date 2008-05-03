@@ -14,4 +14,4 @@
 300000000..00000000.
 01234567890123456789
 
-SpeedyDiver
+Fish("speedy_walking", 6, 2, 7, Room.Layer.Background)
