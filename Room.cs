@@ -163,13 +163,19 @@ namespace DB.DoF
 
         public IList<Entity> GetCollidingEntities(Entity entity)
         {
-            IList<Entity> result = new List<Entity>();
+            return GetCollidingEntities<Entity>(entity);
+        }
+
+
+        public IList<T> GetCollidingEntities<T>(Entity entity) where T : Entity
+        {
+            IList<T> result = new List<T>();
 
             foreach (Entity e in entities)
             {
-                if (e.Dimension.Intersects(entity.Dimension))
+                if (typeof(T).IsAssignableFrom(e.GetType()) && e.Dimension.Intersects(entity.Dimension))
                 {
-                    result.Add(e);
+                    result.Add((T)e);
                 }
             }
 

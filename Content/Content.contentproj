@@ -73,6 +73,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="maptiles.png">
+      <Name>maptiles</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="yellow_fish.bmp">
       <Name>yellow_fish</Name>
       <Importer>TextureImporter</Importer>

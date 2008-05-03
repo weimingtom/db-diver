@@ -9,7 +9,7 @@ namespace DB.DoF
     public class TileMap
     {
         private string fileFormatMapping =     ".0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        private string tilePropertiesMapping = "0111121111111111111111111111111111111";
+        private string tilePropertiesMapping = "0121111111111111111111111111111111111";
         int[] tiles;
 
         public SpriteGrid TileSet;
@@ -38,7 +38,7 @@ namespace DB.DoF
 
         public bool IsSolid(int x, int y)
         {
-            return tilePropertiesMapping[this[x,y]] != '0';
+            return tilePropertiesMapping[this[x,y]] == '1';
         }
         
         public TileMap(SpriteGrid tileSet, int width, int height)
