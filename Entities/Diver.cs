@@ -14,14 +14,18 @@ namespace DB.DoF.Entities
         protected int JumpPower = Resolution * 3;
         protected int MaxJumpSpeed = 2 * Resolution;
         protected int MaxFallSpeed = (3 * Resolution) / 2;
+        protected int WalkAnimationSpeed = Resolution * 3;
 
+        protected SpriteGrid WalkingGrid;
+
+        int walkingGridFrame = 3;
         int jumpVelocity;
 
         public int Oxygen = 10000;
 
         public override void Update(State s, Room room)
         {
-            bool isOnGround = true;
+            bool isOnGround = IsTileSolidBelow(room);
             int acceleration = GroundAcceleration;
 
             if (s.Input.IsHeld(Input.Action.Right) && !s.Input.IsHeld(Input.Action.Left))
@@ -44,13 +48,22 @@ namespace DB.DoF.Entities
                 }
             }
 
+            if (Velocity.X == 0)
+            {
+                walkingGridFrame = 3 * WalkAnimationSpeed;
+            }
+            else
+            {
+                walkingGridFrame += Math.Abs(Velocity.X);
+            }
+
             if (s.Input.WasPressed(Input.Action.Jump) && isOnGround)
             {
                 jumpVelocity = -JumpPower;
                 isOnGround = false;
             }
 
-            if (s.Input.WasReleased(Input.Action.Jump) && jumpVelocity < 0)
+            if ((s.Input.WasReleased(Input.Action.Jump) && jumpVelocity < 0) || isOnGround)
             {
                 jumpVelocity = 0;
             }
@@ -66,6 +79,17 @@ namespace DB.DoF.Entities
             if (Oxygen < 0)
             {
                 // DIE!!
+            }
+        }
+
+        public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
+        {
+            if (layer == Room.Layer.Player)
+            {
+                Point pos = new Point(Position.X - 2, Position.Y);
+                g.Begin();
+                WalkingGrid.Draw(g, pos, walkingGridFrame / WalkAnimationSpeed);
+                g.End();
             }
         }
 
