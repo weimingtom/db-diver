@@ -84,6 +84,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="Entities\SpeedyDiver.cs" />
+    <Compile Include="SmoothFloat.cs" />
     <Compile Include="Sea.cs" />
     <Compile Include="SpriteGrid.cs" />
     <Compile Include="TileMap.cs" />
