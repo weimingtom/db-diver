@@ -8,7 +8,8 @@ namespace DB.DoF.Entities
 {
     public abstract class Diver: Entity
     {
-        public int Speed;
+        public int MaxSpeed = 2 * Resolution;
+        public int GroundAcceleration = 1 * Resolution;
         public int Oxygen = 10000;
 
         public override void Update(State s, Room room)
@@ -32,8 +33,8 @@ namespace DB.DoF.Entities
 
             MoveWithCollision(room);
 
-            Oxygen--;
 
+            Oxygen--;
             if (Oxygen < 0)
             {
                 // DIE!!
