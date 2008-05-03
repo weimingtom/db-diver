@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using Microsoft.Xna.Framework;
 
-namespace DB.Diver
+namespace DB.DoF
 {
     public class TileMap
     {
@@ -24,7 +24,7 @@ namespace DB.Diver
             set { tiles[x + y * Width] = value; }
         }
 
-        bool IsSolid(int x, int y)
+        public bool IsSolid(int x, int y)
         {
             return tilePropertiesMapping[this[x,y]] != '0';
         }

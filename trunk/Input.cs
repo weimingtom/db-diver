@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Input;
 
-namespace DB.Diver
+namespace DB.DoF
 {
     public class Input
     {

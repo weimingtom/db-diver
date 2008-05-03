@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DB.Diver
+namespace DB.DoF
 {
     public class SpriteGrid
     {
