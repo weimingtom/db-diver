@@ -13,13 +13,13 @@ namespace DB.DoF.Entities
         Point position;
         public Point Velocity;
 
-        public int X
+        public virtual int X
         {
             get { return position.X / Resolution; }
             set { position.X = value * Resolution; }
         }
 
-        public int Y
+        public virtual int Y
         {
             get { return position.Y / Resolution; }
             set { position.Y = value * Resolution; }

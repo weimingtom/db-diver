@@ -10,14 +10,30 @@ namespace DB.DoF.Entities
     public class Fish : Entity
     {
         Random r;
+        public override int X
+        {
+            set
+            {
+                base.X = value;
+                this.position.X = X;
+            }
+        }
 
+        public override int Y
+        {
+            set
+            {
+                base.Y = value;
+                this.position.Y = Y;
+            }
+        }
         SpriteGrid animationGrid;
         double animationGridFrame;
         int sprites;
         Room.Layer layer;
         Vector2 position = new Vector2();
 
-        SmoothFloat xSpeed = new SmoothFloat(0, 170), ySpeed = new SmoothFloat(0, 170);
+        SmoothFloat xSpeed = new SmoothFloat(0, 0.06f), ySpeed = new SmoothFloat(0, 0.03f);
 
         public Fish(string spriteGridName, int sprites, int x, int y, Room.Layer layer)
         {
@@ -34,13 +50,13 @@ namespace DB.DoF.Entities
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
         {
-            X = (int)position.X;
-            Y = (int)position.Y;
+            //X = (int)position.X;
+            //Y = (int)position.Y;
 
             g.Begin();
 
             if (layer == Room.Layer.Player)
-                animationGrid.Draw(g, Position, ((int)animationGridFrame) % sprites, xSpeed.Diff < 0 ? SpriteEffects.FlipHorizontally:SpriteEffects.None);
+                animationGrid.Draw(g, new Point((int)position.X, (int)position.Y), ((int)animationGridFrame) % sprites, xSpeed.Diff < 0 ? SpriteEffects.FlipHorizontally:SpriteEffects.None);
 
             g.End();
         }
@@ -62,10 +78,10 @@ namespace DB.DoF.Entities
                 xSpeed.Target = (float)(r.NextDouble()*1-0.5f);
                 ySpeed.Target = (float)(r.NextDouble() * 0.6 - 0.3f);
             }
-            if (X < 0 && xSpeed.Target < 0 ||
-                X > room.TileMap.SizeInPixels.X && xSpeed.Diff > 0) xSpeed.Target *= -1;
-            if (Y < 0 && ySpeed.Target < 0 ||
-                Y > room.TileMap.SizeInPixels.Y && ySpeed.Diff > 0) ySpeed.Target *= -1;
+            if (position.X < 0 && xSpeed.Target < 0 ||
+                position.X > room.TileMap.SizeInPixels.X && xSpeed.Diff > 0) xSpeed.Target *= -1;
+            if (position.Y < 0 && ySpeed.Target < 0 ||
+                position.Y > room.TileMap.SizeInPixels.Y && ySpeed.Diff > 0) ySpeed.Target *= -1;
 
 
         }

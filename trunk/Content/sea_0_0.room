@@ -17,3 +17,4 @@
 3333333333333333333333333
 
 Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
+Shoal()
