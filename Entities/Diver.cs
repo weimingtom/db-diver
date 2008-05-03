@@ -9,7 +9,9 @@ namespace DB.DoF.Entities
     public abstract class Diver: Entity
     {
         public int MaxSpeed = 2 * Resolution;
-        public int GroundAcceleration = 1 * Resolution;
+        public int GroundAcceleration = Resolution;
+        public int AirAcceleration = Resolution / 2;
+
         public int Oxygen = 10000;
 
         public override void Update(State s, Room room)
