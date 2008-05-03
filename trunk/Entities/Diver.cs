@@ -12,10 +12,10 @@ namespace DB.DoF.Entities
         public const int MaxOxygen = 10000;
         protected int MaxSpeed = 1 * Resolution;
         protected int GroundAcceleration = Resolution;
-        protected int AirAcceleration = Resolution / 2;
-        protected int JumpPower = Resolution * 3;
-        protected int MaxJumpSpeed = 2 * Resolution;
-        protected int MaxFallSpeed = (3 * Resolution) / 2;
+        protected int AirAcceleration = Resolution / 16;
+        protected int JumpPower = (9 * Resolution) / 2;
+        protected int MaxJumpSpeed = (5 * Resolution) / 2;
+        protected int MaxFallSpeed = (6 * Resolution) / 2;
         protected int WalkAnimationSpeed = Resolution * 3;
 
         protected SpriteGrid WalkingGrid;
@@ -30,7 +30,7 @@ namespace DB.DoF.Entities
         public override void Update(State s, Room room)
         {
             bool isOnGround = IsTileSolidBelow(room);
-            int acceleration = GroundAcceleration;
+            int acceleration = isOnGround ? GroundAcceleration : AirAcceleration;
 
             if (s.Input.IsHeld(Input.Action.Right) && !s.Input.IsHeld(Input.Action.Left))
             {
@@ -78,6 +78,12 @@ namespace DB.DoF.Entities
             Velocity.Y = Math.Max(Math.Min(jumpVelocity, MaxFallSpeed), -MaxJumpSpeed);
 
             MoveWithCollision(room);
+
+            // Bumped head
+            if (Velocity.Y == 0)
+            {
+                jumpVelocity = 0;
+            }
 
 
             Oxygen--;
