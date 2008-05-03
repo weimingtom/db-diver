@@ -94,7 +94,7 @@ namespace DB.DoF
             }
 
             sb.AppendLine("}}}");
-            System.Console.WriteLine(sb.ToString());
+
             CodeDomProvider cdp = new CSharpCodeProvider();
             CompilerParameters compilerParameters = new CompilerParameters();
             foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())

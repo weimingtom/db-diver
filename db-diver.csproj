@@ -68,6 +68,7 @@
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Fish.cs" />
     <Compile Include="Entities\FattyDiver.cs" />
+    <Compile Include="Entities\Shoal.cs" />
     <Compile Include="Gui\Box.cs" />
     <Compile Include="Gui\Boxes\BorderBox.cs" />
     <Compile Include="Gui\Boxes\CompoundBox.cs" />

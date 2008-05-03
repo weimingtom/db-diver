@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DB.DoF
 {
-    class SmoothFloat
+    public struct SmoothFloat
     {
         float value;
         public float Value { get { return value; } }
@@ -13,17 +13,17 @@ namespace DB.DoF
 
         public float Diff { get { return Target - value; } }
 
-        float divisor;
+        float speed;
 
-        public SmoothFloat(float value, float divisor)
+        public SmoothFloat(float value, float speed)
         {
-            this.value = value;
-            this.divisor = divisor;
+            this.value = Target = value;
+            this.speed = speed;
         }
 
         public void Update()
         {
-            this.value += Diff/divisor;
+            this.value += Diff*speed;
         }
     }
 }
