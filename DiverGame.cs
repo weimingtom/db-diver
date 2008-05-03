@@ -175,7 +175,7 @@ namespace DB.Diver
             graphics.BeginClip();
 
             graphics.Begin();
-            room.Draw(graphics);
+            room.Draw(graphics, gameTime);
 
             diver.Draw(graphics, gameTime, Room.Layer.Player);
             
