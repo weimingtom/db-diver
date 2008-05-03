@@ -33,7 +33,7 @@ namespace DB.DoF
 
         private Rectangle GetRectangle(int frame)
         {
-            return new Rectangle((frame % XCount) * FrameSize.X, (frame / XCount) * FrameSize.Y, FrameSize.X, FrameSize.Y); 
+            return new Rectangle((frame % XCount) * FrameSize.X, ((frame / XCount) % YCount) * FrameSize.Y, FrameSize.X, FrameSize.Y); 
         }
     }
 }
