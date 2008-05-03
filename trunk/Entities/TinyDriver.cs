@@ -11,7 +11,7 @@ namespace DB.DoF.Entities
         public TinyDiver()
         {
             Size = new Point(16, 16);
-            Speed = 1;
+            //Speed = 1;
         }
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
