@@ -57,8 +57,9 @@ namespace DB.Diver
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            graphicsDeviceManager.PreferredBackBufferWidth = 640;
-            graphicsDeviceManager.PreferredBackBufferHeight = 480;
+            graphicsDeviceManager.PreferredBackBufferWidth = 800;
+            graphicsDeviceManager.PreferredBackBufferHeight = 600;
+            graphicsDeviceManager.IsFullScreen = true;
             // graphicsDeviceManager.ToggleFullScreen();
             graphicsDeviceManager.ApplyChanges();
 
@@ -72,7 +73,7 @@ namespace DB.Diver
         protected override void LoadContent()
         {
             graphics = new Graphics(GraphicsDevice);
-            renderTarget = new RenderTarget2D(GraphicsDevice, 512, 256, 0, SurfaceFormat.Color, MultiSampleType.None, 1);
+            renderTarget = new RenderTarget2D(GraphicsDevice, 512, 512, 0, SurfaceFormat.Color, MultiSampleType.None, 1);
          
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -153,12 +154,13 @@ namespace DB.Diver
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
-        {
-            graphicsDeviceManager.GraphicsDevice.Clear(Color.CornflowerBlue);
+        {            
             graphicsDeviceManager.GraphicsDevice.SetRenderTarget(0, renderTarget);
+            graphicsDeviceManager.GraphicsDevice.Clear(Color.CornflowerBlue);
             graphics.BeginClip();
 
             graphics.Begin();
+            room.Draw(graphics);
             diver.Draw(graphics, gameTime);
             graphics.End();
 
@@ -170,8 +172,8 @@ namespace DB.Diver
             graphics.Begin(SpriteBlendMode.None,SpriteSortMode.Immediate, SaveStateMode.SaveState);
             graphics.GraphicsDevice.SamplerStates[0].MagFilter = TextureFilter.None;
             graphics.Draw(renderTarget.GetTexture(),
-                          new Rectangle(0, 0, 640, 480),
-                          new Rectangle(0, 0, 320, 240), 
+                          new Rectangle(0, 0, 800, 600),
+                          new Rectangle(0, 0, 400, 300), 
                           Color.White);
             graphics.End();
 
