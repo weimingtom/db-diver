@@ -162,7 +162,7 @@ namespace DB.Diver
             diver.Draw(graphics, gameTime);
             graphics.End();
 
-            guiManager.Draw(graphics, gameTime);
+           // guiManager.Draw(graphics, gameTime);
             
             GraphicsDevice.SetRenderTarget(0, null);
 
