@@ -22,11 +22,15 @@ namespace DB.DoF.Entities
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
         {
+            g.Begin();
+
             if (layer == Room.Layer.Player)
                 walkingGrid.Draw(g, Position, walkingGridFrame % 6);
 
             if (gameTime.TotalGameTime.Milliseconds % 100 == 0)
                 walkingGridFrame++;
+
+            g.End();
         }
 
         public override void Update(State s, Room room)

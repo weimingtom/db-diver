@@ -8,6 +8,7 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using DB.DoF.Entities;
 
 namespace DB.DoF
@@ -22,12 +23,15 @@ namespace DB.DoF
             Foreground
         }
 
-        public const int WidthInTiles = 20;
-        public const int HeightInTiles = 15;
+        public const int WidthInTiles = 25;
+        public const int HeightInTiles = 17;
+
+        public Point Size { get { return TileMap.SizeInPixels; } }
 
         public TileMap TileMap;
         IList<Entity> entities = new List<Entity>();
         Diver diver;
+        Texture2D glowTexture;
 
         public Diver Diver
         {
@@ -44,6 +48,7 @@ namespace DB.DoF
         public Room(SpriteGrid tileSet)
         {
             TileMap = new TileMap(tileSet, WidthInTiles, HeightInTiles);
+            glowTexture = DiverGame.DefaultContent.Load<Texture2D>("glow");
         }
 
         public static Room FromFile(string filename, SpriteGrid tileSet)
@@ -121,11 +126,18 @@ namespace DB.DoF
             {
                 if(layer == Layer.Player)
                     TileMap.Draw(g);
+
                 foreach (Entity entity in entities)
                 {
                     entity.Draw(g, gt, layer);
                 }
             }
+
+            g.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState);
+            g.GraphicsDevice.RenderState.SourceBlend = Blend.DestinationColor;
+            g.GraphicsDevice.RenderState.DestinationBlend = Blend.Zero;
+            g.Draw(glowTexture, new Rectangle(-300, -300, 400 + 600, 300 + 600), new Color(255,255,255,128));
+            g.End();
         }
 
         public void Update(State s)

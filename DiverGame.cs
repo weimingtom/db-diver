@@ -43,6 +43,7 @@ namespace DB.DoF
         public static ContentManager DefaultContent;
         RenderTarget2D renderTarget;
         State state;
+        Texture2D white;
 
         public DiverGame()
         {
@@ -91,7 +92,7 @@ namespace DB.DoF
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Texture2D white = new Texture2D(GraphicsDevice, 4, 4, 1, TextureUsage.Tiled, SurfaceFormat.Color);
+            white = new Texture2D(GraphicsDevice, 4, 4, 1, TextureUsage.Tiled, SurfaceFormat.Color);
             white.SetData(new uint[] { 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
                                        0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
                                        0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
@@ -174,18 +175,19 @@ namespace DB.DoF
         protected override void Draw(GameTime gameTime)
         {            
             graphicsDeviceManager.GraphicsDevice.SetRenderTarget(0, renderTarget);
-            graphicsDeviceManager.GraphicsDevice.Clear(Color.CornflowerBlue);
+            graphicsDeviceManager.GraphicsDevice.Clear(Color.Black);
            
             graphics.BeginClip();
-
+            graphics.PushClipRectangle(new Rectangle(0, 300 - room.Size.Y - 8, room.Size.X, room.Size.Y));
             graphics.Begin();
-            room.Draw(graphics, gameTime);            
+            graphics.Draw(white, new Rectangle(0, 0, room.Size.X, room.Size.Y), Color.CornflowerBlue);
             graphics.End();
+            room.Draw(graphics, gameTime);
+            graphics.PopClipRectangle();
 
-           // guiManager.Draw(graphics, gameTime);
+            //guiManager.Draw(graphics, gameTime);
             
             GraphicsDevice.SetRenderTarget(0, null);
-
            
             graphics.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.SaveState);
             graphics.GraphicsDevice.SamplerStates[0].MagFilter = TextureFilter.None;
