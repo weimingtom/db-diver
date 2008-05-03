@@ -13,28 +13,24 @@ namespace DB.DoF.Entities
 
         public override void Update(State s, Room room)
         {
-            Point velocity = new Point();
-
             if (s.Input.IsHeld(Input.Action.Right))
             {
-                velocity.X += Speed;
+                Velocity.X = Math.Min(Velocity.X + 1, 256 * 2);
             }
 
             if (s.Input.IsHeld(Input.Action.Left))
             {
-                velocity.X -= Speed;
+                Velocity.X = Math.Max(Velocity.X - 1, -256 * 2);
             }
 
             if (s.Input.IsHeld(Input.Action.Jump))
             {
-                velocity.Y -= 3;
+                Velocity.Y = -20;
             }
 
-            velocity.Y += 2;
+            Velocity.Y += 1;
 
-            velocity = ResolveCollision(velocity, room);
-            Dimension.X += velocity.X;
-            Dimension.Y += velocity.Y;
+            MoveWithCollision(room);
 
             Oxygen--;
 

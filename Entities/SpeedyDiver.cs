@@ -15,7 +15,7 @@ namespace DB.DoF.Entities
 
         public SpeedyDiver()
         {
-            Dimension = new Rectangle(0, 0, 16, 32);
+            Size = new Point(16, 32);
             Speed = 3;
             walkingGrid = new SpriteGrid("speedy_walking", 6, 1);
         }

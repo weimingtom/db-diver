@@ -10,7 +10,7 @@ namespace DB.DoF.Entities
     {
         public TinyDiver()
         {
-            Dimension = new Rectangle(0, 0, 16, 16);
+            Size = new Point(16, 16);
             Speed = 1;
         }
 
