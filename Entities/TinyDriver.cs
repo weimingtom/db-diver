@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using DB.Gui;
 
-namespace DB.Diver
+namespace DB.DoF.Entities
 {
     public class TinyDiver: Diver
     {

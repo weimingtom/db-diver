@@ -1,6 +1,6 @@
 using System;
 
-namespace DB.Diver
+namespace DB.DoF
 {
     public static class Program
     {

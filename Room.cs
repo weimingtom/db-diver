@@ -8,8 +8,9 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 
 using Microsoft.Xna.Framework;
+using DB.DoF.Entities;
 
-namespace DB.Diver
+namespace DB.DoF
 {
 
     public class Room
@@ -77,7 +78,7 @@ namespace DB.Diver
             {
                 string[] splitted = line.Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 string className = splitted[0];
-                Type type = Type.GetType("DB.Diver." + className, true, false);
+                Type type = Type.GetType("DB.DoF.Entities." + className, true, false);
 
                 if (splitted.Length == 1)
                 {

@@ -12,8 +12,9 @@ using Microsoft.Xna.Framework.Storage;
 using DB.Gui;
 using DB.Gui.Boxes;
 using DB.Audio;
+using DB.DoF.Entities;
 
-namespace DB.Diver
+namespace DB.DoF
 {
     public class State
     {

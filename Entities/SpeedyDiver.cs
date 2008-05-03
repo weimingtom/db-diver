@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using DB.Gui;
 
-namespace DB.Diver
+namespace DB.DoF.Entities
 {
     public class SpeedyDiver: Diver
     {

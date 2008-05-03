@@ -4,7 +4,7 @@ using System.Text;
 using DB.Gui;
 using Microsoft.Xna.Framework;
 
-namespace DB.Diver
+namespace DB.DoF.Entities
 {
     public abstract class Diver: Entity
     {

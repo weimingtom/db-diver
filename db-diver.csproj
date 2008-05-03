@@ -65,8 +65,9 @@
     <Compile Include="Audio\Internal\WaveNative.cs" />
     <Compile Include="Audio\Internal\WaveOut.cs" />
     <Compile Include="DiverGame.cs" />
-    <Compile Include="Entity.cs" />
-    <Compile Include="FattyDiver.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\Fish.cs" />
+    <Compile Include="Entities\FattyDiver.cs" />
     <Compile Include="Gui\Box.cs" />
     <Compile Include="Gui\Boxes\BorderBox.cs" />
     <Compile Include="Gui\Boxes\CompoundBox.cs" />
@@ -77,15 +78,15 @@
     <Compile Include="Gui\Graphics.cs" />
     <Compile Include="Gui\GuiManager.cs" />
     <Compile Include="Gui\Widget.cs" />
-    <Compile Include="Diver.cs" />
+    <Compile Include="Entities\Diver.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Room.cs" />
-    <Compile Include="SpeedyDiver.cs" />
+    <Compile Include="Entities\SpeedyDiver.cs" />
     <Compile Include="SpriteGrid.cs" />
     <Compile Include="TileMap.cs" />
-    <Compile Include="TinyDriver.cs" />
+    <Compile Include="Entities\TinyDriver.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
