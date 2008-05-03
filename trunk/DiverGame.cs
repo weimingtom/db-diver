@@ -70,7 +70,7 @@ namespace DB.Diver
             graphicsDeviceManager.PreferredBackBufferHeight = 600;
             graphicsDeviceManager.SynchronizeWithVerticalRetrace = true;
             
-            graphicsDeviceManager.IsFullScreen = true;
+            //graphicsDeviceManager.IsFullScreen = true;
             graphicsDeviceManager.SynchronizeWithVerticalRetrace = true;
             // graphicsDeviceManager.ToggleFullScreen();
             graphicsDeviceManager.ApplyChanges();

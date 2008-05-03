@@ -26,7 +26,7 @@ namespace DB.Diver
 
         bool IsSolid(int x, int y)
         {
-            return tilePropertiesMapping(this[x,y]) != '0';
+            return tilePropertiesMapping[this[x,y]] != '0';
         }
         
         public TileMap(SpriteGrid tileSet, int width, int height)
