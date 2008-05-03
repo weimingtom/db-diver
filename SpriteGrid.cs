@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DB.Diver
 {
-    class SpriteGrid
+    public class SpriteGrid
     {
         Texture2D texture;
         public int XCount;

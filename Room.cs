@@ -9,8 +9,16 @@ using System.CodeDom.Compiler;
 
 namespace DB.Diver
 {
-    class Room
+
+    public class Room
     {
+        public enum Layer
+        {
+            Background,
+            Player,
+            Foreground
+        }
+
         public const int WidthInTiles = 20;
         public const int HeightInTiles = 15;
 

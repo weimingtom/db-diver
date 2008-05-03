@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace DB.Diver
 {
-    class TileMap
+    public class TileMap
     {
         private string fileFormatMapping = ".0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         int[] tiles;

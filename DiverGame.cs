@@ -161,7 +161,9 @@ namespace DB.Diver
 
             graphics.Begin();
             room.Draw(graphics);
-            diver.Draw(graphics, gameTime);
+
+            diver.Draw(graphics, gameTime, Room.Layer.Player);
+            
             graphics.End();
 
            // guiManager.Draw(graphics, gameTime);
