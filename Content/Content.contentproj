@@ -87,6 +87,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="small_fish.png">
+      <Name>small_fish</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="mappaper.png">
       <Name>mappaper</Name>
       <Importer>TextureImporter</Importer>
