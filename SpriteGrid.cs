@@ -20,6 +20,12 @@ namespace DB.Diver
             this.YCount = yCount;
         }
 
+        public SpriteGrid(string filename, int xCount, int yCount)
+            :this(DiverGame.DefaultContent.Load<Texture2D>(filename), xCount, yCount)
+        {
+            
+        }
+
         public void Draw(Gui.Graphics g, Point position, int frame)
         {
             g.Draw(texture, position, GetRectangle(frame), Color.White);
