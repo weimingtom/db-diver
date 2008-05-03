@@ -38,6 +38,7 @@ namespace DB.DoF
         RenderTarget2D renderTarget;
         State state;
         public static Texture2D White;
+        public static Random Random = new Random();
         Sea sea;
 
         public DiverGame()

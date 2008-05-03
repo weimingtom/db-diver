@@ -16,4 +16,4 @@
 000000000..00010000......
 3333333333333333333333333
 
-Fish("speedy_walking", 6, 2, 7, Room.Layer.Background)
+Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)

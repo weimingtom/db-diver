@@ -220,5 +220,10 @@ namespace DB.DoF.Entities
         public abstract void Draw(Graphics g, GameTime gameTime, Room.Layer layer);
 
         public virtual void Update(State s, Room room) { }
+
+        public virtual bool IsTransitionable()
+        {
+            return false;
+        }
     }
 }

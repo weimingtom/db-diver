@@ -24,6 +24,20 @@ namespace DB.DoF
         TinyDiver tinyDiver;
         Diver diver;
 
+        private class EntityTransition
+        {
+            public EntityTransition(Entity entity, Room room)
+            {
+                Entity = entity;
+                Room = room;
+            }
+
+            public Entity Entity;
+            public Room Room;
+        }
+
+        IList<EntityTransition> entityTransitions = new List<EntityTransition>();
+
         public Sea(string name, 
                    int width, 
                    int height, 
@@ -75,12 +89,10 @@ namespace DB.DoF
                     room = null;
                 }
 
-                return room;
+                rooms[filename] = room;
             }
-            else
-            {
-                return rooms[filename];
-            }
+           
+            return rooms[filename]; 
         }
 
         void MakeRoomActive(int x, int y)
@@ -107,21 +119,21 @@ namespace DB.DoF
                 if (room.IsEntityLeftOfRoom(entity))
                 {
                     MakeRoomActive(--currentRoomX, currentRoomY);
+                    entity.X = room.Size.X - 2;
                 }
                 if (room.IsEntityRightOfRoom(entity))
                 {
                     MakeRoomActive(++currentRoomX, currentRoomY);
-                }         
-            }
+                    entity.X = -entity.Width + 1;
+                }
 
-            if (room.IsEntityLeftOfRoom(entity))
-            {
-               entity.X = room.Size.X - 2;
+                return;
             }
-
-            if (room.IsEntityRightOfRoom(entity))
+            
+            if (entity.IsTransitionable())
             {
-                entity.X = -entity.Width + 1;
+                EntityTransition entityTransistion = new EntityTransition(entity, room);
+                entityTransitions.Add(entityTransistion);
             }
         }
 
@@ -139,8 +151,53 @@ namespace DB.DoF
         {
             foreach(KeyValuePair<string, Room> keyValuePair in rooms)
             {
-                if (keyValuePair.Value.IsUpdateNeeded() || room == keyValuePair.Value)
+                if (keyValuePair.Value != null
+                    && (keyValuePair.Value.IsUpdateNeeded() || room == keyValuePair.Value))
                     keyValuePair.Value.Update(s);
+            }
+
+            foreach (EntityTransition entityTransition in entityTransitions)
+            {
+                PerformTransition(entityTransition);
+            }
+
+            entityTransitions.Clear();
+        }
+
+        void PerformTransition(EntityTransition entityTransition)
+        {
+            Room newRoom = null;
+            Room room = entityTransition.Room;
+            Entity entity = entityTransition.Entity;
+
+            if (room.IsEntityLeftOfRoom(entity))
+            {
+                newRoom = GetRoom(currentRoomX - 1, currentRoomY);
+
+                if (newRoom == null)
+                {
+                    return;
+                }
+
+                entity.X = newRoom.Size.X - 2;
+            }
+
+            if (room.IsEntityRightOfRoom(entity))
+            {
+                newRoom = GetRoom(currentRoomX + 1, currentRoomY);
+
+                if (newRoom == null)
+                {
+                    return;
+                }
+
+                entity.X = -entity.Width + 1;
+            }
+
+            if (newRoom != null)
+            {
+                room.RemoveEntity(entity);
+                newRoom.AddEntity(entity);
             }
         }
     }

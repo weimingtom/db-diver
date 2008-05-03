@@ -23,7 +23,7 @@ namespace DB.DoF.Entities
         {
             this.position.X = x*16;
             this.position.Y = y*16;
-            r = new Random(x + y*25);
+            r = DiverGame.Random;
 
             this.layer = layer;
             this.sprites = sprites;
@@ -68,6 +68,11 @@ namespace DB.DoF.Entities
                 Y > room.TileMap.SizeInPixels.Y && ySpeed.Diff > 0) ySpeed.Target *= -1;
 
 
+        }
+
+        public override bool IsTransitionable()
+        {
+            return true;
         }
     }
 
