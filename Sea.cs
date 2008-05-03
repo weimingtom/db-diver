@@ -25,7 +25,9 @@ namespace DB.DoF
         FattyDiver fattyDiver;
         TinyDiver tinyDiver;
         Diver diver;
+        MiniMap miniMap;
         Texture2D panel;
+        bool isMiniMapShowing;
 
         private class EntityTransition
         {
@@ -34,7 +36,6 @@ namespace DB.DoF
                 Entity = entity;
                 Room = room;
             }
-
             public Entity Entity;
             public Room Room;
         }
@@ -60,6 +61,8 @@ namespace DB.DoF
 
             leftRoomHandler = new Room.LeftRoomHandler(OnLeftRoom);
             leftBoatHandler = new Room.LeftRoomHandler(OnLeftBoat);
+
+            miniMap = new MiniMap(this);
 
             preloadAllRooms();
            
@@ -118,6 +121,8 @@ namespace DB.DoF
             currentRoomX = x;
             currentRoomY = y;
             room.Diver = diver;
+
+            miniMap.Discover(room, x, y);
             diver.OxygenDecrease = true;
             diver.OxygenIncrease = false;
         }
@@ -129,6 +134,8 @@ namespace DB.DoF
             diver.X = 200;
             diver.Y = 129;
             room.Diver = diver;
+            currentRoomX = firstRoomX;
+            currentRoomY = firstRoomY - 1;
             diver.OxygenDecrease = false;
             diver.OxygenIncrease = true;
         }
@@ -192,10 +199,17 @@ namespace DB.DoF
             g.Draw(DiverGame.White, new Rectangle(16, 4, (122 * diver.Oxygen) / Diver.MaxOxygen, 4), new Color(199, 77, 77));
             g.End();
             g.PopClipRectangle();
+
+            if (isMiniMapShowing)
+            {
+                miniMap.Draw(g, currentRoomX, currentRoomY);
+            }
         }
 
         public void Update(State s)
         {
+            isMiniMapShowing ^= s.Input.WasPressed(Input.Action.Map);
+
             foreach(KeyValuePair<string, Room> keyValuePair in rooms)
             {
                 if (keyValuePair.Value != null
