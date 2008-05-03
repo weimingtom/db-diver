@@ -50,14 +50,41 @@ namespace DB.Diver
 
         public Point ResolveCollision(Point velocity, Room room)
         {
-          
             if (velocity.X > 0)
             {
 
-                int yStart = Dimension.Y / room.TileMap.TileSize.Y;
-               // int yEnd = Dimension.Y + 
             }
             else if (velocity.X > 0)
+            {
+
+            }
+
+            if (velocity.Y > 0)
+            {
+                int yStart = (Dimension.Y + Dimension.Height) / room.TileMap.TileSize.Y;
+                int yEnd = (Dimension.Y + Dimension.Height + velocity.Y) / room.TileMap.TileSize.Y;
+
+                int xStart = Dimension.X / room.TileMap.TileSize.X;
+                int xEnd = (Dimension.X + Dimension.Width) / room.TileMap.TileSize.X;
+
+                for (int y = yStart; y < yEnd; y++)
+                {
+                    for (int x = xStart; x < xEnd; x++)
+                    {
+                      
+                        if (room.TileMap.IsSolid(x, y))
+                        {
+                            System.Console.WriteLine("Solid");
+                       
+                        }
+
+                        //rectangle.Intersects(new Rectangle(x * TileSize, y * TileSize, TileSize, TileSize));
+                    }
+                }
+
+               
+            }
+            else if (velocity.Y < 0)
             {
 
             }
