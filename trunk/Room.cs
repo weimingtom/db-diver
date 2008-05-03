@@ -15,10 +15,10 @@ namespace DB.Diver
         public const int HeightInTiles = 15;
 
         public TileMap TileMap;
-        IList<Object> entities = new List<Object>();
+        IList<Entity> entities = new List<Entity>();
 
         public Room(SpriteGrid tileSet)
-        {            
+        {
             TileMap = new TileMap(tileSet, WidthInTiles, HeightInTiles);
         }
 
@@ -50,12 +50,47 @@ namespace DB.Diver
 
         void LoadEntities(IList<string> lines)
         {
+            foreach (string line in lines)
+            {
+                string[] splitted = line.Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string className = splitted[0];
+                Type type = Type.GetType("DB.Diver." + className, true, false);
+
+                if (splitted.Length == 1)
+                {
+                    ConstructorInfo c = type.GetConstructor(new Type[] {});
+                    entities.Add((Entity)c.Invoke(new object[] {}));
+                }
+                else if (splitted.Length == 3)
+                {
+                    string XStr = splitted[1];
+                    string YStr = splitted[2];
+
+                    ConstructorInfo c = type.GetConstructor(new Type[] { 0.GetType(), 0.GetType() });
+                    entities.Add((Entity)c.Invoke(new object[] { int.Parse(XStr), int.Parse(YStr) }));
+                }
+                else if (splitted.Length == 4)
+                {
+                    string XStr = splitted[1];
+                    string YStr = splitted[2];
+                    string TagStr = splitted[3];
+
+                    ConstructorInfo c = type.GetConstructor(new Type[] { 0.GetType(), 0.GetType(), "".GetType() } );
+                    entities.Add((Entity)c.Invoke(new object[] { int.Parse(XStr), int.Parse(YStr), TagStr }));
+                }
+                else
+                {
+                    throw new Exception("Error in room file: " + line);
+                }
+            }
+            
+            /*
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("using System;");
             sb.AppendLine("using System.Collections.Generic;");
             sb.AppendLine("namespace DB.Diver{");
             sb.AppendLine("public class CSCodeEvaler{");
-            sb.AppendLine("public void InsertEntities(IList<Object> entities){");
+            sb.AppendLine("public void InsertEntities(IList<DB.Diver.Entity> entities){");
             foreach(string line in lines)
             {
                 sb.AppendLine("entities.Add(new " + line + ");");
@@ -65,6 +100,8 @@ namespace DB.Diver
             CodeDomProvider cdp = new CSharpCodeProvider();
             CompilerParameters compilerParameters = new CompilerParameters();
             compilerParameters.ReferencedAssemblies.Add("system.dll");
+            //compilerParameters.ReferencedAssemblies.Add(Assembly.GetAssembly(this.GetType()).GetName().Name);
+            //compilerParameters.ReferencedAssemblies.Add("db-diver");
             compilerParameters.CompilerOptions = "/t:library";
             compilerParameters.GenerateInMemory = true;
 
@@ -79,7 +116,7 @@ namespace DB.Diver
             Type t = o.GetType();
             MethodInfo mi = t.GetMethod("InsertEntities");
 
-            mi.Invoke(o, new object[] { entities });
+            mi.Invoke(o, new object[] { entities });*/
         }
 
         public void Draw(Gui.Graphics g)
