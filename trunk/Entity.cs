@@ -6,6 +6,8 @@ using DB.Gui;
 
 namespace DB.Diver
 {
+
+
     public abstract class Entity
     {
         public Rectangle Dimension = Rectangle.Empty;
@@ -46,7 +48,7 @@ namespace DB.Diver
             set { Dimension.Width = value.X; Dimension.Height = value.Y; }
         }
 
-        public abstract void Draw(Graphics g, GameTime gameTime);
+        public abstract void Draw(Graphics g, GameTime gameTime, Room.Layer layer);
 
         public virtual void Update(GameTime gameTime) { }
     }

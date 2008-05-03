@@ -13,8 +13,9 @@ namespace DB.Diver
             this.Dimension = new Rectangle(0, 0, 16, 16);
         }
 
-        public override void Draw(Graphics g, GameTime gameTime)
+        public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
         {
+            
         }
     }
 }

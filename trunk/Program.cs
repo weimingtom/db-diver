@@ -2,7 +2,7 @@ using System;
 
 namespace DB.Diver
 {
-    static class Program
+    public static class Program
     {
         /// <summary>
         /// The main entry point for the application.

@@ -19,7 +19,7 @@ namespace DB.Diver
             walkingGrid = new SpriteGrid("speedy_walking", 6, 1);
         }
 
-        public override void Draw(Graphics g, GameTime gameTime)
+        public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
         {
             walkingGrid.Draw(g, Position, walkingGridFrame % 6);
 
