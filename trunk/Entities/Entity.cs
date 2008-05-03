@@ -52,7 +52,7 @@ namespace DB.DoF.Entities
 
             if (newVelocity.X > 0)
             {
-                int x = (Dimension.X + Dimension.Width + newVelocity.X - 1) / room.TileMap.TileSize.X;
+                int x = (Dimension.X + Dimension.Width + newVelocity.X) / room.TileMap.TileSize.X;
              
                 int yStart = (Dimension.Y) / room.TileMap.TileSize.Y;
                 int yEnd = (Dimension.Y + Dimension.Height - 2) / room.TileMap.TileSize.Y;
@@ -69,7 +69,7 @@ namespace DB.DoF.Entities
             }
             else if (newVelocity.X < 0)
             {
-                int x = (Dimension.X + newVelocity.X + 1) / room.TileMap.TileSize.X;
+                int x = (Dimension.X + newVelocity.X - 1) / room.TileMap.TileSize.X;
 
                 int yStart = Dimension.Y / room.TileMap.TileSize.Y;
                 int yEnd = (Dimension.Y + Dimension.Height - 2) / room.TileMap.TileSize.Y;
@@ -109,8 +109,6 @@ namespace DB.DoF.Entities
                 int xStart = (Dimension.X + newVelocity.X) / room.TileMap.TileSize.X;
                 int xEnd = (Dimension.X + Dimension.Width + newVelocity.X - 1) / room.TileMap.TileSize.X;
 
-                System.Console.WriteLine(xStart + " " + xEnd);
-
                 for (int x = xStart; x <= xEnd; x++)
                 {
                     if (room.TileMap.IsSolid(x, y))
@@ -124,6 +122,95 @@ namespace DB.DoF.Entities
 
             return newVelocity;
         }
+
+        public bool isTileSolidBelow(Room room)
+        {
+            int y = (Dimension.Y + Dimension.Height) / room.TileMap.TileSize.Y;
+
+            int xStart = Dimension.X / room.TileMap.TileSize.X;
+            int xEnd = (Dimension.X + Dimension.Width - 1) / room.TileMap.TileSize.X;
+
+            for (int x = xStart; x <= xEnd; x++)
+            {
+                if (room.TileMap.IsSolid(x, y))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool isTileSolidAbove(Room room)
+        {
+            int y = (Dimension.Y - 1) / room.TileMap.TileSize.Y;
+
+            int xStart = Dimension.X / room.TileMap.TileSize.X;
+            int xEnd = (Dimension.X + Dimension.Width - 1) / room.TileMap.TileSize.X;
+
+            for (int x = xStart; x <= xEnd; x++)
+            {
+                if (room.TileMap.IsSolid(x, y))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool isTileSolidLeft(Room room)
+        {
+            int x = (Dimension.X - 1) / room.TileMap.TileSize.X;
+
+            int yStart = Dimension.Y / room.TileMap.TileSize.Y;
+            int yEnd = (Dimension.Y + Dimension.Height - 2) / room.TileMap.TileSize.Y;
+
+            for (int y = yStart; y <= yEnd; y++)
+            {
+                if (room.TileMap.IsSolid(x, y))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool isTileSolidRight(Room room)
+        {
+            int x = (Dimension.X + Dimension.Width) / room.TileMap.TileSize.X;
+
+            int yStart = (Dimension.Y) / room.TileMap.TileSize.Y;
+            int yEnd = (Dimension.Y + Dimension.Height - 2) / room.TileMap.TileSize.Y;
+
+            for (int y = yStart; y <= yEnd; y++)
+            {
+                if (room.TileMap.IsSolid(x, y))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool isTileSolidBelowRight(Room room)
+        {
+            int x = (Dimension.X + Dimension.Width) / room.TileMap.TileSize.X;
+            int y = (Dimension.Y + Dimension.Height) / room.TileMap.TileSize.Y;
+
+            return room.TileMap.IsSolid(x, y);
+        }
+
+        public bool isTileSolidBelowLeft(Room room)
+        {
+            int x = (Dimension.X - 1) / room.TileMap.TileSize.X;
+            int y = (Dimension.Y + Dimension.Height) / room.TileMap.TileSize.Y;
+
+            return room.TileMap.IsSolid(x, y);
+        }
+
 
         public abstract void Draw(Graphics g, GameTime gameTime, Room.Layer layer);
 
