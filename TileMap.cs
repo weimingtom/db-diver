@@ -20,7 +20,13 @@ namespace DB.DoF
           
         public int this[int x, int y]
         {
-            get { return tiles[x + y * Width]; }
+            get 
+            {
+                if (x < 0 || x >= Width || y < 0 || y >= Height)
+                    return 0;
+                
+                return tiles[x + y * Width]; 
+            }
             set { tiles[x + y * Width] = value; }
         }
 
