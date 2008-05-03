@@ -8,7 +8,8 @@ namespace DB.Diver
 {
     public class TileMap
     {
-        private string fileFormatMapping = ".0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private string fileFormatMapping =     ".0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private string tilePropertiesMapping = "0111121111111111111111111111111111111";
         int[] tiles;
 
         public SpriteGrid TileSet;
@@ -21,6 +22,11 @@ namespace DB.Diver
         {
             get { return tiles[x + y * Width]; }
             set { tiles[x + y * Width] = value; }
+        }
+
+        bool IsSolid(int x, int y)
+        {
+            return tilePropertiesMapping(this[x,y]) != '0';
         }
         
         public TileMap(SpriteGrid tileSet, int width, int height)

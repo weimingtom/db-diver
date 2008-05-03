@@ -68,6 +68,8 @@ namespace DB.Diver
             // TODO: Add your initialization logic here
             graphicsDeviceManager.PreferredBackBufferWidth = 800;
             graphicsDeviceManager.PreferredBackBufferHeight = 600;
+            graphicsDeviceManager.SynchronizeWithVerticalRetrace = true;
+            
             graphicsDeviceManager.IsFullScreen = true;
             graphicsDeviceManager.SynchronizeWithVerticalRetrace = true;
             // graphicsDeviceManager.ToggleFullScreen();
@@ -186,7 +188,7 @@ namespace DB.Diver
             GraphicsDevice.SetRenderTarget(0, null);
 
            
-            graphics.Begin(SpriteBlendMode.None,SpriteSortMode.Immediate, SaveStateMode.SaveState);
+            graphics.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.SaveState);
             graphics.GraphicsDevice.SamplerStates[0].MagFilter = TextureFilter.None;
             graphics.Draw(renderTarget.GetTexture(),
                           new Rectangle(0, 0, 800, 600),
