@@ -7,6 +7,8 @@ using Microsoft.CSharp;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 
+using Microsoft.Xna.Framework;
+
 namespace DB.Diver
 {
 
@@ -127,9 +129,17 @@ namespace DB.Diver
             mi.Invoke(o, new object[] { entities });*/
         }
 
-        public void Draw(Gui.Graphics g)
+        public void Draw(Gui.Graphics g, GameTime gt)
         {
-            TileMap.Draw(g);
+            foreach (Layer layer in Enum.GetValues(typeof(Layer)))
+            {
+                if(layer == Layer.Player)
+                    TileMap.Draw(g);
+                foreach (Entity entity in entities)
+                {
+                    entity.Draw(g, gt, layer);
+                }
+            }
         }
     }
 }
