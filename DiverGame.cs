@@ -115,7 +115,7 @@ namespace DB.DoF
 
             b.Clicked += new Button.ClickedHandler(PlaySound);
 
-            sea = new Sea("sea", 2, 1, 1, 0);
+            sea = new Sea("sea", 2, 2, 1, 0);
 
             // TODO: use this.Content to load your game content 
         }
