@@ -74,73 +74,45 @@ namespace DB.DoF
 
         void LoadEntities(IList<string> lines)
         {
-            foreach (string line in lines)
-            {
-                string[] splitted = line.Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                string className = splitted[0];
-                Type type = Type.GetType("DB.DoF.Entities." + className, true, false);
 
-                if (splitted.Length == 1)
-                {
-                    ConstructorInfo c = type.GetConstructor(new Type[] {});
-                    entities.Add((Entity)c.Invoke(new object[] {}));
-                }
-                else if (splitted.Length == 3)
-                {
-                    string XStr = splitted[1];
-                    string YStr = splitted[2];
-
-                    ConstructorInfo c = type.GetConstructor(new Type[] { 0.GetType(), 0.GetType() });
-                    entities.Add((Entity)c.Invoke(new object[] { int.Parse(XStr), int.Parse(YStr) }));
-                }
-                else if (splitted.Length == 4)
-                {
-                    string XStr = splitted[1];
-                    string YStr = splitted[2];
-                    string TagStr = splitted[3];
-
-                    ConstructorInfo c = type.GetConstructor(new Type[] { 0.GetType(), 0.GetType(), "".GetType() } );
-                    entities.Add((Entity)c.Invoke(new object[] { int.Parse(XStr), int.Parse(YStr), TagStr }));
-                }
-                else
-                {
-                    throw new Exception("Error in room file: " + line);
-                }
-            }
-            
-            /*
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("using System;");
             sb.AppendLine("using System.Collections.Generic;");
-            sb.AppendLine("namespace DB.Diver{");
-            sb.AppendLine("public class CSCodeEvaler{");
-            sb.AppendLine("public void InsertEntities(IList<DB.Diver.Entity> entities){");
-            foreach(string line in lines)
+            sb.AppendLine("using DB.DoF.Entities;");
+            sb.AppendLine("namespace DB.DoF {");
+            sb.AppendLine("public class CSCodeEvaler {");
+            sb.AppendLine("public void InsertEntities(IList<Entity> entities) {");
+
+            foreach (string line in lines)
             {
                 sb.AppendLine("entities.Add(new " + line + ");");
-            }            
-            sb.AppendLine("}}}");
+            }
 
+            sb.AppendLine("}}}");
+            System.Console.WriteLine(sb.ToString());
             CodeDomProvider cdp = new CSharpCodeProvider();
             CompilerParameters compilerParameters = new CompilerParameters();
-            compilerParameters.ReferencedAssemblies.Add("system.dll");
-            //compilerParameters.ReferencedAssemblies.Add(Assembly.GetAssembly(this.GetType()).GetName().Name);
-            //compilerParameters.ReferencedAssemblies.Add("db-diver");
-            compilerParameters.CompilerOptions = "/t:library";
+            foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                compilerParameters.ReferencedAssemblies.Add(asm.Location);
+            }
+
             compilerParameters.GenerateInMemory = true;
 
             CompilerResults cr = cdp.CompileAssemblyFromSource(compilerParameters, sb.ToString());
-            if( cr.Errors.Count > 0 ){
-              throw new Exception(cr.Errors[0].ErrorText);
+            if (cr.Errors.Count > 0)
+            {
+                throw new Exception(cr.Errors[0].ErrorText);
             }
 
             Assembly a = cr.CompiledAssembly;
-            object o = a.CreateInstance("DB.Diver.CSCodeEvaler");
+            object o = a.CreateInstance("DB.DoF.CSCodeEvaler");
 
             Type t = o.GetType();
             MethodInfo mi = t.GetMethod("InsertEntities");
 
-            mi.Invoke(o, new object[] { entities });*/
+            mi.Invoke(o, new object[] { entities });
+            
         }
 
         public void Draw(Gui.Graphics g, GameTime gt)
