@@ -8,36 +8,13 @@
 .........................
 .........................
 .........................
-......3113113113113......
 .........................
 .........................
 .........................
 .........................
+......4444444444444......
 .........................
 .........................
 
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
+Decoration("clouds", 1, 1000, 0, 0, Room.Layer.Background)
+Decoration("sea", 1, 1000, 0, 12, Room.Layer.Foreground)

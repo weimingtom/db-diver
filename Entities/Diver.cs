@@ -24,6 +24,8 @@ namespace DB.DoF.Entities
 
         int walkingGridFrame = 3;
         int jumpVelocity;
+        public bool OxygenDecrease = true;
+        public bool OxygenIncrease = false;
 
         public int Oxygen = MaxOxygen;
 
@@ -85,12 +87,18 @@ namespace DB.DoF.Entities
                 jumpVelocity = 0;
             }
 
+            if (OxygenDecrease)
+                Oxygen--;
+            if (OxygenIncrease)
+                Oxygen += 5;
 
-            Oxygen--;
             if (Oxygen < 0)
             {
                 // DIE!!
             }
+
+            if (Oxygen > MaxOxygen)
+                Oxygen = MaxOxygen;
         }
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)

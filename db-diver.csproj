@@ -65,6 +65,7 @@
     <Compile Include="Audio\Internal\WaveNative.cs" />
     <Compile Include="Audio\Internal\WaveOut.cs" />
     <Compile Include="DiverGame.cs" />
+    <Compile Include="Entities\Decoration.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Fish.cs" />
     <Compile Include="Entities\FattyDiver.cs" />

@@ -118,6 +118,8 @@ namespace DB.DoF
             currentRoomX = x;
             currentRoomY = y;
             room.Diver = diver;
+            diver.OxygenDecrease = true;
+            diver.OxygenIncrease = false;
         }
 
         void EnterBoat()
@@ -127,6 +129,8 @@ namespace DB.DoF
             diver.X = 200;
             diver.Y = 129;
             room.Diver = diver;
+            diver.OxygenDecrease = false;
+            diver.OxygenIncrease = true;
         }
 
         void OnLeftBoat(Entity entity)
