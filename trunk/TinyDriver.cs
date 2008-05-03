@@ -10,7 +10,8 @@ namespace DB.Diver
     {
         public TinyDiver()
         {
-            this.Dimension = new Rectangle(0, 0, 16, 16);
+            Dimension = new Rectangle(0, 0, 16, 16);
+            Speed = 1;
         }
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)

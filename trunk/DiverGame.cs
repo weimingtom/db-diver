@@ -69,6 +69,7 @@ namespace DB.Diver
             graphicsDeviceManager.PreferredBackBufferWidth = 800;
             graphicsDeviceManager.PreferredBackBufferHeight = 600;
             graphicsDeviceManager.IsFullScreen = true;
+            graphicsDeviceManager.SynchronizeWithVerticalRetrace = true;
             // graphicsDeviceManager.ToggleFullScreen();
             graphicsDeviceManager.ApplyChanges();
 
@@ -148,7 +149,8 @@ namespace DB.Diver
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+                || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
             state.Input.Update();
@@ -169,6 +171,7 @@ namespace DB.Diver
         {            
             graphicsDeviceManager.GraphicsDevice.SetRenderTarget(0, renderTarget);
             graphicsDeviceManager.GraphicsDevice.Clear(Color.CornflowerBlue);
+           
             graphics.BeginClip();
 
             graphics.Begin();
