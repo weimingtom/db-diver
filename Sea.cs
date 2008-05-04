@@ -17,11 +17,9 @@ namespace DB.DoF
         public string Name;
         IDictionary<string, Room> rooms = new Dictionary<string, Room>();
 
-        int currentRoomX, currentRoomY, firstRoomX, firstRoomY;
-        Room room;
+        int firstRoomX, firstRoomY;
+        Room currentRoom;
         Room boat;
-        Room.LeftRoomHandler leftRoomHandler;
-        Room.LeftRoomHandler leftBoatHandler;
         SpeedyDiver speedyDiver;
         FattyDiver fattyDiver;
         TinyDiver tinyDiver;
@@ -63,9 +61,6 @@ namespace DB.DoF
             tinyDiver = new TinyDiver();
             diver = speedyDiver;
 
-            leftRoomHandler = new Room.LeftRoomHandler(OnLeftRoom);
-            leftBoatHandler = new Room.LeftRoomHandler(OnLeftBoat);
-
             miniMap = new MiniMap(this);
 
             // To load new game...
@@ -102,8 +97,14 @@ namespace DB.DoF
             }
             catch (FileNotFoundException e)
             {
-                System.Console.WriteLine("Couldn't find room " + filename);
+                System.Console.WriteLine("Couldn't find room " + filename + " " + e);
                 room = null;
+            }
+
+            if (room != null)
+            {
+                room.SeaX = x;
+                room.SeaY = y;
             }
 
             rooms[filename] = room;
@@ -123,33 +124,27 @@ namespace DB.DoF
 
         void MakeRoomActive(int x, int y)
         {
-            room.OnLeftRoom -= leftRoomHandler;
+            currentRoom = GetRoom(x, y);
 
-            room = GetRoom(x, y);
-
-            if (room == null)
+            if (currentRoom == null)
             {
                 throw new Exception("Cannot make a null room active! (" + x + "," + y + ")");
             }
-            room.OnLeftRoom += leftRoomHandler;
-            currentRoomX = x;
-            currentRoomY = y;
-            room.Diver = diver;
+            currentRoom.Diver = diver;
 
-            miniMap.Discover(room, x, y);
+            miniMap.Discover(currentRoom);
             diver.OxygenDecrease = true;
             diver.OxygenIncrease = false;
         }
 
         void EnterBoat()
         {
-            boat.OnLeftRoom += leftBoatHandler;
-            room = boat;
+            currentRoom = boat;
             diver.X = 200;
             diver.Y = 129;
-            room.Diver = diver;
-            currentRoomX = firstRoomX;
-            currentRoomY = firstRoomY - 1;
+            currentRoom.Diver = diver;
+            currentRoom.SeaX = firstRoomX;
+            currentRoom.SeaY = firstRoomY - 1;
             diver.OxygenDecrease = false;
             diver.OxygenIncrease = true;
         }
@@ -158,44 +153,49 @@ namespace DB.DoF
         {
             if (entity == diver)
             {
-                boat.OnLeftRoom -= leftBoatHandler;
                 MakeRoomActive(firstRoomX, firstRoomY);
                 entity.Y = -entity.Height + 1;
                 entity.X = boat.Size.X / 2 - entity.Width / 2;
             }
         }
 
-        void OnLeftRoom(Entity entity)
-        {        
+        public void OnLeftRoom(Entity entity, Room room)
+        {
+            if (room == boat)
+            {
+                OnLeftBoat(entity);
+                return;
+            }
+
             if (entity == diver)
             {
                 if (room.IsEntityLeftOfRoom(entity))
                 {
-                    MakeRoomActive(--currentRoomX, currentRoomY);
+                    MakeRoomActive(1 - room.SeaX, room.SeaY);
                     entity.X = room.Size.X - 2;
                 }
 
                 if (room.IsEntityRightOfRoom(entity))
                 {
-                    MakeRoomActive(++currentRoomX, currentRoomY);
+                    MakeRoomActive(1 + room.SeaX, room.SeaY);
                     entity.X = -entity.Width + 1;
                 }
 
                 if (room.IsEntityBelowRoom(entity))
                 {
-                    MakeRoomActive(currentRoomX, ++currentRoomY);
+                    MakeRoomActive(room.SeaX, 1 + room.SeaY);
                     entity.Y = -entity.Height + 1;
                 }
                 if (room.IsEntityAboveRoom(entity))
                 {
-                    MakeRoomActive(currentRoomX, --currentRoomY);
+                    MakeRoomActive(room.SeaX, 1 - room.SeaY);
                     entity.Y = room.Size.Y - 2;
                 }
 
                 return;
             }
             
-            if (entity.IsTransitionable())
+            if (entity.IsTransitionable)
             {
                 EntityTransition entityTransistion = new EntityTransition(entity, room);
                 entityTransitions.Add(entityTransistion);
@@ -204,14 +204,14 @@ namespace DB.DoF
 
         public void Draw(Gui.Graphics g, GameTime gt)
         {
-            g.PushClipRectangle(new Rectangle(0, 0, room.Size.X, room.Size.Y));
+            g.PushClipRectangle(new Rectangle(0, 0, currentRoom.Size.X, currentRoom.Size.Y));
             g.Begin();
-            g.Draw(DiverGame.White, new Rectangle(0, 0, room.Size.X, room.Size.Y), new Color(74, 193, 231));
+            g.Draw(DiverGame.White, new Rectangle(0, 0, currentRoom.Size.X, currentRoom.Size.Y), new Color(74, 193, 231));
             g.End();
-            room.Draw(g, gt);
+            currentRoom.Draw(g, gt);
             g.PopClipRectangle();
 
-            g.PushClipRectangle(new Rectangle(0, room.Size.Y, 400, 300 - room.Size.Y));
+            g.PushClipRectangle(new Rectangle(0, currentRoom.Size.Y, 400, 300 - currentRoom.Size.Y));
             g.Begin();
             g.Draw(panel, new Point(0, 0), Color.White);
             g.Draw(DiverGame.White, new Rectangle(16, 4, (122 * diver.Oxygen) / Diver.MaxOxygen, 4), new Color(199, 77, 77));
@@ -220,7 +220,7 @@ namespace DB.DoF
 
             if (isMiniMapShowing)
             {
-                miniMap.Draw(g, currentRoomX, currentRoomY);
+                miniMap.Draw(g, currentRoom.SeaX, currentRoom.SeaY);
             }
         }
 
@@ -230,9 +230,10 @@ namespace DB.DoF
 
             foreach(KeyValuePair<string, Room> keyValuePair in rooms)
             {
-                if (keyValuePair.Value != null
-                    && (keyValuePair.Value.IsUpdateNeeded() || room == keyValuePair.Value))
-                    keyValuePair.Value.Update(s);
+                if (keyValuePair.Value != null)
+                {
+                    keyValuePair.Value.Update(s, currentRoom == keyValuePair.Value);
+                }
             }
 
             foreach (EntityTransition entityTransition in entityTransitions)
@@ -251,7 +252,7 @@ namespace DB.DoF
 
             if (room.IsEntityLeftOfRoom(entity))
             {
-                newRoom = GetRoom(currentRoomX - 1, currentRoomY);
+                newRoom = GetRoom(room.SeaX - 1, room.SeaY);
 
                 if (newRoom == null)
                 {
@@ -263,7 +264,7 @@ namespace DB.DoF
 
             if (room.IsEntityRightOfRoom(entity))
             {
-                newRoom = GetRoom(currentRoomX + 1, currentRoomY);
+                newRoom = GetRoom(room.SeaX + 1, room.SeaY);
 
                 if (newRoom == null)
                 {
@@ -271,6 +272,30 @@ namespace DB.DoF
                 }
 
                 entity.X = -entity.Width + 1;
+            }
+
+            if (room.IsEntityAboveRoom(entity))
+            {
+                newRoom = GetRoom(room.SeaX, room.SeaY - 1);
+
+                if (newRoom == null)
+                {
+                    return;
+                }
+
+                entity.Y = -newRoom.Size.Y - 2;
+            }
+
+            if (room.IsEntityBelowRoom(entity))
+            {
+                newRoom = GetRoom(room.SeaX, room.SeaY + 1);
+
+                if (newRoom == null)
+                {
+                    return;
+                }
+
+                entity.Y = -entity.Height + 1;
             }
 
             if (newRoom != null)
