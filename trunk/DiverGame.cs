@@ -121,6 +121,8 @@ namespace DB.DoF
             sea = new Sea("sea", 2, 2, 1, 0);
 
             // TODO: use this.Content to load your game content 
+
+            Console.WriteLine(GraphicsDevice.GraphicsDeviceCapabilities.MaxPixelShaderProfile);
         }
 
         void PlaySound(Button sender, int x, int y, MouseButton button)
@@ -181,7 +183,7 @@ namespace DB.DoF
             graphics.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
             graphics.GraphicsDevice.SamplerStates[0].MagFilter = TextureFilter.None;
             waterEffect.Begin();
-            waterEffect.Parameters["time"].SetValue(gameTime.TotalGameTime.Ticks / 1000.0f);
+            waterEffect.Parameters["time"].SetValue(gameTime.TotalGameTime.Ticks / 3000000.0f);
             waterEffect.CurrentTechnique.Passes[0].Begin();
             graphics.Draw(renderTarget.GetTexture(),
                           new Rectangle(0, 0, 800, Room.HeightInTiles*16*2),
