@@ -74,13 +74,16 @@ namespace DB.DoF.Entities
 
         public override void Draw(DB.Gui.Graphics g, Microsoft.Xna.Framework.GameTime gameTime, Room.Layer layer)
         {
-            g.Begin();
-
-            foreach(Fishy fish in fishies)
+            if (layer == Room.Layer.Background)
             {
-                fish.Draw(g, gameTime, layer);
+                g.Begin();
+
+                foreach (Fishy fish in fishies)
+                {
+                    fish.Draw(g, gameTime, layer);
+                }
+                g.End();
             }
-            g.End();
         }
 
         public override void Update(State s, Room room)

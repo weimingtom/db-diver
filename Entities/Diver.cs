@@ -101,6 +101,19 @@ namespace DB.DoF.Entities
 
             if (Oxygen > MaxOxygen)
                 Oxygen = MaxOxygen;
+
+            if (s.Time.TotalGameTime.Seconds % 4 == 1 && s.Time.TotalGameTime.Milliseconds % 1000 < 500)
+            {
+                if (DiverGame.Random.Next(10) == 0)
+                {
+                    room.AddEntity(Particle.MakeBigBubble(new Point(X + Width / 2, Y)));
+                }
+
+                if (DiverGame.Random.Next(5) == 0)
+                {
+                    room.AddEntity(Particle.MakeSmallBubble(new Point(X + Width / 2, Y)));
+                }
+            }
         }
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)

@@ -16,5 +16,14 @@
 000000000................
 333333333........33333333
 
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
+// public Decoration(string spriteGridName, int sprites, int animationSpeed, int x, int y, Room.Layer layer)
 Shoal()
+Decoration("bgcave01", 1, 0, 0, 0, Room.Layer.Background, new Color(46, 162, 200))
+Shoal()
+Decoration("bgcave02", 1, 0, 0, 0, Room.Layer.Background, new Color(8, 119, 156))
+Decoration("bgcave03", 1, 0, 0, 0, Room.Layer.Background, new Color(0, 77, 102))
+Decoration("bgcave04", 1, 0, 0, 0, Room.Layer.Background, new Color(0, 44, 58))
+Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
+
+
+

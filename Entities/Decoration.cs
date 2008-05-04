@@ -13,16 +13,23 @@ namespace DB.DoF.Entities
         int animationGridFrame;
         int sprites;
         int animationSpeed;
+        Color color;
 
         Room.Layer layer;
 
         public Decoration(string spriteGridName, int sprites, int animationSpeed, int x, int y, Room.Layer layer)
+            :
+            this(spriteGridName, sprites, animationSpeed, x, y, layer, Color.White)
+        { }
+
+        public Decoration(string spriteGridName, int sprites, int animationSpeed, int x, int y, Room.Layer layer, Color color)
         {
             X = x * 16;
             Y = y * 16;
             this.layer = layer;
             this.sprites = sprites;
             this.animationSpeed = animationSpeed;
+            this.color = color;
             animationGrid = new SpriteGrid(spriteGridName, sprites, 1);
             Width = animationGrid.FrameSize.X;
             Height = animationGrid.FrameSize.Y;
@@ -33,7 +40,7 @@ namespace DB.DoF.Entities
             g.Begin();
 
             if (layer == this.layer)
-                animationGrid.Draw(g, new Point(X, Y), animationGridFrame % sprites);
+                animationGrid.Draw(g, new Point(X, Y), animationGridFrame % sprites, color);
 
             g.End();
         }
@@ -42,7 +49,7 @@ namespace DB.DoF.Entities
         {
             base.Update(s, room);
 
-            if (s.Time.TotalGameTime.Milliseconds % animationSpeed == 0)
+            if (animationSpeed != 0 && s.Time.TotalGameTime.Milliseconds % animationSpeed == 0)
             {
                 animationGridFrame++;
             }

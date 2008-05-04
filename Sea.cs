@@ -192,7 +192,7 @@ namespace DB.DoF
         {
             g.PushClipRectangle(new Rectangle(0, 0, room.Size.X, room.Size.Y));
             g.Begin();
-            g.Draw(DiverGame.White, new Rectangle(0, 0, room.Size.X, room.Size.Y), Color.CornflowerBlue);
+            g.Draw(DiverGame.White, new Rectangle(0, 0, room.Size.X, room.Size.Y), new Color(74, 193, 231));
             g.End();
             room.Draw(g, gt);
             g.PopClipRectangle();
