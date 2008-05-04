@@ -63,8 +63,7 @@ namespace DB.DoF
             // or, to load a saved game (also preloads rooms)
             // LoadState();
            
-            panel = DiverGame.DefaultContent.Load<Texture2D>("panel");
-            boat = Room.FromFile(DiverGame.DefaultContent.RootDirectory + "/" + name + "_boat.room", tileSet, false, this);
+            panel = DiverGame.DefaultContent.Load<Texture2D>("panel");            
 
             speedyDiver = new SpeedyDiver();
             fattyDiver = new FattyDiver();
@@ -81,7 +80,6 @@ namespace DB.DoF
             boat.AddEntity(fattyDiver);
             boat.AddEntity(tinyDiver);
 
-            rooms[DiverGame.DefaultContent.RootDirectory + "/" + name + "_boat.room"] = boat;
             EnterBoat();
         }
 
@@ -94,16 +92,18 @@ namespace DB.DoF
                     LoadRoom(x, y, skipPersistent);
                 }
             }
+
+            boat = LoadRoom(Name + "_boat", firstRoomX, firstRoomY - 1, skipPersistent);
         }
 
-        void LoadRoom(int x, int y, bool skipPersistent)
+        Room LoadRoom(string filename, int x, int y, bool skipPersistent)
         {
-            string filename = DiverGame.DefaultContent.RootDirectory + "/" + Name + "_" + x + "_" + y + ".room";
+            string path = DiverGame.DefaultContent.RootDirectory + "/" + filename + ".room";
 
             Room room;
             try
             {
-                room = Room.FromFile(filename, tileSet, skipPersistent, this);
+                room = Room.FromFile(path, tileSet, skipPersistent, this);
                 rooms[filename] = room;
             }
             catch (FileNotFoundException e)
@@ -119,11 +119,18 @@ namespace DB.DoF
             }
 
             rooms[filename] = room;
+            return room;
+        }
+
+        void LoadRoom(int x, int y, bool skipPersistent)
+        {
+            string filename = Name + "_" + x + "_" + y;
+            LoadRoom(filename, x, y, skipPersistent);
         }
 
         Room GetRoom(int x, int y)
         {
-            string filename = DiverGame.DefaultContent.RootDirectory + "/" + Name + "_" + x + "_" + y + ".room";
+            string filename = Name + "_" + x + "_" + y;
 
             if (!rooms.ContainsKey(filename))
             {
@@ -173,6 +180,8 @@ namespace DB.DoF
             fattyDiver.Y = 224 - fattyDiver.Height;
             tinyDiver.X = 230;
             tinyDiver.Y = 224 - tinyDiver.Height;
+
+            SaveState();
         }
 
         void OnLeftBoat(Entity entity)
@@ -264,6 +273,11 @@ namespace DB.DoF
         public void Update(State s)
         {
             isMiniMapShowing ^= s.Input.WasPressed(Input.Action.Map);
+
+            if (s.Input.WasPressed(Input.Action.Item1))
+            {
+                // LoadState();
+            }
 
             foreach(KeyValuePair<string, Room> keyValuePair in rooms)
             {
@@ -378,6 +392,8 @@ namespace DB.DoF
                     rooms[roomname].LoadState(r);
                 }
             }
+
+            EnterBoat();
         }
 
         public bool IsDiverOnBoat()

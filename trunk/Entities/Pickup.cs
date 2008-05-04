@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DB.DoF.Entities
 {
-    public class Pickup : Entity
+    public class Pickup : PersistentEntity
     {
         readonly public ITool Tool;
         string text;
@@ -21,6 +21,11 @@ namespace DB.DoF.Entities
             X = x;
             startY = Y = y;
             Size = new Point(16, 16);
+        }
+
+        protected override string[] GetConstructorArguments()
+        {
+            return new string[] { X.ToString(), startY.ToString(), "new " + Tool.GetType().Name + "()", Quote(text) };
         }
 
         public override void Draw(DB.Gui.Graphics g, Microsoft.Xna.Framework.GameTime gameTime, Room.Layer layer)
