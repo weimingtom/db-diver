@@ -28,7 +28,6 @@ namespace DB.DoF.Entities
         public Inventory(int x, int y, ITool[] tools)
         :this(x, y)
         {
-            ITool[] ted = new ITool[] { null, null, null };
             foreach (ITool tool in tools)
             {
                 this.tools.Add(tool);
@@ -59,14 +58,35 @@ namespace DB.DoF.Entities
                 }
                 g.Draw(tool.Icon, new Point(X + x, Y + y), Color.White);
             }
+            if (diverInInventory)
+            {
+                if (isGUIActive)
+                {
+                    g.DrawStringShadowed(font,
+                     "Press Space to close inventory",
+                     new Rectangle(0, 100, 400, 20),
+                     TextAlignment.Center,
+                     Color.White);
+                }
+                else
+                {
+                    g.DrawStringShadowed(font,
+                     "Press Space to open inventory",
+                     new Rectangle(0, 100, 400, 20),
+                     TextAlignment.Center,
+                     Color.White);
+                }
+
+            }
 
             if (isGUIActive)
             {
                 g.DrawStringShadowed(font,
-                        "Press Space leave inventory",
-                        new Rectangle(0, 100, 400, 20),
-                        TextAlignment.Center,
-                        Color.White);
+                                     "Inventory!",
+                                     new Rectangle(0, 80, 400, 20),
+                                     TextAlignment.Center,
+                                     Color.White);
+
             }
 
             g.End();
@@ -77,7 +97,7 @@ namespace DB.DoF.Entities
         {
             if (isGUIActive)
             {
-                if(s.Input.WasPressed(Input.Action.Select))
+                if (s.Input.WasPressed(Input.Action.Select))
                 {
                     isGUIActive = false;
                     room.Diver.Freeze = false;
@@ -87,22 +107,21 @@ namespace DB.DoF.Entities
             }
             else
             {
-                bool collidingWithDiver = false;
-                foreach (Entity entity in room.GetCollidingEntities<Diver>(this))
-                {
-                    if (room.Diver == entity)
-                    {
-                        collidingWithDiver = true;
-                    }
-                }
-                
-                if (!diverInInventory && collidingWithDiver)
+                if (s.Input.WasPressed(Input.Action.Select))
                 {
                     isGUIActive = true;
                     room.Diver.Freeze = true;
                 }
-                diverInInventory = collidingWithDiver;
+            }
 
+            diverInInventory = false;
+            foreach (Entity entity in room.GetCollidingEntities<Diver>(this))
+            {
+                if (room.Diver == entity)
+                {
+                    diverInInventory = true;
+                    break;
+                }
             }
         }
 
