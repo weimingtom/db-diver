@@ -10,13 +10,14 @@ float4 ripple2( float2 Tex : TEXCOORD0 ) : COLOR0
     {
 		for(int y=-1; y<2; y++)
 		{
-			float2 offset = float2((x - 0.5f) / (512.0f * 3.0f), (y - 0.5f) / (512.0f * 3.0f));
+			float2 offset = float2((x - 0.5f) / (512.0f * 3.5f), (y - 0.5f) / (512.0f * 3.5f));
 			Color += tex2D(samplerState, Tex + offset + float2(sin(time + Tex.y * 30),sin(time + Tex.x * 30)) * 0.001);
 		}
     }
         
     return Color / 9.0f;
 }
+
 /*
 float4 ripple3( float2 Tex : TEXCOORD0 ) : COLOR0
 {
