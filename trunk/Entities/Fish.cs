@@ -40,7 +40,7 @@ namespace DB.DoF.Entities
             this.position.X = x*16;
             this.position.Y = y*16;
             r = DiverGame.Random;
-
+            TriggerNewSpeedTarget();
             this.layer = layer;
             this.sprites = sprites;
             animationGrid = new SpriteGrid(spriteGridName, sprites, 1);
@@ -74,25 +74,29 @@ namespace DB.DoF.Entities
 
             base.X = (int)position.X;
             base.Y = (int)position.Y;
-            /*
+            
             if (r.Next(400) == 0)
             {
-                xSpeed.Target = (float)(r.NextDouble()*1-0.5f);
-                ySpeed.Target = (float)(r.NextDouble() * 0.6 - 0.3f);
+                TriggerNewSpeedTarget();
             }
-            */ 
+             
             if (position.X < 0 && xSpeed.Target < 0 ||
                 position.X > room.TileMap.SizeInPixels.X && xSpeed.Diff > 0) xSpeed.Target *= -1;
             if (position.Y < 0 && ySpeed.Target < 0 ||
                 position.Y > room.TileMap.SizeInPixels.Y && ySpeed.Diff > 0) ySpeed.Target *= -1;
+        }
+        
+        private void TriggerNewSpeedTarget()
+        {
+            xSpeed.Target = (float)(r.NextDouble() * 1 - 0.5f);
+            ySpeed.Target = (float)(r.NextDouble() * 0.6 - 0.3f);
         }
 
         public override void OnMessageReceived(string channel, string message, Entity sender)
         {
             if (channel == "buttondown")
             {
-                xSpeed.Target = (float)(r.NextDouble() * 1 - 0.5f);
-                ySpeed.Target = (float)(r.NextDouble() * 0.6 - 0.3f);
+                TriggerNewSpeedTarget();
             }
 
         }
