@@ -43,6 +43,9 @@ namespace DB.DoF.Entities
             base.Update(s, room);
             Vector2 direction = new Vector2((float)((TargetX - x) * (DiverGame.Random.NextDouble() * 0.2f + 0.8f)), 
                                             (float)((TargetY - y) * (DiverGame.Random.NextDouble() * 0.2f + 0.8f)));
+
+
+
             if(direction.LengthSquared() > 0)
                 direction.Normalize();
 
@@ -50,6 +53,10 @@ namespace DB.DoF.Entities
             speedY += direction.Y * 0.007f;
             speedX *= 0.999f;
             speedY *= 0.999f;
+
+            float speed = (float)Math.Sqrt(speedX * speedX + speedY * speedY);
+            animationGridFrame += speed * 0.25f + 0.03f;
+
             x += speedX;
             y += speedY;
             X = (int)x;
@@ -110,10 +117,6 @@ namespace DB.DoF.Entities
             {
                 fish.TargetX = targetX.Value + DiverGame.Random.Next(40) - 80;
                 fish.TargetY = targetY.Value + DiverGame.Random.Next(40) - 80;
-            }
-
-            foreach (Fishy fish in fishies)
-            {
                 fish.Update(s, room);
             }
         }
