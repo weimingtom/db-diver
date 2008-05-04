@@ -223,8 +223,14 @@ namespace DB.DoF
             g.Draw(panel, new Point(0, 0), Color.White);
             g.Draw(DiverGame.White, new Rectangle(16, 4, (122 * diver.Oxygen) / Diver.MaxOxygen, 4), new Color(199, 77, 77));
 
-            g.Draw(currentRoom.Diver.Tool1.Icon, new Point(151, 6), Color.White);
-            
+            ITool tool1 = currentRoom.Diver.Tool1;
+            ITool tool2 = currentRoom.Diver.Tool2;
+
+            if(tool1 != null)
+                g.Draw(tool1.Icon, new Point(151, 6), Color.White);
+            if (tool2 != null)
+                g.Draw(tool2.Icon, new Point(171, 6), Color.White);
+
             g.End();
             g.PopClipRectangle();
 
