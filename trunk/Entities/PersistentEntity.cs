@@ -10,15 +10,9 @@ namespace DB.DoF.Entities
         {
             StringBuilder sb = new StringBuilder(this.GetType().Name + "(");
             string[] args = GetConstructorArguments();
-            for (int i = 0; i < args.Length; i++)
-            {
-                if (i != 0)
-                {
-                    sb.Append(", ");
-                }
+            String s = CommaSeparate(args);
+            sb.Append(s);
 
-                sb.Append(args[i]);
-            }
             sb.Append(")");
             return sb.ToString();
         }
@@ -28,6 +22,21 @@ namespace DB.DoF.Entities
         protected static string Quote(string s)
         {
             return '"' + s + '"';
+        }
+
+        public static string CommaSeparate(string[] args)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (i != 0)
+                {
+                    sb.Append(", ");
+                }
+
+                sb.Append(args[i]);
+            }
+            return sb.ToString();
         }
     }
 }

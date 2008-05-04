@@ -6,9 +6,26 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DB.DoF.Entities
 {
-    public class Inventory : Entity
+    public class Inventory : PersistentEntity
     {
-        IList<ITool> tools = new List<ITool>();
+        List<ITool> tools = new List<ITool>();
+
+        public Inventory(int x, int y)
+        {
+            this.X = x;
+            this.Y = y;
+        }
+
+        public Inventory(int x, int y, ITool[] tools)
+        {
+            this.X = x;
+            this.Y = y;
+            ITool[] ted = new ITool[] { null, null, null };
+            foreach (ITool tool in tools)
+            {
+                this.tools.Add(tool);
+            }
+        }
 
         public void AddTool(ITool tool)
         {
@@ -43,6 +60,27 @@ namespace DB.DoF.Entities
             {
                 AddTool((ITool)obj);
             }
+        }
+
+
+        protected override string[] GetConstructorArguments()
+        {
+            string[] toolConstructorStrings = new string[tools.Count];
+
+            foreach (ITool tool in tools)
+            {
+                int i = 0;
+                i++;
+
+                toolConstructorStrings[i] = tool.GetType().Name + "()";
+            }
+
+            string[] arguments = new string[] {
+            "" + X,
+            "" + Y,
+            "new ITool[] {" + CommaSeparate(toolConstructorStrings) + "}"
+            }; 
+            return arguments;
         }
     }
 }
