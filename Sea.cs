@@ -74,7 +74,7 @@ namespace DB.DoF
             // LoadState();
            
             panel = DiverGame.DefaultContent.Load<Texture2D>("panel");
-            boat = Room.FromFile(DiverGame.DefaultContent.RootDirectory + "/" + name + "_boat.room", tileSet, false);
+            boat = Room.FromFile(DiverGame.DefaultContent.RootDirectory + "/" + name + "_boat.room", tileSet, false, this);
             rooms[DiverGame.DefaultContent.RootDirectory + "/" + name + "_boat.room"] = boat;
             EnterBoat();
         }
@@ -97,7 +97,7 @@ namespace DB.DoF
             Room room;
             try
             {
-                room = Room.FromFile(filename, tileSet, skipPersistent);
+                room = Room.FromFile(filename, tileSet, skipPersistent, this);
                 rooms[filename] = room;
             }
             catch (FileNotFoundException e)

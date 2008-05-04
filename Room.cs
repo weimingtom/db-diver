@@ -32,6 +32,7 @@ namespace DB.DoF
         IList<Entity> entities = new List<Entity>();
         Diver diver;
         Texture2D glowTexture;
+        public Sea Sea;
 
         public Diver Diver
         {
@@ -45,15 +46,16 @@ namespace DB.DoF
             get { return diver; }
         }
 
-        public Room(SpriteGrid tileSet)
+        public Room(SpriteGrid tileSet, Sea sea)
         {
             TileMap = new TileMap(tileSet, WidthInTiles, HeightInTiles);
             glowTexture = DiverGame.DefaultContent.Load<Texture2D>("glow");
+            this.Sea = sea;
         }
 
-        public static Room FromFile(string filename, SpriteGrid tileSet, bool skipPersistent)
+        public static Room FromFile(string filename, SpriteGrid tileSet, bool skipPersistent, Sea sea)
         {
-            Room room = new Room(tileSet);
+            Room room = new Room(tileSet, sea);
 
             using (TextReader r = new StreamReader(filename))
             {
@@ -221,7 +223,7 @@ namespace DB.DoF
 
             foreach (Entity e in entities)
             {
-                if (typeof(T).IsAssignableFrom(e.GetType()) && e.Dimension.Intersects(entity.Dimension))
+                if (typeof(T).IsAssignableFrom(e.GetType()) && e.Dimension.Intersects(entity.Dimension) && e != entity)
                 {
                     result.Add((T)e);
                 }

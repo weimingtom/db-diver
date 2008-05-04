@@ -17,3 +17,4 @@
 3333333333333333333333333
 
 Fish("small_fish", 4, 2, 7, Room.Layer.Background)
+Fish("small_fish", 4, 2, 12, Room.Layer.Background)
