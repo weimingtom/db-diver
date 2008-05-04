@@ -10,16 +10,19 @@ namespace DB.DoF.Entities
     public class Box : PersistentEntity
     {
         Texture2D texture;
+        int Weight;
 
-        public Box(string texture, int x, int y)
+        public Box(string texture, int x, int y, int weight)
         {
             this.texture = DiverGame.DefaultContent.Load<Texture2D>(texture);
             this.texture.Name = texture;
+            this.Weight = weight;
             this.X = x;
             this.Y = y;
             this.Width = this.texture.Width;
             this.Height = this.texture.Height;
             this.IsTransitionable = true;
+            this.IsSolid = true;
         }
 
         public override bool IsUpdateNeeded(Room room)
@@ -50,7 +53,10 @@ namespace DB.DoF.Entities
                 d.Inflate(1, 0);
                 if (d.Intersects(Dimension))
                 {
-                    Velocity.X += room.Diver.Velocity.X;
+                    if (Math.Sign(Center.X - room.Diver.Center.X) == Math.Sign(room.Diver.AppliedForce.X))
+                    {
+                        Velocity.X += (Resolution / Weight) * Math.Sign(room.Diver.AppliedForce.X) * Math.Max(Math.Abs(room.Diver.AppliedForce.X) - Weight, 0);
+                    }
                 }
             }
 

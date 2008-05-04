@@ -237,6 +237,21 @@ namespace DB.DoF
             return result;
         }
 
+        public IList<Entity> GetCollidingSolidEntities(Rectangle rect)
+        {
+            IList<Entity> result = new List<Entity>();
+
+            foreach (Entity e in entities)
+            {
+                if (e.IsSolid && e.Dimension.Intersects(rect))
+                {
+                    result.Add(e);
+                }
+            }
+
+            return result;
+        }
+
         public bool IsEntityLeftOfRoom(Entity entity)
         {
             return entity.X + entity.Width < 0;

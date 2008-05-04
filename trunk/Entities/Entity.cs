@@ -13,7 +13,14 @@ namespace DB.DoF.Entities
         Point position;
         public Point Velocity;
         public Boolean CleanUpOnRoomLeft = false;
-        bool isTransitionable;
+        bool isTransitionable = false;
+        bool isSolid = false;
+
+        public bool IsSolid
+        {
+            get { return isSolid; }
+            protected set { isSolid = value; }
+        }
 
         public bool IsTransitionable
         {
@@ -61,17 +68,21 @@ namespace DB.DoF.Entities
             get { return new Rectangle(X, Y, Width, Height); }
         }
 
-
         public Point TopCenter
         {
             get { return new Point(X + Width / 2, Y); }
         }
 
-        public void MoveWithCollision(Room room)
+        public Point Center
         {
+            get { return new Point(X + Width / 2, Y + Height / 2); }
+        }
+
+        public void MoveWithCollision(Room room)
+        {            
             if (Velocity.X > 0)
-            {
-                int x = ((position.X + Velocity.X) / Resolution + Width) / room.TileMap.TileSize.X;
+            {                
+                int x = ((position.X + Velocity.X) / Resolution + Width) / room.TileMap.TileSize.X;                
              
                 int yStart = Y / room.TileMap.TileSize.Y;
                 int yEnd = (Y + Height - 2) / room.TileMap.TileSize.Y;
@@ -83,6 +94,19 @@ namespace DB.DoF.Entities
                         X = x * room.TileMap.TileSize.X - Width;
                         Velocity.X = 0;
                         break;
+                    }                    
+                }
+
+                if (Velocity.X != 0)
+                {
+                    IList<Entity> solids = room.GetCollidingSolidEntities(new Rectangle((position.X + Velocity.X) / Resolution, Y, Width, Height));
+
+                    foreach (Entity s in solids)
+                    {
+                        if (s == this) continue;
+
+                        X = s.X - Width;
+                        Velocity.X = 0;
                     }
                 }
             }
@@ -100,6 +124,19 @@ namespace DB.DoF.Entities
                         X = (1 + x) * room.TileMap.TileSize.X;
                         Velocity.X = 0;
                         break;
+                    }
+                }
+
+                if (Velocity.X != 0)
+                {
+                    IList<Entity> solids = room.GetCollidingSolidEntities(new Rectangle((position.X + Velocity.X) / Resolution, Y, Width, Height));
+
+                    foreach (Entity s in solids)
+                    {
+                        if (s == this) continue;
+
+                        X = s.X + s.Width;
+                        Velocity.X = 0;
                     }
                 }
             }
@@ -120,6 +157,19 @@ namespace DB.DoF.Entities
                         break;       
                     }
                 }
+
+                if (Velocity.Y != 0)
+                {
+                    IList<Entity> solids = room.GetCollidingSolidEntities(new Rectangle((position.X + Velocity.X) / Resolution, (position.Y + Velocity.Y) / Resolution, Width, Height));
+
+                    foreach (Entity s in solids)
+                    {
+                        if (s == this) continue;
+
+                        Y = s.Y - Height;
+                        Velocity.Y = 0;
+                    }
+                }
             }
             else if (Velocity.Y < 0)
             {
@@ -135,6 +185,19 @@ namespace DB.DoF.Entities
                         Y = (1 + y) * room.TileMap.TileSize.Y;
                         Velocity.Y = 0;
                         break;
+                    }
+                }
+
+                if (Velocity.Y != 0)
+                {
+                    IList<Entity> solids = room.GetCollidingSolidEntities(new Rectangle((position.X + Velocity.X) / Resolution, (position.Y + Velocity.Y) / Resolution, Width, Height));
+
+                    foreach (Entity s in solids)
+                    {
+                        if (s == this) continue;
+
+                        Y = s.Y + s.Height;
+                        Velocity.Y = 0;
                     }
                 }
             }
@@ -163,7 +226,9 @@ namespace DB.DoF.Entities
                 }
             }
 
-            return false;
+            IList<Entity> solids = room.GetCollidingSolidEntities(new Rectangle(X, Y + Height, Width, 1));
+
+            return solids.Count > 0 && !(solids.Count == 1 && solids.Contains(this));
         }
 
         public bool IsTileSolidAbove(Room room)

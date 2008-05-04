@@ -107,7 +107,7 @@ namespace DB.DoF.Entities
                                 new Color(255, 255, 255, 255),
                                 SpriteBlendMode.Additive,
                                 Room.Layer.Player,
-                                0.02f, 20);
+                                0.015f, 20);
         }
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
@@ -118,7 +118,7 @@ namespace DB.DoF.Entities
 
                 if (timeToLive > 0)
                 {
-                    c = new Color(c.R, c.G, c.B, (byte)(color.A * (frame / timeToLive)));
+                    c = new Color(c.R, c.G, c.B, (byte)(color.A * (1.0f - (frame / timeToLive))));
                 }
 
                 g.Begin(blend);
