@@ -31,22 +31,10 @@ namespace DB.DoF
         public bool LeaveRoomEnabled = true;
         public TileMap TileMap;
         IList<Entity> entities = new List<Entity>();
-        Diver diver;
         Texture2D glowTexture;
         public Sea Sea;
         public int SeaX, SeaY;
-
-        public Diver Diver
-        {
-            set
-            {
-                entities.Remove(diver);
-                diver = value;
-                entities.Add(diver);
-            }
-
-            get { return diver; }
-        }
+        public Diver Diver;
 
         public Room(SpriteGrid tileSet, Sea sea)
         {
@@ -173,17 +161,17 @@ namespace DB.DoF
         public void Draw(Gui.Graphics g, GameTime gt)
         {
             foreach (Layer layer in Enum.GetValues(typeof(Layer)))
-            {
-                if (layer == Layer.Player)
-                {
-                    diver.Draw(g, gt, layer);
-                    TileMap.Draw(g);
-                }
-
+            {              
                 foreach (Entity entity in entities)
                 {
-                    if (entity != diver)
+                    if (entity != Diver)
                         entity.Draw(g, gt, layer);
+                }
+
+                if (layer == Layer.Player)
+                {
+                    Diver.Draw(g, gt, layer);
+                    TileMap.Draw(g);
                 }
             }
 
@@ -197,6 +185,8 @@ namespace DB.DoF
 
         public void Update(State s, bool isActive)
         {
+            LeaveRoomEnabled = true;
+
             List<Entity> entitiesCopy = new List<Entity>(entities);
             foreach (Entity entity in entitiesCopy)
             {
@@ -305,6 +295,12 @@ namespace DB.DoF
                     entities.Remove(entity);
                 }
             }
+        }
+
+        public void OnDiverChange(Diver diver)
+        {
+            Diver = diver;
+            Sea.onDiverChange(diver);
         }
     }
 }

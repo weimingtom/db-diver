@@ -10,12 +10,16 @@ namespace DB.DoF.Entities
     {
         public FattyDiver()
         {
-            Size = new Point(16, 32);
-            //Speed = 1;
+            Size = new Point(16, 40);
+            WalkingGrid = new SpriteGrid("fatty_walking", 6, 1);
+            JumpingGrid = new SpriteGrid("fatty_jumping", 1, 1);
+            Name = "Fatty";
+            originalBoatPosition = new Point(200, 224 - Height);
         }
 
-        public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
+        public override void Update(State s, Room room)
         {
+            base.Update(s, room);
         }
     }
 }

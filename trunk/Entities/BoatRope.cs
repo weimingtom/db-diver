@@ -45,16 +45,20 @@ namespace DB.DoF.Entities
             {
                 g.Begin();
                 ropeGrid.Draw(g, new Point(190, -20 + offsetY), diverFreezed?1:0);
+                g.End();
+            }
 
+            if (layer == Room.Layer.Foreground)
+            {
+                g.Begin();
                 if (collisionWithDiver && diverFreezed && !surface)
                 {
-                    g.DrawStringShadowed(font, 
-                                         "Press Space to surface", 
-                                         new Rectangle(0, 100, 400, 20), 
-                                         TextAlignment.Center, 
+                    g.DrawStringShadowed(font,
+                                         "Press Space to surface",
+                                         new Rectangle(0, 100, 400, 20),
+                                         TextAlignment.Center,
                                          Color.White);
                 }
-
                 g.End();
             }
         }
@@ -65,6 +69,8 @@ namespace DB.DoF.Entities
 
             if (surface)
             {
+                room.LeaveRoomEnabled = false;
+
                 offsetY += pullSpeed;
                 room.Diver.Y += pullSpeed;
 
@@ -86,7 +92,6 @@ namespace DB.DoF.Entities
                 if (frameCounter > 240)
                 {
                     Reset();
-                    room.LeaveRoomEnabled = true;
                     room.Diver.Freeze = false;
                     room.SurfaceDiver();
                 }
@@ -115,7 +120,6 @@ namespace DB.DoF.Entities
 
             if (collisionWithDiver && s.Input.WasPressed(Input.Action.Select))
             {
-                room.LeaveRoomEnabled = false;
                 surface = true;
                 pullSpeed = 2;
                 frameCounter = 0;

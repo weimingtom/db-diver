@@ -56,11 +56,6 @@ namespace DB.DoF
 
             tileSet = new SpriteGrid(DiverGame.DefaultContent.Load<Texture2D>("tileset"), 4, 4);
 
-            speedyDiver = new SpeedyDiver();
-            fattyDiver = new FattyDiver();
-            tinyDiver = new TinyDiver();
-            diver = speedyDiver;
-
             miniMap = new MiniMap(this);
 
             // To load new game...
@@ -70,6 +65,22 @@ namespace DB.DoF
            
             panel = DiverGame.DefaultContent.Load<Texture2D>("panel");
             boat = Room.FromFile(DiverGame.DefaultContent.RootDirectory + "/" + name + "_boat.room", tileSet, false, this);
+
+            speedyDiver = new SpeedyDiver();
+            fattyDiver = new FattyDiver();
+            tinyDiver = new TinyDiver();
+            speedyDiver.X = 170;
+            speedyDiver.Y = 224 - speedyDiver.Height;
+            fattyDiver.X = 200;
+            fattyDiver.Y = 224 - fattyDiver.Height;
+            tinyDiver.X = 230;
+            tinyDiver.Y = 224 - tinyDiver.Height;
+
+            diver = speedyDiver;
+            diver.Enabled = true;
+            boat.AddEntity(fattyDiver);
+            boat.AddEntity(tinyDiver);
+
             rooms[DiverGame.DefaultContent.RootDirectory + "/" + name + "_boat.room"] = boat;
             EnterBoat();
         }
@@ -124,8 +135,9 @@ namespace DB.DoF
 
         void MakeRoomActive(int x, int y)
         {
-            currentRoom = GetRoom(x, y);
+            currentRoom.RemoveEntity(diver);
             currentRoom.OnDiverLeftRoom();
+            currentRoom = GetRoom(x, y);
 
             if (currentRoom == null)
             {
@@ -133,6 +145,7 @@ namespace DB.DoF
             }
 
             currentRoom.Diver = diver;
+            currentRoom.AddEntity(diver);
 
             miniMap.Discover(currentRoom);
             diver.OxygenDecrease = true;
@@ -143,17 +156,23 @@ namespace DB.DoF
         public void EnterBoat()
         {
             if (currentRoom != null)
+            {
+                currentRoom.RemoveEntity(diver);
                 currentRoom.OnDiverLeftRoom();
+            }
 
             currentRoom = boat;
-            diver.X = 200;
-            diver.Y = 200;
             currentRoom.Diver = diver;
-            currentRoom.SeaX = firstRoomX;
-            currentRoom.SeaY = firstRoomY - 1;
+            currentRoom.AddEntity(diver);
             diver.OxygenDecrease = false;
             diver.OxygenIncrease = true;
             diver.JumpEnabled = false;
+            speedyDiver.X = 170;
+            speedyDiver.Y = 224 - speedyDiver.Height;
+            fattyDiver.X = 200;
+            fattyDiver.Y = 224 - fattyDiver.Height;
+            tinyDiver.X = 230;
+            tinyDiver.Y = 224 - tinyDiver.Height;
         }
 
         void OnLeftBoat(Entity entity)
@@ -364,6 +383,11 @@ namespace DB.DoF
         public bool IsDiverOnBoat()
         {
             return currentRoom == boat;
+        }
+
+        public void onDiverChange(Diver diver)
+        {
+            this.diver = diver;
         }
     }
 }

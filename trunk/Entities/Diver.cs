@@ -22,24 +22,66 @@ namespace DB.DoF.Entities
         public Point AppliedForce;
         protected SpriteGrid WalkingGrid;
         protected SpriteGrid JumpingGrid;
+        protected String Name;
+        protected Point originalBoatPosition;
 
         SpriteEffects spriteEffects = SpriteEffects.None;
+        SpriteFont font;
 
         public ITool Tool1;
         public ITool Tool2;
 
         int walkingGridFrame = 3;
         public int JumpVelocity;
-        bool isOnGround;
+        bool isOnGround = true;
         public bool OxygenDecrease = true;
         public bool OxygenIncrease = false;
         public bool Freeze = false;
         public bool JumpEnabled = true;
+        bool disabledThisFrame;
+        bool enabled;
+        public bool Enabled
+        {
+            set { enabled = value; if (!enabled) disabledThisFrame = true; }
+            get { return enabled; }
+        }
+
+
+
+        bool collisionWithDiver = false;
 
         public int Oxygen = MaxOxygen;
 
+        public Diver()
+        {
+            font = DiverGame.DefaultContent.Load<SpriteFont>("Font");
+        }
+
         public override void Update(State s, Room room)
         {
+            if (!Enabled)
+            {
+                collisionWithDiver = Dimension.Intersects(room.Diver.Dimension);
+
+                if (collisionWithDiver 
+                    && s.Input.WasPressed(Input.Action.Select)
+                    && !disabledThisFrame)
+                {
+                    int x = X;
+                    X = room.Diver.X;
+                    room.Diver.X = x;
+                    room.Diver.Enabled = false;
+                    Enabled = true;
+                    OxygenDecrease = false;
+                    OxygenIncrease = true;
+                    JumpEnabled = false;
+                    room.OnDiverChange(this);
+                }
+
+                disabledThisFrame = false;
+                return;
+            }
+
             if (!Freeze)
             {
                 isOnGround = IsTileSolidBelow(room);
@@ -143,8 +185,17 @@ namespace DB.DoF.Entities
             {
                 Point pos = new Point(Position.X - 2, Position.Y);
                 g.Begin();
+                if (collisionWithDiver && !Enabled)
+                {
+
+                    g.DrawStringShadowed(font,
+                                        "Press Space to select " + Name,
+                                        new Rectangle(0, 100, 400, 20),
+                                        TextAlignment.Center,
+                                        Color.White);
+                }
                 if (isOnGround)
-                    WalkingGrid.Draw(g, pos, walkingGridFrame / WalkAnimationSpeed, spriteEffects);
+                    WalkingGrid.Draw(g, new Point(pos.X, pos.Y - (WalkingGrid.FrameSize.Y - Height)), walkingGridFrame / WalkAnimationSpeed, spriteEffects);
                 else
                     JumpingGrid.Draw(g, new Point(pos.X, pos.Y - (JumpingGrid.FrameSize.Y - Height)), 1, spriteEffects);
                 g.End();
@@ -154,7 +205,6 @@ namespace DB.DoF.Entities
         public void kill()
         {
             Oxygen = 0;
-            
         }
     }
 }
