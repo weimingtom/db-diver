@@ -16,6 +16,7 @@ namespace DB.DoF
         public int Height;
         public string Name;
         IDictionary<string, Room> rooms = new Dictionary<string, Room>();
+
         int currentRoomX, currentRoomY, firstRoomX, firstRoomY;
         Room room;
         Room boat;
@@ -276,6 +277,15 @@ namespace DB.DoF
             {
                 room.RemoveEntity(entity);
                 newRoom.AddEntity(entity);
+            }
+        }
+
+        public void Broadcast(string channel, string message)
+        {
+            foreach (KeyValuePair<string, Room> keyValuePair in rooms)
+            {
+                if (keyValuePair.Value != null)
+                    keyValuePair.Value.Broadcast(channel, message);
             }
         }
 
