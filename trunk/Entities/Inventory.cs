@@ -63,7 +63,7 @@ namespace DB.DoF.Entities
                 if (isGUIActive)
                 {
                     g.DrawStringShadowed(font,
-                     "Press Space to close inventory",
+                     "Press Space when finished",
                      new Rectangle(0, 100, 400, 20),
                      TextAlignment.Center,
                      Color.White);
@@ -82,10 +82,16 @@ namespace DB.DoF.Entities
             if (isGUIActive)
             {
                 g.DrawStringShadowed(font,
-                                     "Inventory!",
+                                     "Equipt your diver!",
                                      new Rectangle(0, 80, 400, 20),
                                      TextAlignment.Center,
                                      Color.White);
+                x = 0;
+                foreach (ITool tool in tools)
+                {
+                    x += 16;
+                    g.Draw(tool.Icon, new Point(120 + x, 120), Color.White);
+                }
 
             }
 
@@ -95,6 +101,17 @@ namespace DB.DoF.Entities
 
         public override void Update(State s, Room room)
         {
+
+            diverInInventory = false;
+            foreach (Entity entity in room.GetCollidingEntities<Diver>(this))
+            {
+                if (room.Diver == entity)
+                {
+                    diverInInventory = true;
+                    break;
+                }
+            }
+
             if (isGUIActive)
             {
                 if (s.Input.WasPressed(Input.Action.Select))
@@ -107,20 +124,10 @@ namespace DB.DoF.Entities
             }
             else
             {
-                if (s.Input.WasPressed(Input.Action.Select))
+                if (s.Input.WasPressed(Input.Action.Select) && diverInInventory)
                 {
                     isGUIActive = true;
                     room.Diver.Freeze = true;
-                }
-            }
-
-            diverInInventory = false;
-            foreach (Entity entity in room.GetCollidingEntities<Diver>(this))
-            {
-                if (room.Diver == entity)
-                {
-                    diverInInventory = true;
-                    break;
                 }
             }
         }
