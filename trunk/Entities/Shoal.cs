@@ -11,6 +11,7 @@ namespace DB.DoF.Entities
         public float TargetX, TargetY;
         float x, y;
         float speedX, speedY;
+        float rotation;
         Color color;
 
         SpriteGrid animationGrid;
@@ -35,7 +36,8 @@ namespace DB.DoF.Entities
 
         public override void Draw(DB.Gui.Graphics g, GameTime gameTime, Room.Layer layer)
         {
-            animationGrid.Draw(g, Position, ((int)animationGridFrame) % sprites, (float)Math.Atan2(speedX, -speedY)-(float)Math.PI/2f, color);
+
+            animationGrid.Draw(g, Position, ((int)animationGridFrame) % sprites, rotation, color);
         }
 
         public override void Update(State s, Room room)
@@ -62,6 +64,11 @@ namespace DB.DoF.Entities
             X = (int)x;
             Y = (int)y;
 
+            float desiredRot = (float)Math.Atan2(speedX, -speedY) - (float)Math.PI / 2f;
+            float rotDiff = desiredRot - rotation;
+            if (rotDiff > MathHelper.Pi) rotDiff -= MathHelper.TwoPi;
+            if (rotDiff < -MathHelper.Pi) rotDiff += MathHelper.TwoPi;
+            rotation += rotDiff * 0.1f;
         }
     }
 

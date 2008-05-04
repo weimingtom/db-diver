@@ -120,11 +120,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="bubble.bmp">
-      <Name>bubble</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="bubblesmall.bmp">
       <Name>bubblesmall</Name>
       <Importer>TextureImporter</Importer>
@@ -170,6 +165,13 @@
     </Compile>
     <Compile Include="bgcave04.png">
       <Name>bgcave04</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="bubble.bmp">
+      <Name>bubble</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
