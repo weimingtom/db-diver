@@ -221,6 +221,11 @@ namespace DB.DoF.Entities
 
         public virtual void Update(State s, Room room) { }
 
+        public virtual void OnMessageReceived(string channel, string message)
+        {
+            //Default no-op
+        }
+
         public virtual bool IsTransitionable()
         {
             return false;

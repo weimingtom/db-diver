@@ -265,6 +265,14 @@ namespace DB.DoF
             entities.Add(entity);
         }
 
+        public void Broadcast(String channel, String message)
+        {
+            foreach (Entity entity in entities)
+            {
+                entity.OnMessageReceived(channel, message);
+            }
+        }
+
         public delegate void LeftRoomHandler(Entity entity);
         public event LeftRoomHandler OnLeftRoom;
     }
