@@ -147,6 +147,7 @@ namespace DB.DoF
                 boat.OnLeftRoom -= leftBoatHandler;
                 MakeRoomActive(firstRoomX, firstRoomY);
                 entity.Y = -entity.Height + 1;
+                entity.X = boat.Size.X / 2 - entity.Width / 2;
             }
         }
 
