@@ -32,7 +32,7 @@ namespace DB.DoF.Entities
 
         protected override string[] GetConstructorArguments()
         {
-            return new string[] { Quote(texture.Name), X.ToString(), Y.ToString() };
+            return new string[] { Quote(texture.Name), X.ToString(), Y.ToString(), Weight.ToString() };
         }
 
         public override void Draw(DB.Gui.Graphics g, Microsoft.Xna.Framework.GameTime gameTime, Room.Layer layer)

@@ -140,10 +140,9 @@ namespace DB.DoF.Entities
 
             foreach (ITool tool in tools)
             {
-                int i = 0;
+                int i = 0;               
+                toolConstructorStrings[i] = "new " + tool.GetType().Name + "()";
                 i++;
-
-                toolConstructorStrings[i] = tool.GetType().Name + "()";
             }
 
             string[] arguments = new string[] {

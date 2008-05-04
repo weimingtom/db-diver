@@ -126,7 +126,7 @@ namespace DB.DoF
                 sb.AppendLine("e = new " + line + ";");
                 if (skipPersistent)
                 {
-                    sb.AppendLine("if (e is PersistentEntity)");
+                    sb.AppendLine("if (!(e is PersistentEntity))");
                 }
                 sb.AppendLine("entities.Add(e);");
             }
