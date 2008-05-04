@@ -50,13 +50,11 @@ namespace DB.DoF.Entities
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
         {
-            //X = (int)position.X;
-            //Y = (int)position.Y;
 
             g.Begin();
 
             if (layer == Room.Layer.Player)
-                animationGrid.Draw(g, new Point((int)position.X, (int)position.Y), ((int)animationGridFrame) % sprites, xSpeed.Diff < 0 ? SpriteEffects.FlipHorizontally:SpriteEffects.None);
+                animationGrid.Draw(g, Position, ((int)animationGridFrame) % sprites, xSpeed.Diff < 0 ? SpriteEffects.FlipHorizontally:SpriteEffects.None);
 
             g.End();
         }
@@ -73,6 +71,9 @@ namespace DB.DoF.Entities
             position.X += xSpeed.Value;
             position.Y += ySpeed.Value;
 
+            base.X = (int)position.X;
+            base.Y = (int)position.Y;
+
             if (r.Next(400) == 0)
             {
                 xSpeed.Target = (float)(r.NextDouble()*1-0.5f);
@@ -84,6 +85,13 @@ namespace DB.DoF.Entities
                 position.Y > room.TileMap.SizeInPixels.Y && ySpeed.Diff > 0) ySpeed.Target *= -1;
 
 
+            foreach (Entity entity in room.GetCollidingEntities(this))
+            {
+                if (entity == room.Diver)
+                {
+                    xSpeed.Target *= 1.02f;
+                }
+            }
         }
 
         public override bool IsTransitionable()
