@@ -66,8 +66,8 @@ namespace DB.DoF.Entities
 
             float desiredRot = (float)Math.Atan2(speedX, -speedY) - (float)Math.PI / 2f;
             float rotDiff = desiredRot - rotation;
-            if (rotDiff > MathHelper.Pi) rotDiff -= MathHelper.TwoPi;
-            if (rotDiff < -MathHelper.Pi) rotDiff += MathHelper.TwoPi;
+            while (rotDiff > MathHelper.Pi) rotDiff -= MathHelper.TwoPi;
+            while (rotDiff < -MathHelper.Pi) rotDiff += MathHelper.TwoPi;
             rotation += rotDiff * 0.1f;
         }
     }
