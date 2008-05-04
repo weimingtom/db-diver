@@ -23,7 +23,10 @@ Shoal(new Color(8, 119, 156))
 Decoration("bgcave02", 1, 0, 0, 0, Room.Layer.Background, new Color(8, 119, 156))
 Decoration("bgcave03", 1, 0, 0, 0, Room.Layer.Background, new Color(0, 77, 102))
 Decoration("bgcave04", 1, 0, 0, 0, Room.Layer.Background, new Color(0, 44, 58))
-Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
+Fish("yellow_fish", 2, 2, 2, Room.Layer.Background)
+Fish("green_fish", 2, 12, 5, Room.Layer.Background)
+Fish("yellow_fish", 2, 3, 7, Room.Layer.Background)
+Fish("green_fish", 2, 6, 12, Room.Layer.Background)
 //Shoal(Color.Yellow)
 Box("tileset", 200, 200);
 
