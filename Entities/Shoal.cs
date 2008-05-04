@@ -112,7 +112,6 @@ namespace DB.DoF.Entities
 
             targetX.Update();
             targetY.Update();
-
             foreach (Fishy fish in fishies)
             {
                 fish.TargetX = targetX.Value + DiverGame.Random.Next(40) - 80;

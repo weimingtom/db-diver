@@ -51,7 +51,7 @@ namespace DB.DoF
             glowTexture = DiverGame.DefaultContent.Load<Texture2D>("glow");
         }
 
-        public static Room FromFile(string filename, SpriteGrid tileSet)
+        public static Room FromFile(string filename, SpriteGrid tileSet, bool skipPersistent)
         {
             Room room = new Room(tileSet);
 
@@ -71,15 +71,54 @@ namespace DB.DoF
                     }
                 }
 
-                room.LoadEntities(lines);
+                room.LoadEntities(lines, skipPersistent);
             }
 
             return room;
         }
 
-        void LoadEntities(IList<string> lines)
+        public void LoadState(TextReader r)
         {
+            int numLines = int.Parse(r.ReadLine());
+            IList<string> lines = new List<string>();
+            for (int i = 0; i < numLines; i++)
+            {
+                string linet = r.ReadLine().Trim(" \n\r\t".ToCharArray());
+                if (linet.Length > 0 && !linet.StartsWith("//"))
+                {
+                    System.Console.WriteLine(linet);
+                    lines.Add(linet);
+                }
+            }
 
+            if (lines.Count > 0)
+            {
+                LoadEntities(lines, false);
+            }
+        }
+
+        public void SaveState(TextWriter w)
+        {
+            IList<PersistentEntity> persistents = new List<PersistentEntity>();
+
+            foreach (Entity e in entities)
+            {
+                if (e is PersistentEntity)
+                {
+                    persistents.Add((PersistentEntity)e);
+                }
+            }
+
+            w.WriteLine(persistents.Count.ToString());
+
+            foreach (PersistentEntity p in persistents)
+            {
+                w.WriteLine(p.GetConstructorString());
+            }
+        }
+
+        void LoadEntities(IList<string> lines, bool skipPersistent)
+        {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("using System;");
             sb.AppendLine("using System.Collections.Generic;");
@@ -88,10 +127,15 @@ namespace DB.DoF
             sb.AppendLine("namespace DB.DoF {");
             sb.AppendLine("public class CSCodeEvaler {");
             sb.AppendLine("public void InsertEntities(IList<Entity> entities) {");
-
+            sb.AppendLine("Entity e;");
             foreach (string line in lines)
             {
-                sb.AppendLine("entities.Add(new " + line + ");");
+                sb.AppendLine("e = new " + line + ";");
+                if (skipPersistent)
+                {
+                    sb.AppendLine("if (e is PersistentEntity)");
+                }
+                sb.AppendLine("entities.Add(e);");
             }
 
             sb.AppendLine("}}}");

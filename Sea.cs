@@ -27,6 +27,7 @@ namespace DB.DoF
         Diver diver;
         MiniMap miniMap;
         Texture2D panel;
+        SpriteGrid tileSet;
         bool isMiniMapShowing;
 
         private class EntityTransition
@@ -54,6 +55,8 @@ namespace DB.DoF
             this.firstRoomX = firstRoomX;
             this.firstRoomY = firstRoomY;
 
+            tileSet = new SpriteGrid(DiverGame.DefaultContent.Load<Texture2D>("tileset"), 4, 4);
+
             speedyDiver = new SpeedyDiver();
             fattyDiver = new FattyDiver();
             tinyDiver = new TinyDiver();
@@ -64,23 +67,45 @@ namespace DB.DoF
 
             miniMap = new MiniMap(this);
 
-            preloadAllRooms();
+            // To load new game...
+            PreloadAllRooms(false);
+            // or, to load a saved game (also preloads rooms)
+            // LoadState();
            
             panel = DiverGame.DefaultContent.Load<Texture2D>("panel");
-            boat = Room.FromFile(DiverGame.DefaultContent.RootDirectory + "/" + name + "_boat.room", new SpriteGrid(DiverGame.DefaultContent.Load<Texture2D>("tileset"), 4, 4));
+            boat = Room.FromFile(DiverGame.DefaultContent.RootDirectory + "/" + name + "_boat.room", tileSet, false);
             rooms[DiverGame.DefaultContent.RootDirectory + "/" + name + "_boat.room"] = boat;
             EnterBoat();
         }
 
-        public void preloadAllRooms()
+        public void PreloadAllRooms(bool skipPersistent)
         {
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    GetRoom(x, y);
+                    LoadRoom(x, y, skipPersistent);
                 }
             }
+        }
+
+        void LoadRoom(int x, int y, bool skipPersistent)
+        {
+            string filename = DiverGame.DefaultContent.RootDirectory + "/" + Name + "_" + x + "_" + y + ".room";
+
+            Room room;
+            try
+            {
+                room = Room.FromFile(filename, tileSet, skipPersistent);
+                rooms[filename] = room;
+            }
+            catch (FileNotFoundException e)
+            {
+                System.Console.WriteLine("Couldn't find room " + filename);
+                room = null;
+            }
+
+            rooms[filename] = room;
         }
 
         Room GetRoom(int x, int y)
@@ -89,19 +114,7 @@ namespace DB.DoF
 
             if (!rooms.ContainsKey(filename))
             {
-                Room room;
-                try
-                {
-                    room = Room.FromFile(filename, new SpriteGrid(DiverGame.DefaultContent.Load<Texture2D>("tileset"), 4, 4));
-                    rooms[filename] = room;
-                }
-                catch (FileNotFoundException e)
-                {
-                    System.Console.WriteLine("Couldn't find room " + filename);
-                    room = null;
-                }
-
-                rooms[filename] = room;
+                LoadRoom(x, y, false);
             }
            
             return rooms[filename]; 
@@ -263,6 +276,35 @@ namespace DB.DoF
             {
                 room.RemoveEntity(entity);
                 newRoom.AddEntity(entity);
+            }
+        }
+
+        public void SaveState()
+        {
+            using (TextWriter w = new StreamWriter(Name + ".state"))
+            {
+                foreach (KeyValuePair<string, Room> keyValuePair in rooms)
+                {
+                    if (keyValuePair.Value != null)
+                    {
+                        w.WriteLine(keyValuePair.Key);
+                        keyValuePair.Value.SaveState(w);
+                    }
+                }
+            }
+        }
+
+        public void LoadState()
+        {
+            rooms.Clear();
+            PreloadAllRooms(true);
+            using (StreamReader r = new StreamReader(Name + ".state"))
+            {
+                while (!r.EndOfStream)
+                {
+                    string roomname = r.ReadLine();
+                    rooms[roomname].LoadState(r);
+                }
             }
         }
     }
