@@ -72,6 +72,7 @@
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Fish.cs" />
     <Compile Include="Entities\FattyDiver.cs" />
+    <Compile Include="Entities\Inventory.cs" />
     <Compile Include="Entities\PersistentEntity.cs" />
     <Compile Include="Entities\Shoal.cs" />
     <Compile Include="Gui\Box.cs" />
@@ -97,6 +98,8 @@
     <Compile Include="SpriteGrid.cs" />
     <Compile Include="TileMap.cs" />
     <Compile Include="Entities\TinyDriver.cs" />
+    <Compile Include="ITool.cs" />
+    <Compile Include="Tools\Harpoon.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

@@ -23,6 +23,9 @@ namespace DB.DoF.Entities
 
         SpriteEffects spriteEffects = SpriteEffects.None;
 
+        public ITool Tool1;
+        public ITool Tool2;
+
         int walkingGridFrame = 3;
         public int JumpVelocity;
         bool isOnGround;

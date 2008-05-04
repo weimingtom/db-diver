@@ -222,8 +222,13 @@ namespace DB.DoF
             g.Begin();
             g.Draw(panel, new Point(0, 0), Color.White);
             g.Draw(DiverGame.White, new Rectangle(16, 4, (122 * diver.Oxygen) / Diver.MaxOxygen, 4), new Color(199, 77, 77));
+
+            g.Draw(currentRoom.Diver.Tool1.Icon, new Point(151, 6), Color.White);
+            
             g.End();
             g.PopClipRectangle();
+
+            
 
             if (isMiniMapShowing)
             {
