@@ -12,13 +12,14 @@ namespace DB.DoF.Entities
     {
         readonly public ITool Tool;
         string text;
+        int startY;
 
         public Pickup(int x, int y, ITool tool, string text)
         {
             Tool = tool;
             this.text = text;
             X = x;
-            Y = y;
+            startY = Y = y;
             Size = new Point(16, 16);
         }
 
@@ -27,14 +28,15 @@ namespace DB.DoF.Entities
             if (layer == Room.Layer.Player)
             {
                 g.Begin();
-                g.Draw(Tool.Icon, new Point(Position.X, Position.Y + (int)(Math.Sin(gameTime.TotalGameTime.Ticks / 10000000.0f) * 8.5f)), Color.White);
+                g.Draw(Tool.Icon, Position, Color.White);
                 g.End();
             }
         }
 
         public override void Update(State s, Room room)
         {
-            room.AddEntity(Particle.MakeSpark(new Point(X + DiverGame.Random.Next(Width), Y + DiverGame.Random.Next(Height))));
+            Y = startY + (int)(Math.Sin(s.Time.TotalGameTime.Ticks / 10000000.0f) * 8.5f);
+            room.AddEntity(Particle.MakeSpark(new Point(X + DiverGame.Random.Next(Width), Y + DiverGame.Random.Next(Height))));            
 
             if (room.Diver.Dimension.Intersects(Dimension))
             {

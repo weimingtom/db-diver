@@ -14,7 +14,7 @@
 00.......................
 0011.....................
 0000.....................
-3333....3333333..33333333
+3333....33333333333333333
 
 // public Decoration(string spriteGridName, int sprites, int animationSpeed, int x, int y, Room.Layer layer)
 Shoal(new Color(46, 162, 200))
@@ -28,6 +28,6 @@ Fish("green_fish", 2, 12, 5, Room.Layer.Background)
 Fish("yellow_fish", 2, 3, 7, Room.Layer.Background)
 Fish("green_fish", 2, 6, 12, Room.Layer.Background)
 //Shoal(Color.Yellow)
-Box("tileset", 200, 200);
+Box("tileset", 200, 200, 8);
 
 

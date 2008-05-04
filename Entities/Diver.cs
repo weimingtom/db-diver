@@ -17,7 +17,9 @@ namespace DB.DoF.Entities
         protected int MaxJumpSpeed = (5 * Resolution) / 2;
         protected int MaxFallSpeed = (6 * Resolution) / 2;
         protected int WalkAnimationSpeed = Resolution * 3;
+        protected int Strength = 10;
 
+        public Point AppliedForce;
         protected SpriteGrid WalkingGrid;
         protected SpriteGrid JumpingGrid;
 
@@ -45,14 +47,17 @@ namespace DB.DoF.Entities
 
                 if (s.Input.IsHeld(Input.Action.Right) && !s.Input.IsHeld(Input.Action.Left))
                 {
+                    AppliedForce.X = Strength;
                     Velocity.X = Math.Min(Velocity.X + acceleration, MaxSpeed);
                 }
                 else if (s.Input.IsHeld(Input.Action.Left) && !s.Input.IsHeld(Input.Action.Right))
                 {
+                    AppliedForce.X = -Strength;
                     Velocity.X = Math.Max(Velocity.X - acceleration, -MaxSpeed);
                 }
                 else
                 {
+                    AppliedForce.X = 0;
                     if (Velocity.X > 0)
                     {
                         Velocity.X = Math.Max(Velocity.X - acceleration, 0);
