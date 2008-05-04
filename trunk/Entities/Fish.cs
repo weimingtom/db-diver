@@ -89,14 +89,19 @@ namespace DB.DoF.Entities
             {
                 if (entity == room.Diver)
                 {
-                    xSpeed.Target *= 1.02f;
+                    room.Broadcast("Fish friends", "TASTY DIVER OVER HERE!!", this);
                 }
             }
         }
 
+        public override void OnMessageReceived(string channel, string message, Entity sender)
+        {
+            
+        }
+
         public override bool IsTransitionable()
         {
-            return true;
+            return false;
         }
     }
 

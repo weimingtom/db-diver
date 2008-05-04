@@ -280,12 +280,12 @@ namespace DB.DoF
             }
         }
 
-        public void Broadcast(string channel, string message)
+        public void Broadcast(string channel, string message, Entity sender)
         {
             foreach (KeyValuePair<string, Room> keyValuePair in rooms)
             {
                 if (keyValuePair.Value != null)
-                    keyValuePair.Value.Broadcast(channel, message);
+                    keyValuePair.Value.Broadcast(channel, message, sender);
             }
         }
 
