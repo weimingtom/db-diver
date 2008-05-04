@@ -142,9 +142,12 @@ namespace DB.DoF
 
         void OnLeftBoat(Entity entity)
         {
-            boat.OnLeftRoom -= leftBoatHandler;
-            MakeRoomActive(firstRoomX, firstRoomY);
-            entity.Y = -entity.Height + 1;
+            if (entity == diver)
+            {
+                boat.OnLeftRoom -= leftBoatHandler;
+                MakeRoomActive(firstRoomX, firstRoomY);
+                entity.Y = -entity.Height + 1;
+            }
         }
 
         void OnLeftRoom(Entity entity)
