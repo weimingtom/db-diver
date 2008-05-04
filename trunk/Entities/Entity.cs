@@ -12,6 +12,7 @@ namespace DB.DoF.Entities
         public Point Size;
         Point position;
         public Point Velocity;
+        public Boolean CleanUpOnRoomLeft = false;
         bool isTransitionable;
 
         public bool IsTransitionable
@@ -58,6 +59,12 @@ namespace DB.DoF.Entities
         public Rectangle Dimension
         {
             get { return new Rectangle(X, Y, Width, Height); }
+        }
+
+
+        public Point TopCenter
+        {
+            get { return new Point(X + Width / 2, Y); }
         }
 
         public void MoveWithCollision(Room room)

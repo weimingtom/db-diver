@@ -125,28 +125,35 @@ namespace DB.DoF
         void MakeRoomActive(int x, int y)
         {
             currentRoom = GetRoom(x, y);
+            currentRoom.OnDiverLeftRoom();
 
             if (currentRoom == null)
             {
                 throw new Exception("Cannot make a null room active! (" + x + "," + y + ")");
             }
+
             currentRoom.Diver = diver;
 
             miniMap.Discover(currentRoom);
             diver.OxygenDecrease = true;
             diver.OxygenIncrease = false;
+            diver.JumpEnabled = true;
         }
 
-        void EnterBoat()
+        public void EnterBoat()
         {
+            if (currentRoom != null)
+                currentRoom.OnDiverLeftRoom();
+
             currentRoom = boat;
             diver.X = 200;
-            diver.Y = 129;
+            diver.Y = 200;
             currentRoom.Diver = diver;
             currentRoom.SeaX = firstRoomX;
             currentRoom.SeaY = firstRoomY - 1;
             diver.OxygenDecrease = false;
             diver.OxygenIncrease = true;
+            diver.JumpEnabled = false;
         }
 
         void OnLeftBoat(Entity entity)

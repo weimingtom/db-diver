@@ -28,6 +28,7 @@ namespace DB.DoF
 
         public Point Size { get { return TileMap.SizeInPixels; } }
 
+        public bool LeaveRoomEnabled = true;
         public TileMap TileMap;
         IList<Entity> entities = new List<Entity>();
         Diver diver;
@@ -191,7 +192,6 @@ namespace DB.DoF
             g.GraphicsDevice.RenderState.DestinationBlend = Blend.Zero;
             g.Draw(glowTexture, new Rectangle(-300, -300, 400 + 600, 300 + 600), new Color(255,255,255,128));
             g.End();
-
         }
 
         public void Update(State s, bool isActive)
@@ -199,14 +199,16 @@ namespace DB.DoF
             List<Entity> entitiesCopy = new List<Entity>(entities);
             foreach (Entity entity in entitiesCopy)
             {
+
                 if (entity.IsUpdateNeeded(this) || isActive)
                 {
                     entity.Update(s, this);
 
-                    if (IsEntityLeftOfRoom(entity)
+                    if (LeaveRoomEnabled &&
+                        (IsEntityLeftOfRoom(entity)
                         || IsEntityRightOfRoom(entity)
                         || IsEntityAboveRoom(entity)
-                        || IsEntityBelowRoom(entity))
+                        || IsEntityBelowRoom(entity)))
                     {
                         Sea.OnLeftRoom(entity, this);
                     }
@@ -218,7 +220,6 @@ namespace DB.DoF
         {
             return GetCollidingEntities<Entity>(entity);
         }
-
 
         public IList<T> GetCollidingEntities<T>(Entity entity) where T : Entity
         {
@@ -270,6 +271,23 @@ namespace DB.DoF
             foreach (Entity entity in entities)
             {
                 entity.OnMessageReceived(channel, message, sender);
+            }
+        }
+
+        public void SurfaceDiver()
+        {
+            Sea.EnterBoat();
+        }
+
+        public void OnDiverLeftRoom()
+        {
+            List<Entity> entitiesCopy = new List<Entity>(entities);
+            foreach (Entity entity in entitiesCopy)
+            {
+                if (entity.CleanUpOnRoomLeft)
+                {
+                    entities.Remove(entity);
+                }
             }
         }
     }

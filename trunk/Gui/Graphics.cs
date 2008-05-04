@@ -183,6 +183,23 @@ namespace DB.Gui
             DrawString(spriteFont, text, new Point(position.X + destinationRectangle.X, position.Y + destinationRectangle.Y), color);
         }
 
+        public void DrawStringShadowed(SpriteFont spriteFont, string text, Rectangle destinationRectangle, TextAlignment alignment, Color color)
+        {
+            DrawString(spriteFont,
+                       text,
+                       new Rectangle(destinationRectangle.X + 1,
+                                     destinationRectangle.Y + 1,
+                                     destinationRectangle.Width,
+                                     destinationRectangle.Height),
+                       alignment,
+                       Color.Black);
+            DrawString(spriteFont,
+                       text,
+                       destinationRectangle,
+                       alignment,
+                       color);
+        }
+
         public new void DrawString(SpriteFont spriteFont, string text, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
         {
             base.DrawString(spriteFont, text, ApplyOffset(position), color, rotation, origin, scale, effects, layerDepth);
