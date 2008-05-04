@@ -92,13 +92,12 @@ namespace DB.DoF.Entities
             ySpeed.Target = (float)(r.NextDouble() * 0.6 - 0.3f);
         }
 
-        public override void OnMessageReceived(string channel, string message, Entity sender)
+        public override void OnMessageReceived(string channel, string message, object obj)
         {
             if (channel == "buttondown")
             {
                 TriggerNewSpeedTarget();
             }
-
         }
     }
 

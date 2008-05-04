@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DB.DoF.Entities
 {
-    class Inventory : Entity
+    public class Inventory : Entity
     {
         IList<ITool> tools = new List<ITool>();
 
@@ -35,6 +35,14 @@ namespace DB.DoF.Entities
                 g.Draw(tool.Icon, new Point(X + x, Y + y), Color.White);
             }
             g.End();
+        }
+
+        public override void OnMessageReceived(string channel, string message, object obj)
+        {
+            if (channel == "inventory" && message == "add")
+            {
+                AddTool((ITool)obj);
+            }
         }
     }
 }

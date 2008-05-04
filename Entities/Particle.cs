@@ -21,8 +21,9 @@ namespace DB.DoF.Entities
         SpriteBlendMode blend;
         Room.Layer layer;
         float frame;
+        int timeToLive;
 
-        public Particle(SpriteGrid spriteGrid, float framerate, Vector2 position, Vector2 velocity, Vector2 gravity, float damping, Color color, SpriteBlendMode blend, Room.Layer layer)
+        public Particle(SpriteGrid spriteGrid, float framerate, Vector2 position, Vector2 velocity, Vector2 gravity, float damping, Color color, SpriteBlendMode blend, Room.Layer layer, float scale, int timeToLive)
         {
             this.spriteGrid = spriteGrid;
             this.framerate = framerate;
@@ -33,10 +34,12 @@ namespace DB.DoF.Entities
             this.color = color;
             this.blend = blend;
             this.layer = layer;
+            this.timeToLive = timeToLive;
 
             CleanUpOnRoomLeft = true;
 
-            Size = spriteGrid.FrameSize;
+            Width = (int)(scale * spriteGrid.FrameSize.X);
+            Height = (int)(scale * spriteGrid.FrameSize.Y);
 
             X = (int)position.X - Width / 2;
             Y = (int)position.Y - Height / 2;
@@ -54,7 +57,8 @@ namespace DB.DoF.Entities
                                 0.9f,
                                 new Color(255, 255, 255, 128),
                                 SpriteBlendMode.AlphaBlend,
-                                Room.Layer.Background);
+                                Room.Layer.Background,
+                                1.0f, -1);
         }
 
         public static Particle MakeSmallBubble(Point pos)
@@ -69,7 +73,8 @@ namespace DB.DoF.Entities
                                 0.9f,
                                 new Color(255, 255, 255, 96),
                                 SpriteBlendMode.AlphaBlend,
-                                Room.Layer.Background);
+                                Room.Layer.Background,
+                                1.0f, -1);
         }
 
 
@@ -85,15 +90,39 @@ namespace DB.DoF.Entities
                                 0.9f,
                                 new Color(255, 255, 255, 64),
                                 SpriteBlendMode.AlphaBlend,
-                                Room.Layer.Background);
+                                Room.Layer.Background,
+                                1.0f, -1);
+        }
+
+        public static Particle MakeSpark(Point pos)
+        {
+            SpriteGrid spriteGrid = new SpriteGrid("glow", 1, 1);
+            Random r = DiverGame.Random;
+            return new Particle(spriteGrid,
+                                1.0f,
+                                new Vector2((float)pos.X, (float)pos.Y),
+                                new Vector2(0, 0),
+                                new Vector2(0, -(float)r.NextDouble() * 0.1f - 0.07f),
+                                0.9f,
+                                new Color(255, 255, 255, 255),
+                                SpriteBlendMode.Additive,
+                                Room.Layer.Player,
+                                0.02f, 20);
         }
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
         {
             if (layer == this.layer)
             {
+                Color c = color;
+
+                if (timeToLive > 0)
+                {
+                    c = new Color(c.R, c.G, c.B, (byte)(color.A * (frame / timeToLive)));
+                }
+
                 g.Begin(blend);
-                spriteGrid.Draw(g, Position, (int)frame, color);
+                spriteGrid.Draw(g, Dimension, (int)frame, c);
                 g.End();
             }
         }
@@ -107,7 +136,12 @@ namespace DB.DoF.Entities
             X = (int)position.X;
             Y = (int)position.Y;
 
-            if (!new Rectangle(0, 0, room.Size.X, room.Size.Y).Intersects(Dimension))
+            if (timeToLive <= 0 && !new Rectangle(0, 0, room.Size.X, room.Size.Y).Intersects(Dimension))
+            {
+                room.RemoveEntity(this);
+            }
+
+            if (timeToLive > 0 && frame > timeToLive)
             {
                 room.RemoveEntity(this);
             }

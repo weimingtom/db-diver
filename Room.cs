@@ -127,6 +127,7 @@ namespace DB.DoF
             sb.AppendLine("using System;");
             sb.AppendLine("using System.Collections.Generic;");
             sb.AppendLine("using DB.DoF.Entities;");
+            sb.AppendLine("using DB.DoF.Tools;");
             sb.AppendLine("using Microsoft.Xna.Framework.Graphics;");
             sb.AppendLine("namespace DB.DoF {");
             sb.AppendLine("public class CSCodeEvaler {");
@@ -266,11 +267,11 @@ namespace DB.DoF
             entities.Add(entity);
         }
 
-        public void Broadcast(String channel, String message, Entity sender)
+        public void Broadcast(String channel, String message, object obj)
         {
             foreach (Entity entity in entities)
             {
-                entity.OnMessageReceived(channel, message, sender);
+                entity.OnMessageReceived(channel, message, obj);
             }
         }
 
