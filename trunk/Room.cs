@@ -33,6 +33,7 @@ namespace DB.DoF
         Diver diver;
         Texture2D glowTexture;
         public Sea Sea;
+        public int SeaX, SeaY;
 
         public Diver Diver
         {
@@ -193,20 +194,22 @@ namespace DB.DoF
 
         }
 
-        public void Update(State s)
+        public void Update(State s, bool isActive)
         {
             List<Entity> entitiesCopy = new List<Entity>(entities);
             foreach (Entity entity in entitiesCopy)
             {
-                entity.Update(s, this);
-
-                if (OnLeftRoom != null
-                    && (IsEntityLeftOfRoom(entity)
-                    || IsEntityRightOfRoom(entity)
-                    || IsEntityAboveRoom(entity)
-                    || IsEntityBelowRoom(entity)))
+                if (entity.IsUpdateNeeded(this) || isActive)
                 {
-                    OnLeftRoom(entity);
+                    entity.Update(s, this);
+
+                    if (IsEntityLeftOfRoom(entity)
+                        || IsEntityRightOfRoom(entity)
+                        || IsEntityAboveRoom(entity)
+                        || IsEntityBelowRoom(entity))
+                    {
+                        Sea.OnLeftRoom(entity, this);
+                    }
                 }
             }
         }
@@ -252,11 +255,6 @@ namespace DB.DoF
             return entity.Y > Size.Y;
         }
 
-        public bool IsUpdateNeeded()
-        {
-            return false;
-        }
-
         public void RemoveEntity(Entity entity)
         {
             entities.Remove(entity);
@@ -274,8 +272,5 @@ namespace DB.DoF
                 entity.OnMessageReceived(channel, message, sender);
             }
         }
-
-        public delegate void LeftRoomHandler(Entity entity);
-        public event LeftRoomHandler OnLeftRoom;
     }
 }

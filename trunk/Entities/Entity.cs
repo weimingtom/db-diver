@@ -12,6 +12,18 @@ namespace DB.DoF.Entities
         public Point Size;
         Point position;
         public Point Velocity;
+        bool isTransitionable;
+
+        public bool IsTransitionable
+        {
+            get { return isTransitionable; }
+            protected set { isTransitionable = value; }
+        }
+
+        public virtual bool IsUpdateNeeded(Room room)
+        {
+            return false;
+        }
 
         public virtual int X
         {
@@ -61,7 +73,7 @@ namespace DB.DoF.Entities
                 {
                     if (room.TileMap.IsSolid(x, y))
                     {
-                        X = x * room.TileMap.TileSize.X - room.TileMap.TileSize.X;
+                        X = x * room.TileMap.TileSize.X - Width;
                         Velocity.X = 0;
                         break;
                     }
@@ -78,7 +90,7 @@ namespace DB.DoF.Entities
                 {
                     if (room.TileMap.IsSolid(x, y))
                     {
-                        X = Dimension.Width + x * room.TileMap.TileSize.X;
+                        X = (1 + x) * room.TileMap.TileSize.X;
                         Velocity.X = 0;
                         break;
                     }
@@ -96,7 +108,7 @@ namespace DB.DoF.Entities
                 {
                     if (room.TileMap.IsSolid(x, y))
                     {   
-                        Y = y * room.TileMap.TileSize.Y - Dimension.Height;
+                        Y = y * room.TileMap.TileSize.Y - Height;
                         Velocity.Y = 0;
                         break;       
                     }
@@ -113,7 +125,7 @@ namespace DB.DoF.Entities
                 {
                     if (room.TileMap.IsSolid(x, y))
                     {
-                        Y = y * room.TileMap.TileSize.Y + room.TileMap.TileSize.Y;
+                        Y = (1 + y) * room.TileMap.TileSize.Y;
                         Velocity.Y = 0;
                         break;
                     }
@@ -226,9 +238,5 @@ namespace DB.DoF.Entities
             //Default no-op
         }
 
-        public virtual bool IsTransitionable()
-        {
-            return false;
-        }
     }
 }

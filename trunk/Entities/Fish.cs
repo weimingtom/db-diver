@@ -83,8 +83,6 @@ namespace DB.DoF.Entities
                 position.X > room.TileMap.SizeInPixels.X && xSpeed.Diff > 0) xSpeed.Target *= -1;
             if (position.Y < 0 && ySpeed.Target < 0 ||
                 position.Y > room.TileMap.SizeInPixels.Y && ySpeed.Diff > 0) ySpeed.Target *= -1;
-
-
             foreach (Entity entity in room.GetCollidingEntities(this))
             {
                 if (entity == room.Diver)
@@ -97,11 +95,6 @@ namespace DB.DoF.Entities
         public override void OnMessageReceived(string channel, string message, Entity sender)
         {
             
-        }
-
-        public override bool IsTransitionable()
-        {
-            return false;
         }
     }
 

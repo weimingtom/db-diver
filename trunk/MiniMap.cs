@@ -41,9 +41,11 @@ namespace DB.DoF
             }
         }
 
-        public void Discover(Room room, int roomX, int roomY)
+        public void Discover(Room room)
         {
             int direction = 0;
+            int roomX = room.SeaX;
+            int roomY = room.SeaY;
 
             for (int y = 1; y < room.TileMap.Height - 1; y++)
             {
