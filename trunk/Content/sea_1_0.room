@@ -16,9 +16,7 @@
 ......3113113113113......
 3333333333333333333333333
 
-Fish("small_fish", 4, 2, 7, Room.Layer.Background)
 BoatRope()
-Fish("small_fish", 4, 2, 7, Room.Layer.Background)
-Fish("small_fish", 4, 2, 12, Room.Layer.Background)
-Fish("small_fish", 4, 2, 12, Room.Layer.Background)
+Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
+Fish("yellow_fish", 2, 2, 12, Room.Layer.Background)
 Button(3, 15, "ted")
