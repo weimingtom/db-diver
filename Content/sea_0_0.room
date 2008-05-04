@@ -24,6 +24,7 @@ Decoration("bgcave02", 1, 0, 0, 0, Room.Layer.Background, new Color(8, 119, 156)
 Decoration("bgcave03", 1, 0, 0, 0, Room.Layer.Background, new Color(0, 77, 102))
 Decoration("bgcave04", 1, 0, 0, 0, Room.Layer.Background, new Color(0, 44, 58))
 Fish("yellow_fish", 2, 2, 7, Room.Layer.Background)
+Shoal(Color.Yellow)
 
 
 

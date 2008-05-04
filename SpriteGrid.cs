@@ -31,9 +31,9 @@ namespace DB.DoF
             g.Draw(texture, new Vector2(position.X, position.Y), GetRectangle(frame), Color.White, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
         }
 
-        public void Draw(Gui.Graphics g, Point position, int frame, float rotation)
+        public void Draw(Gui.Graphics g, Point position, int frame, float rotation, Color color)
         {
-            g.Draw(texture, new Vector2(position.X, position.Y), GetRectangle(frame), Color.White, rotation, new Vector2(FrameSize.X / 2, FrameSize.Y / 2), 1f, SpriteEffects.None, 1f);
+            g.Draw(texture, new Vector2(position.X, position.Y), GetRectangle(frame), color, rotation, new Vector2(FrameSize.X / 2, FrameSize.Y / 2), 1f, SpriteEffects.None, 1f);
         }
 
         public void Draw(Gui.Graphics g, Point position, int frame, Color color)
