@@ -24,73 +24,99 @@ namespace DB.DoF.Entities
         SpriteEffects spriteEffects = SpriteEffects.None;
 
         int walkingGridFrame = 3;
-        int jumpVelocity;
+        public int JumpVelocity;
         bool isOnGround;
         public bool OxygenDecrease = true;
         public bool OxygenIncrease = false;
+        public bool Freeze = false;
+        public bool JumpEnabled = true;
 
         public int Oxygen = MaxOxygen;
 
         public override void Update(State s, Room room)
         {
-            isOnGround = IsTileSolidBelow(room);
-            int acceleration = isOnGround ? GroundAcceleration : AirAcceleration;
+            if (!Freeze)
+            {
+                isOnGround = IsTileSolidBelow(room);
+                int acceleration = isOnGround ? GroundAcceleration : AirAcceleration;
 
-            if (s.Input.IsHeld(Input.Action.Right) && !s.Input.IsHeld(Input.Action.Left))
-            {
-                Velocity.X = Math.Min(Velocity.X + acceleration, MaxSpeed);
-            }
-            else if (s.Input.IsHeld(Input.Action.Left) && !s.Input.IsHeld(Input.Action.Right))
-            {
-                Velocity.X = Math.Max(Velocity.X - acceleration, -MaxSpeed);
-            }
-            else
-            {
-                if (Velocity.X > 0)
+                if (s.Input.IsHeld(Input.Action.Right) && !s.Input.IsHeld(Input.Action.Left))
                 {
-                    Velocity.X = Math.Max(Velocity.X - acceleration, 0);
+                    Velocity.X = Math.Min(Velocity.X + acceleration, MaxSpeed);
                 }
-                else if (Velocity.X < 0)
+                else if (s.Input.IsHeld(Input.Action.Left) && !s.Input.IsHeld(Input.Action.Right))
                 {
-                    Velocity.X = Math.Min(Velocity.X + acceleration, 0);
+                    Velocity.X = Math.Max(Velocity.X - acceleration, -MaxSpeed);
                 }
-            }
+                else
+                {
+                    if (Velocity.X > 0)
+                    {
+                        Velocity.X = Math.Max(Velocity.X - acceleration, 0);
+                    }
+                    else if (Velocity.X < 0)
+                    {
+                        Velocity.X = Math.Min(Velocity.X + acceleration, 0);
+                    }
+                }
 
-            if (Velocity.X == 0)
-            {
-                walkingGridFrame = 3 * WalkAnimationSpeed;
-            }
-            else
-            {
-                walkingGridFrame += Math.Abs(Velocity.X);
-                spriteEffects = Velocity.X > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-            }
+                if (Velocity.X == 0)
+                {
+                    walkingGridFrame = 3 * WalkAnimationSpeed;
+                }
+                else
+                {
+                    walkingGridFrame += Math.Abs(Velocity.X);
+                    spriteEffects = Velocity.X > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                }
 
-            if (s.Input.WasPressed(Input.Action.Jump) && isOnGround)
-            {
-                jumpVelocity = -JumpPower;
-                isOnGround = false;
-            }
+                if (s.Input.WasPressed(Input.Action.Jump) && isOnGround && JumpEnabled)
+                {
+                    JumpVelocity = -JumpPower;
+                    isOnGround = false;
+                }
 
-            if ((s.Input.WasReleased(Input.Action.Jump) && jumpVelocity < 0) || isOnGround)
-            {
-                jumpVelocity = 0;
-            }
+                if ((s.Input.WasReleased(Input.Action.Jump) && JumpVelocity < 0) || isOnGround)
+                {
+                    JumpVelocity = 0;
+                }
 
-            jumpVelocity += Resolution / 8;
+                JumpVelocity += Resolution / 8;
 
-            Velocity.Y = Math.Max(Math.Min(jumpVelocity, MaxFallSpeed), -MaxJumpSpeed);
+                Velocity.Y = Math.Max(Math.Min(JumpVelocity, MaxFallSpeed), -MaxJumpSpeed);
 
-            MoveWithCollision(room);
+                MoveWithCollision(room);
 
-            // Bumped head
-            if (Velocity.Y == 0)
-            {
-                jumpVelocity = 0;
+                // Bumped head
+                if (Velocity.Y == 0)
+                {
+                    JumpVelocity = 0;
+                }
             }
 
             if (OxygenDecrease)
+            {
                 Oxygen--;
+
+                if (s.Time.TotalGameTime.Seconds % 4 == 1 && s.Time.TotalGameTime.Milliseconds % 1000 < 500)
+                {
+                    if (DiverGame.Random.Next(10) == 0)
+                    {
+                        room.AddEntity(Particle.MakeBigBubble(new Point(X + Width / 2, Y)));
+                    }
+
+                    if (DiverGame.Random.Next(5) == 0)
+                    {
+                        room.AddEntity(Particle.MakeSmallBubble(new Point(X + Width / 2, Y)));
+                    }
+
+                    if (DiverGame.Random.Next(4) == 0)
+                    {
+                        room.AddEntity(Particle.MakeTinyBubble(new Point(X + Width / 2, Y)));
+                    }
+                }
+            }
+
             if (OxygenIncrease)
                 Oxygen += 5;
 
@@ -101,24 +127,6 @@ namespace DB.DoF.Entities
 
             if (Oxygen > MaxOxygen)
                 Oxygen = MaxOxygen;
-
-            if (s.Time.TotalGameTime.Seconds % 4 == 1 && s.Time.TotalGameTime.Milliseconds % 1000 < 500)
-            {
-                if (DiverGame.Random.Next(10) == 0)
-                {
-                    room.AddEntity(Particle.MakeBigBubble(new Point(X + Width / 2, Y)));
-                }
-
-                if (DiverGame.Random.Next(5) == 0)
-                {
-                    room.AddEntity(Particle.MakeSmallBubble(new Point(X + Width / 2, Y)));
-                }
-
-                if (DiverGame.Random.Next(4) == 0)
-                {
-                    room.AddEntity(Particle.MakeTinyBubble(new Point(X + Width / 2, Y)));
-                }
-            }
         }
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)

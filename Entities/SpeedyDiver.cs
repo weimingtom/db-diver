@@ -17,7 +17,6 @@ namespace DB.DoF.Entities
             JumpingGrid = new SpriteGrid("speedy_jumping", 1, 1);
         }
 
-
         public override void Update(State s, Room room)
         {
             base.Update(s, room);

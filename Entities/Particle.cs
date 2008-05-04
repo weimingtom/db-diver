@@ -32,7 +32,9 @@ namespace DB.DoF.Entities
             this.damping = damping;
             this.color = color;
             this.blend = blend;
-            this.layer = layer;            
+            this.layer = layer;
+
+            CleanUpOnRoomLeft = true;
 
             Size = spriteGrid.FrameSize;
 

@@ -40,6 +40,7 @@ namespace DB.DoF
         public static Texture2D White;
         public static Random Random = new Random();
         Sea sea;
+        Effect waterEffect;
 
         public DiverGame()
         {
@@ -115,6 +116,8 @@ namespace DB.DoF
 
             b.Clicked += new Button.ClickedHandler(PlaySound);
 
+            waterEffect = DefaultContent.Load<Effect>("water");
+
             sea = new Sea("sea", 2, 2, 1, 0);
 
             // TODO: use this.Content to load your game content 
@@ -175,11 +178,24 @@ namespace DB.DoF
             
             GraphicsDevice.SetRenderTarget(0, null);
            
-            graphics.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.SaveState);
+            graphics.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
+            graphics.GraphicsDevice.SamplerStates[0].MagFilter = TextureFilter.None;
+            waterEffect.Begin();
+            waterEffect.Parameters["time"].SetValue(gameTime.TotalGameTime.Ticks / 1000.0f);
+            waterEffect.CurrentTechnique.Passes[0].Begin();
+            graphics.Draw(renderTarget.GetTexture(),
+                          new Rectangle(0, 0, 800, Room.HeightInTiles*16*2),
+                          new Rectangle(0, 0, 400, Room.HeightInTiles * 16), 
+                          Color.White);
+            waterEffect.CurrentTechnique.Passes[0].End();
+            waterEffect.End();
+            graphics.End();
+
+            graphics.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
             graphics.GraphicsDevice.SamplerStates[0].MagFilter = TextureFilter.None;
             graphics.Draw(renderTarget.GetTexture(),
-                          new Rectangle(0, 0, 800, 600),
-                          new Rectangle(0, 0, 400, 300), 
+                          new Rectangle(0, Room.HeightInTiles * 16 * 2, 800, 600 - Room.HeightInTiles * 16 * 2),
+                          new Rectangle(0, Room.HeightInTiles * 16, 400, 300 - Room.HeightInTiles * 16),
                           Color.White);
             graphics.End();
 
