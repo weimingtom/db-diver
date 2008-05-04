@@ -7,7 +7,7 @@ using DB.Gui;
 
 namespace DB.DoF.Tools
 {
-    class Harpoon : ITool
+    public class Harpoon : ITool
     {
         Texture2D icon;
         public Texture2D Icon { get { return icon; } }

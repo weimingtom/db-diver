@@ -240,7 +240,7 @@ namespace DB.DoF.Entities
 
         public virtual void Update(State s, Room room) { }
 
-        public virtual void OnMessageReceived(string channel, string message, Entity sender)
+        public virtual void OnMessageReceived(string channel, string message, object obj)
         {
             //Default no-op
         }

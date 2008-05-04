@@ -74,6 +74,7 @@
     <Compile Include="Entities\FattyDiver.cs" />
     <Compile Include="Entities\Inventory.cs" />
     <Compile Include="Entities\PersistentEntity.cs" />
+    <Compile Include="Entities\Pickup.cs" />
     <Compile Include="Entities\Shoal.cs" />
     <Compile Include="Gui\Box.cs" />
     <Compile Include="Gui\Boxes\BorderBox.cs" />
