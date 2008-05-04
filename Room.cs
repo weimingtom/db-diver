@@ -267,11 +267,11 @@ namespace DB.DoF
             entities.Add(entity);
         }
 
-        public void Broadcast(String channel, String message)
+        public void Broadcast(String channel, String message, Entity sender)
         {
             foreach (Entity entity in entities)
             {
-                entity.OnMessageReceived(channel, message);
+                entity.OnMessageReceived(channel, message, sender);
             }
         }
 
