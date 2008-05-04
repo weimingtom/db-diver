@@ -146,6 +146,7 @@ namespace DB.DoF.Entities
         public void kill()
         {
             Oxygen = 0;
+            
         }
     }
 }

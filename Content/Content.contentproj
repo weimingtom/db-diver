@@ -189,6 +189,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="button.png">
+      <Name>button</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="boat_rope.bmp">
       <Name>boat_rope</Name>
       <Importer>TextureImporter</Importer>
