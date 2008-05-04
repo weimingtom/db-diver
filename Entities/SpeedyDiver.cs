@@ -12,9 +12,11 @@ namespace DB.DoF.Entities
     {
         public SpeedyDiver()
         {
-            Size = new Point(16, 32);
+            Size = new Point(16, 40);
             WalkingGrid = new SpriteGrid("speedy_walking", 6, 1);
             JumpingGrid = new SpriteGrid("speedy_jumping", 1, 1);
+            Name = "Speedy";
+            originalBoatPosition = new Point(150, 224 - Height);
         }
 
         public override void Update(State s, Room room)
