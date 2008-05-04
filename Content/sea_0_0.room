@@ -28,6 +28,6 @@ Fish("green_fish", 2, 12, 5, Room.Layer.Background)
 Fish("yellow_fish", 2, 3, 7, Room.Layer.Background)
 Fish("green_fish", 2, 6, 12, Room.Layer.Background)
 //Shoal(Color.Yellow)
-Box("tileset", 200, 200, 8);
+Box("box", 200, 200, 7);
 
 
