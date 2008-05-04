@@ -113,6 +113,11 @@ namespace DB.DoF.Entities
                 {
                     room.AddEntity(Particle.MakeSmallBubble(new Point(X + Width / 2, Y)));
                 }
+
+                if (DiverGame.Random.Next(4) == 0)
+                {
+                    room.AddEntity(Particle.MakeTinyBubble(new Point(X + Width / 2, Y)));
+                }
             }
         }
 

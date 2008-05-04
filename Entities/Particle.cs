@@ -32,12 +32,12 @@ namespace DB.DoF.Entities
             this.damping = damping;
             this.color = color;
             this.blend = blend;
-            this.layer = layer;
-
-            X = (int)position.X;
-            Y = (int)position.Y;
+            this.layer = layer;            
 
             Size = spriteGrid.FrameSize;
+
+            X = (int)position.X - Width / 2;
+            Y = (int)position.Y - Height / 2;
         }
 
         public static Particle MakeBigBubble(Point pos)
@@ -52,7 +52,7 @@ namespace DB.DoF.Entities
                                 0.9f,
                                 new Color(255, 255, 255, 128),
                                 SpriteBlendMode.AlphaBlend,
-                                Room.Layer.Player);
+                                Room.Layer.Background);
         }
 
         public static Particle MakeSmallBubble(Point pos)
@@ -65,9 +65,25 @@ namespace DB.DoF.Entities
                                 new Vector2(((float)r.NextDouble() - 0.5f) * 3.0f, (float)-r.NextDouble() * 1.5f),
                                 new Vector2(0, -(float)r.NextDouble() * 0.2f - 0.1f),
                                 0.9f,
-                                new Color(255, 255, 255, 128),
+                                new Color(255, 255, 255, 96),
                                 SpriteBlendMode.AlphaBlend,
-                                Room.Layer.Player);
+                                Room.Layer.Background);
+        }
+
+
+        public static Particle MakeTinyBubble(Point pos)
+        {
+            SpriteGrid spriteGrid = new SpriteGrid("bubbletiny", 1, 1);
+            Random r = DiverGame.Random;
+            return new Particle(spriteGrid,
+                                1.0f,
+                                new Vector2((float)pos.X, (float)pos.Y),
+                                new Vector2(((float)r.NextDouble() - 0.5f) * 3.0f, (float)-r.NextDouble() * 1.5f),
+                                new Vector2(0, -(float)r.NextDouble() * 0.1f - 0.07f),
+                                0.9f,
+                                new Color(255, 255, 255, 64),
+                                SpriteBlendMode.AlphaBlend,
+                                Room.Layer.Background);
         }
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
