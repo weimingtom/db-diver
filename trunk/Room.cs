@@ -84,6 +84,7 @@ namespace DB.DoF
             sb.AppendLine("using System;");
             sb.AppendLine("using System.Collections.Generic;");
             sb.AppendLine("using DB.DoF.Entities;");
+            sb.AppendLine("using Microsoft.Xna.Framework.Graphics;");
             sb.AppendLine("namespace DB.DoF {");
             sb.AppendLine("public class CSCodeEvaler {");
             sb.AppendLine("public void InsertEntities(IList<Entity> entities) {");
@@ -137,18 +138,19 @@ namespace DB.DoF
                 }
             }
 
-            /*
+
             g.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState);
             g.GraphicsDevice.RenderState.SourceBlend = Blend.DestinationColor;
             g.GraphicsDevice.RenderState.DestinationBlend = Blend.Zero;
             g.Draw(glowTexture, new Rectangle(-300, -300, 400 + 600, 300 + 600), new Color(255,255,255,128));
             g.End();
-            */
+
         }
 
         public void Update(State s)
         {
-            foreach (Entity entity in entities)
+            List<Entity> entitiesCopy = new List<Entity>(entities);
+            foreach (Entity entity in entitiesCopy)
             {
                 entity.Update(s, this);
 
