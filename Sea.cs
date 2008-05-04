@@ -349,5 +349,10 @@ namespace DB.DoF
                 }
             }
         }
+
+        public bool IsDiverOnBoat()
+        {
+            return currentRoom == boat;
+        }
     }
 }

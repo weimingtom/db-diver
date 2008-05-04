@@ -182,15 +182,22 @@ namespace DB.DoF
            
             graphics.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
             graphics.GraphicsDevice.SamplerStates[0].MagFilter = TextureFilter.None;
-            waterEffect.Begin();
-            waterEffect.Parameters["time"].SetValue(gameTime.TotalGameTime.Ticks / 3000000.0f);
-            waterEffect.CurrentTechnique.Passes[0].Begin();
+
+            if (!sea.IsDiverOnBoat())
+            {
+                waterEffect.Begin();
+                waterEffect.Parameters["time"].SetValue(gameTime.TotalGameTime.Ticks / 3000000.0f);
+                waterEffect.CurrentTechnique.Passes[0].Begin();
+            }
             graphics.Draw(renderTarget.GetTexture(),
                           new Rectangle(0, 0, 800, Room.HeightInTiles*16*2),
                           new Rectangle(0, 0, 400, Room.HeightInTiles * 16), 
                           Color.White);
-            waterEffect.CurrentTechnique.Passes[0].End();
-            waterEffect.End();
+            if (!sea.IsDiverOnBoat())
+            {
+                waterEffect.CurrentTechnique.Passes[0].End();
+                waterEffect.End();
+            }
             graphics.End();
 
             graphics.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
