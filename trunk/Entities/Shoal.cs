@@ -11,19 +11,21 @@ namespace DB.DoF.Entities
         public float TargetX, TargetY;
         float x, y;
         float speedX, speedY;
+        Color color;
 
         SpriteGrid animationGrid;
         double animationGridFrame;
         int sprites;
 
-        public Fishy(string spriteGridName, int sprites, int x, int y)
+        public Fishy(string spriteGridName, Color color, int sprites, int x, int y)
         {
-            X = x;
-            Y = y;
+            this.color = color;
             TargetX = x;
             TargetY = y;
-            this.x = x;
-            this.y = y;
+            this.x = y;
+            this.y = x;
+            X = (int)this.x;
+            Y = (int)this.y;
 
             this.sprites = sprites;
             animationGrid = new SpriteGrid(spriteGridName, sprites, 1);
@@ -33,7 +35,7 @@ namespace DB.DoF.Entities
 
         public override void Draw(DB.Gui.Graphics g, GameTime gameTime, Room.Layer layer)
         {
-            animationGrid.Draw(g, Position, ((int)animationGridFrame) % sprites, (float)Math.Atan2(speedX, -speedY)-(float)Math.PI/2f);
+            animationGrid.Draw(g, Position, ((int)animationGridFrame) % sprites, (float)Math.Atan2(speedX, -speedY)-(float)Math.PI/2f, color);
         }
 
         public override void Update(State s, Room room)
@@ -44,10 +46,10 @@ namespace DB.DoF.Entities
             if(direction.LengthSquared() > 0)
                 direction.Normalize();
 
-            speedX += direction.X * 0.07f;
-            speedY += direction.Y * 0.07f;
-            speedX *= 0.99f;
-            speedY *= 0.99f;
+            speedX += direction.X * 0.007f;
+            speedY += direction.Y * 0.007f;
+            speedX *= 0.999f;
+            speedY *= 0.999f;
             x += speedX;
             y += speedY;
             X = (int)x;
@@ -63,13 +65,19 @@ namespace DB.DoF.Entities
 
         IList<Fishy> fishies = new List<Fishy>();
 
-        public Shoal()
+        public Shoal(Color color)
         {
             targetX.Target = 100;
             targetY.Target = 100;
-
+            
             for(int i = 0; i < 100; i++)
-                fishies.Add(new Fishy("small_fish", 4, (int)targetX.Value + DiverGame.Random.Next(80) - 40, (int)targetY.Value + DiverGame.Random.Next(80) - 40));
+                fishies.Add(new Fishy("small_fish", color, 4, (int)targetX.Value + DiverGame.Random.Next(80) - 40, (int)targetY.Value + DiverGame.Random.Next(80) - 40));
+
+            foreach (Fishy fish in fishies)
+            {
+                fish.TargetX = targetX.Value + DiverGame.Random.Next(40) - 80;
+                fish.TargetY = targetY.Value + DiverGame.Random.Next(40) - 80;
+            }
         }
 
         public override void Draw(DB.Gui.Graphics g, Microsoft.Xna.Framework.GameTime gameTime, Room.Layer layer)
@@ -89,10 +97,10 @@ namespace DB.DoF.Entities
         public override void Update(State s, Room room)
         {
             base.Update(s, room);
-            if (DiverGame.Random.Next(100) == 0)
+            if (DiverGame.Random.Next(400) == 0)
             {
                 targetX.Target = DiverGame.Random.Next(room.TileMap.SizeInPixels.X);
-                targetY.Target = DiverGame.Random.Next(room.TileMap.SizeInPixels.Y);
+                targetY.Target = DiverGame.Random.Next((int)(room.TileMap.SizeInPixels.Y*0.8));
             }
 
             targetX.Update();
