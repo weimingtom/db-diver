@@ -25,6 +25,7 @@ namespace DB.DoF.Entities
         protected String Name;
         protected Point originalBoatPosition;
 
+        public int FacingDirection;
         SpriteEffects spriteEffects = SpriteEffects.None;
         SpriteFont font;
 
@@ -142,6 +143,27 @@ namespace DB.DoF.Entities
                 {
                     JumpVelocity = 0;
                 }
+
+                FacingDirection = spriteEffects == SpriteEffects.None ? 1 : -1;
+
+                if (s.Input.WasPressed(Input.Action.Item1) && Tool1 != null)
+                {
+                    Tool1.OnUse(this, room);
+                }
+                else if (s.Input.WasPressed(Input.Action.Item2) && Tool2 != null)
+                {
+                    Tool2.OnUse(this, room);
+                }
+            }
+
+            if (Tool1 != null)
+            {
+                Tool1.Update(this, room, s);
+            }
+
+            if (Tool2 != null)
+            {
+                Tool2.Update(this, room, s);
             }
 
             if (OxygenDecrease)

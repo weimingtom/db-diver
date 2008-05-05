@@ -29,10 +29,10 @@ namespace DB.DoF.Entities
             font = DiverGame.DefaultContent.Load<SpriteFont>("Font");
             toolSelectorTexture = DiverGame.DefaultContent.Load<Texture2D>("tool_selector");
 
-            tools.Add(new Harpoon());
-            tools.Add(new Harpoon());
-            tools.Add(new Harpoon());
-            tools.Add(new Harpoon());
+            tools.Add(new HarpoonTool());
+            tools.Add(new HarpoonTool());
+            tools.Add(new HarpoonTool());
+            tools.Add(new HarpoonTool());
         }
 
         public Inventory(int x, int y, ITool[] tools)
