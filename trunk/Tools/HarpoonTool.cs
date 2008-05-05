@@ -40,11 +40,18 @@ namespace DB.DoF.Tools
             switch (action)
             {
                 case Action.Shooting:
+                    if (direction != diver.FacingDirection)
+                    {
+                        action = Action.Retracting;
+                        break;
+                    }
+
                     length += shootSpeed;
                     int tipX = diver.X + diver.Width / 2 + length * direction;
                     int tipY = diver.Y + diver.Height - 12;
                     if (room.TileMap.IsSolid(tipX / 16, tipY / 16))
                     {
+                        diver.Freeze = true;
                         action = Action.Pulling;
                     } 
                     else if (length > maxLength)
@@ -86,7 +93,6 @@ namespace DB.DoF.Tools
                 action = Action.Shooting;
                 length = 0;
                 direction = diver.FacingDirection;
-                diver.Freeze = true;
             }
         }
 

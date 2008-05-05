@@ -116,6 +116,7 @@ namespace DB.DoF
             sb.AppendLine("using System.Collections.Generic;");
             sb.AppendLine("using DB.DoF.Entities;");
             sb.AppendLine("using DB.DoF.Tools;");
+            sb.AppendLine("using Microsoft.Xna.Framework;");
             sb.AppendLine("using Microsoft.Xna.Framework.Graphics;");
             sb.AppendLine("namespace DB.DoF {");
             sb.AppendLine("public class CSCodeEvaler {");
