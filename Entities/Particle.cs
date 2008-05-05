@@ -41,8 +41,11 @@ namespace DB.DoF.Entities
             Width = (int)(scale * spriteGrid.FrameSize.X);
             Height = (int)(scale * spriteGrid.FrameSize.Y);
 
-            X = (int)position.X - Width / 2;
-            Y = (int)position.Y - Height / 2;
+            this.position.X -= Width / 2.0f;
+            this.position.Y -= Height / 2.0f;
+
+            X = (int)this.position.X;
+            Y = (int)this.position.Y;
         }
 
         public static Particle MakeBigBubble(Point pos)
@@ -83,7 +86,7 @@ namespace DB.DoF.Entities
             SpriteGrid spriteGrid = new SpriteGrid("bubbletiny", 1, 1);
             Random r = DiverGame.Random;
             return new Particle(spriteGrid,
-                                1.0f,
+                                10.0f,
                                 new Vector2((float)pos.X, (float)pos.Y),
                                 new Vector2(((float)r.NextDouble() - 0.5f) * 3.0f, (float)-r.NextDouble() * 1.5f),
                                 new Vector2(0, -(float)r.NextDouble() * 0.1f - 0.07f),
@@ -108,6 +111,57 @@ namespace DB.DoF.Entities
                                 SpriteBlendMode.Additive,
                                 Room.Layer.Player,
                                 0.015f, 20);
+        }
+
+        public static Particle ExplosionDust(Point pos)
+        {
+            SpriteGrid spriteGrid = new SpriteGrid("glow", 1, 1);
+            Random r = DiverGame.Random;
+            return new Particle(spriteGrid,
+                                1.0f,
+                                new Vector2((float)pos.X, (float)pos.Y),
+                                new Vector2(((float)r.NextDouble() - 0.5f) * 3.0f, 0),
+                                new Vector2(0, 0),
+                                0.9f,
+                                new Color(255, 255, 255, 255),
+                                SpriteBlendMode.Additive,
+                                Room.Layer.Player,
+                                0.2f,
+                                50);
+        }
+
+        public static Particle Debri(Point pos)
+        {
+            SpriteGrid spriteGrid = new SpriteGrid("debri", 4, 1);
+            Random r = DiverGame.Random;
+            return new Particle(spriteGrid,
+                                1.0f,
+                                new Vector2((float)pos.X, (float)pos.Y),
+                                new Vector2(((float)r.NextDouble() - 0.5f) * 50, ((float)r.NextDouble() - 0.5f) * 50),
+                                new Vector2(0.0f,1.0f),
+                                0.8f,
+                                Color.White,
+                                SpriteBlendMode.AlphaBlend,
+                                Room.Layer.Player,
+                                1.0f, 
+                                40);
+        }
+
+        public static Particle ExplosionGlow(Point pos)
+        {
+            SpriteGrid spriteGrid = new SpriteGrid("glow", 1, 1);
+            Random r = DiverGame.Random;
+            return new Particle(spriteGrid,
+                                1.0f,
+                                new Vector2((float)pos.X, (float)pos.Y),
+                                new Vector2(0,0),
+                                new Vector2(0,0),
+                                1.0f,
+                                Color.Tomato,
+                                SpriteBlendMode.Additive,
+                                Room.Layer.Foreground,
+                                0.5f,
+                                8);
         }
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)

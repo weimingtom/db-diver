@@ -20,3 +20,9 @@ Decoration("clouds", 1, 1000, 0, 0, Room.Layer.Background)
 Decoration("sea", 1, 1000, 0, 12, Room.Layer.Foreground)
 Pickup(100, 180, new HarpoonTool(), "Harpoon get and you can have it")
 Inventory(270, 180)
+Bomb(150, 220)
+Explodable(9, 10);
+Explodable(9, 11);
+Explodable(9, 12);
+Explodable(8, 12);
+Explodable(20, 11);

@@ -33,6 +33,7 @@ namespace DB.DoF.Entities
             tools.Add(new HarpoonTool());
             tools.Add(new HarpoonTool());
             tools.Add(new HarpoonTool());
+            tools.Add(new BombTool());
         }
 
         public Inventory(int x, int y, ITool[] tools)

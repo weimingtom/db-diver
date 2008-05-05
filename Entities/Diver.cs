@@ -47,8 +47,6 @@ namespace DB.DoF.Entities
             get { return enabled; }
         }
 
-
-
         bool collisionWithDiver = false;
 
         public int Oxygen = MaxOxygen;
@@ -169,6 +167,9 @@ namespace DB.DoF.Entities
             if (OxygenDecrease)
             {
                 Oxygen--;
+
+                if (Oxygen < 0)
+                    Oxygen = 0;
 
                 if (s.Time.TotalGameTime.Seconds % 4 == 1 && s.Time.TotalGameTime.Milliseconds % 1000 < 500)
                 {
