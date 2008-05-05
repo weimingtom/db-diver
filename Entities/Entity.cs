@@ -73,6 +73,11 @@ namespace DB.DoF.Entities
             get { return new Point(X + Width / 2, Y); }
         }
 
+        public Point BottomCenter
+        {
+            get { return new Point(X + Width / 2, Y + Height - 1); }
+        }
+
         public Point Center
         {
             get { return new Point(X + Width / 2, Y + Height / 2); }

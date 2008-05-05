@@ -17,11 +17,13 @@ namespace DB.DoF.Entities
         protected int MaxJumpSpeed = (5 * Resolution) / 2;
         protected int MaxFallSpeed = (6 * Resolution) / 2;
         protected int WalkAnimationSpeed = Resolution * 3;
+        protected int ClimbAnimationSpeed = Resolution * 12;
         protected int Strength = 10;
 
         public Point AppliedForce;
         protected SpriteGrid WalkingGrid;
         protected SpriteGrid JumpingGrid;
+        protected SpriteGrid ClimbingGrid;
         protected String Name;
         protected Point originalBoatPosition;
 
@@ -32,6 +34,7 @@ namespace DB.DoF.Entities
         public ITool Tool1;
         public ITool Tool2;
 
+        int climbingGridFrame = 0;
         int walkingGridFrame = 3;
         public int JumpVelocity;
         bool isOnGround = true;
@@ -41,6 +44,8 @@ namespace DB.DoF.Entities
         public bool JumpEnabled = true;
         bool disabledThisFrame;
         bool enabled;
+        bool climbing = false;
+
         public bool Enabled
         {
             set { enabled = value; if (!enabled) disabledThisFrame = true; }
@@ -81,77 +86,15 @@ namespace DB.DoF.Entities
                 return;
             }
 
-            if (!Freeze)
+            isOnGround = IsTileSolidBelow(room) || IsSpecialLadderCase(room) ;
+            
+            if (!Freeze && climbing)
             {
-                isOnGround = IsTileSolidBelow(room);
-                int acceleration = isOnGround ? GroundAcceleration : AirAcceleration;
-
-                if (s.Input.IsHeld(Input.Action.Right) && !s.Input.IsHeld(Input.Action.Left))
-                {
-                    AppliedForce.X = Strength;
-                    Velocity.X = Math.Min(Velocity.X + acceleration, MaxSpeed);
-                }
-                else if (s.Input.IsHeld(Input.Action.Left) && !s.Input.IsHeld(Input.Action.Right))
-                {
-                    AppliedForce.X = -Strength;
-                    Velocity.X = Math.Max(Velocity.X - acceleration, -MaxSpeed);
-                }
-                else
-                {
-                    AppliedForce.X = 0;
-                    if (Velocity.X > 0)
-                    {
-                        Velocity.X = Math.Max(Velocity.X - acceleration, 0);
-                    }
-                    else if (Velocity.X < 0)
-                    {
-                        Velocity.X = Math.Min(Velocity.X + acceleration, 0);
-                    }
-                }
-
-                if (Velocity.X == 0)
-                {
-                    walkingGridFrame = 3 * WalkAnimationSpeed;
-                }
-                else
-                {
-                    walkingGridFrame += Math.Abs(Velocity.X);
-                    spriteEffects = Velocity.X > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                }
-
-                if (s.Input.WasPressed(Input.Action.Jump) && isOnGround && JumpEnabled)
-                {
-                    JumpVelocity = -JumpPower;
-                    isOnGround = false;
-                }
-
-                if ((s.Input.WasReleased(Input.Action.Jump) && JumpVelocity < 0) || isOnGround)
-                {
-                    JumpVelocity = 0;
-                }
-
-                JumpVelocity += Resolution / 8;
-
-                Velocity.Y = Math.Max(Math.Min(JumpVelocity, MaxFallSpeed), -MaxJumpSpeed);
-
-                MoveWithCollision(room);
-
-                // Bumped head
-                if (Velocity.Y == 0)
-                {
-                    JumpVelocity = 0;
-                }
-
-                FacingDirection = spriteEffects == SpriteEffects.None ? 1 : -1;
-
-                if (s.Input.WasPressed(Input.Action.Item1) && Tool1 != null)
-                {
-                    Tool1.OnUse(this, room);
-                }
-                else if (s.Input.WasPressed(Input.Action.Item2) && Tool2 != null)
-                {
-                    Tool2.OnUse(this, room);
-                }
+                UpdateClimbingMovement(s, room);
+            }
+            else if (!Freeze)
+            {
+                UpdateNormalMovement(s, room);
             }
 
             if (Tool1 != null)
@@ -202,28 +145,179 @@ namespace DB.DoF.Entities
                 Oxygen = MaxOxygen;
         }
 
+        public void UpdateClimbingMovement(State s, Room room)
+        {
+            Velocity.X = 0;
+
+            if (s.Input.WasPressed(Input.Action.Jump))
+            {
+                climbing = false;
+                JumpVelocity = -JumpPower / 2;
+            }
+            else if (s.Input.IsHeld(Input.Action.Up) 
+                && !s.Input.IsHeld(Input.Action.Down)
+                && room.TileMap.IsLadder(TopCenter.X / 16, TopCenter.Y / 16))
+            {
+                Velocity.Y = -MaxSpeed;
+                X = Center.X - Center.X % 16;
+            }
+            else if (s.Input.IsHeld(Input.Action.Down) 
+                && !s.Input.IsHeld(Input.Action.Up)
+                && room.TileMap.IsLadder(BottomCenter.X / 16, BottomCenter.Y / 16))
+            {
+                Velocity.Y = MaxSpeed;
+                X = Center.X - Center.X % 16;
+            }
+            else if (s.Input.IsHeld(Input.Action.Left) && !IsTileSolidLeft(room))
+            {
+                climbing = false;
+                Velocity.Y = 0;
+                JumpVelocity = 0;
+            }
+            else if (s.Input.IsHeld(Input.Action.Right) && !IsTileSolidRight(room))
+            {
+                climbing = false;
+                Velocity.Y = 0;
+                JumpVelocity = 0;
+            }
+            else
+            {
+                Velocity.Y = 0;
+                JumpVelocity = 0;
+            }
+
+            MoveWithCollision(room);
+
+            climbingGridFrame += Math.Abs(Velocity.Y);
+
+            if (IsTileSolidBelow(room) && Velocity.Y == 0)
+            {
+                climbing = false;
+                return;
+            }
+        }
+
+        public void UpdateNormalMovement(State s, Room room)
+        {
+            int acceleration = isOnGround ? GroundAcceleration : AirAcceleration;
+
+            if (room.TileMap.IsLadder(Center.X / 16, Center.Y / 16)
+                && s.Input.WasPressed(Input.Action.Up)
+                && Velocity.Y >= 0)
+            {
+                climbing = true;
+                Velocity.Y = 0;
+                return;
+            }
+
+            if (room.TileMap.IsLadder(Center.X / 16, Center.Y / 16)
+                && s.Input.WasPressed(Input.Action.Down)
+                && Velocity.Y >= 0
+                && !room.TileMap.IsSolid(BottomCenter.X / 16, BottomCenter.Y / 16 + 1))
+            {
+                climbing = true;
+                Velocity.Y = 0;
+                return;
+            }
+
+            if (s.Input.IsHeld(Input.Action.Right) && !s.Input.IsHeld(Input.Action.Left))
+            {
+                AppliedForce.X = Strength;
+                Velocity.X = Math.Min(Velocity.X + acceleration, MaxSpeed);
+            }
+            else if (s.Input.IsHeld(Input.Action.Left) && !s.Input.IsHeld(Input.Action.Right))
+            {
+                AppliedForce.X = -Strength;
+                Velocity.X = Math.Max(Velocity.X - acceleration, -MaxSpeed);
+            }
+            else
+            {
+                AppliedForce.X = 0;
+                if (Velocity.X > 0)
+                {
+                    Velocity.X = Math.Max(Velocity.X - acceleration, 0);
+                }
+                else if (Velocity.X < 0)
+                {
+                    Velocity.X = Math.Min(Velocity.X + acceleration, 0);
+                }
+            }
+
+            if (Velocity.X == 0)
+            {
+                walkingGridFrame = 3 * WalkAnimationSpeed;
+            }
+            else
+            {
+                walkingGridFrame += Math.Abs(Velocity.X);
+                spriteEffects = Velocity.X > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            }
+
+            if (s.Input.WasPressed(Input.Action.Jump) && isOnGround && JumpEnabled)
+            {
+                JumpVelocity = -JumpPower;
+                isOnGround = false;
+            }
+
+            if ((s.Input.WasReleased(Input.Action.Jump) && JumpVelocity < 0) || isOnGround)
+            {
+                JumpVelocity = 0;
+            }
+
+            JumpVelocity += Resolution / 8;
+
+            Velocity.Y = Math.Max(Math.Min(JumpVelocity, isOnGround?0:MaxFallSpeed), -MaxJumpSpeed);
+
+            MoveWithCollision(room);
+
+            // Bumped head
+            if (Velocity.Y == 0)
+            {
+                JumpVelocity = 0;
+            }
+
+            FacingDirection = spriteEffects == SpriteEffects.None ? 1 : -1;
+
+            if (s.Input.WasPressed(Input.Action.Item1) && Tool1 != null)
+            {
+                Tool1.OnUse(this, room);
+            }
+            else if (s.Input.WasPressed(Input.Action.Item2) && Tool2 != null)
+            {
+                Tool2.OnUse(this, room);
+            }
+        }
+
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
         {
             if (layer == Room.Layer.Player)
             {
                 if (Tool1 != null) Tool1.Draw(g, this);
                 if (Tool2 != null) Tool2.Draw(g, this);
-
+                  
+                g.Begin();
                 Point pos = new Point(Position.X - 2, Position.Y);
+
+                if (climbing)
+                    ClimbingGrid.Draw(g, new Point(pos.X, pos.Y - (ClimbingGrid.FrameSize.Y - Height)), climbingGridFrame / ClimbAnimationSpeed, spriteEffects);
+                else if (isOnGround)
+                    WalkingGrid.Draw(g, new Point(pos.X, pos.Y - (WalkingGrid.FrameSize.Y - Height)), walkingGridFrame / WalkAnimationSpeed, spriteEffects);
+                else
+                    JumpingGrid.Draw(g, new Point(pos.X, pos.Y - (JumpingGrid.FrameSize.Y - Height)), 1, spriteEffects);
+                g.End();
+            }
+
+            if (layer == Room.Layer.Foreground)
+            {
                 g.Begin();
                 if (collisionWithDiver && !Enabled)
                 {
-
                     g.DrawStringShadowed(font,
                                         "Press Space to select " + Name,
                                         new Rectangle(0, 100, 400, 20),
                                         TextAlignment.Center,
                                         Color.White);
                 }
-                if (isOnGround)
-                    WalkingGrid.Draw(g, new Point(pos.X, pos.Y - (WalkingGrid.FrameSize.Y - Height)), walkingGridFrame / WalkAnimationSpeed, spriteEffects);
-                else
-                    JumpingGrid.Draw(g, new Point(pos.X, pos.Y - (JumpingGrid.FrameSize.Y - Height)), 1, spriteEffects);
                 g.End();
             }
         }
@@ -231,6 +325,15 @@ namespace DB.DoF.Entities
         public void kill()
         {
             Oxygen = 0;
+        }
+
+        bool IsSpecialLadderCase(Room room)
+        {
+            return Velocity.Y == 0
+                && BottomCenter.Y % 16 == 15
+                && room.TileMap.IsLadder(BottomCenter.X / 16, BottomCenter.Y / 16 + 1)
+                && (room.TileMap.IsSolid(BottomCenter.X / 16 - 1, BottomCenter.Y / 16 + 1)
+                    || room.TileMap.IsSolid(BottomCenter.X / 16 + 1, BottomCenter.Y / 16 + 1));
         }
     }
 }

@@ -15,6 +15,7 @@ namespace DB.DoF.Entities
             Size = new Point(16, 40);
             WalkingGrid = new SpriteGrid("speedy_walking", 6, 1);
             JumpingGrid = new SpriteGrid("speedy_jumping", 1, 1);
+            ClimbingGrid = new SpriteGrid("speedy_climbing", 2, 1);
             Name = "Speedy";
             originalBoatPosition = new Point(150, 224 - Height);
         }
