@@ -9,7 +9,6 @@ namespace DB.DoF.Entities
 {
     public class Fish : Entity
     {
-        Random r;
         public override int X
         {
             set
@@ -40,7 +39,7 @@ namespace DB.DoF.Entities
         {
             this.position.X = x*16;
             this.position.Y = y*16;
-            r = DiverGame.Random;
+
             TriggerNewSpeedTarget();
             this.layer = layer;
             this.sprites = sprites;
@@ -82,8 +81,8 @@ namespace DB.DoF.Entities
 
             base.X = (int)position.X;
             base.Y = (int)position.Y;
-            
-            if (r.Next(400) == 0 || (panic && r.Next(5) == 0))
+
+            if (DiverGame.Random.Next(400) == 0 || (panic && DiverGame.Random.Next(20) == 0))
             {
                 TriggerNewSpeedTarget();
             }
@@ -99,7 +98,7 @@ namespace DB.DoF.Entities
             float xMax = 0.5f;
             float yMax = 0.3f;
             float xMin = 0.1f;
-            float yMin = 0.1f;
+            float yMin = 0.05f;
 
             if (panicCooldown != 0)
             {
@@ -108,11 +107,11 @@ namespace DB.DoF.Entities
                 xMin = 1f;
                 yMin = 1f;
             }
-            xSpeed.Target = xMin + (float)(r.NextDouble() * (xMax - xMin));
-            ySpeed.Target = yMin + (float)(r.NextDouble() * (yMax - yMin));
+            xSpeed.Target = xMin + (float)(DiverGame.Random.NextDouble() * (xMax - xMin));
+            ySpeed.Target = yMin + (float)(DiverGame.Random.NextDouble() * (yMax - yMin));
 
-            if (r.Next(1) == 0) xSpeed.Target *= -1;
-            if (r.Next(1) == 0) ySpeed.Target *= -1;
+            if (DiverGame.Random.Next(2) == 0) xSpeed.Target *= -1f;
+            if (DiverGame.Random.Next(2) == 0) ySpeed.Target *= -1f;
 
         }
 
