@@ -25,4 +25,4 @@ Decoration(new SpriteGrid("bgcave04", 1, 1), 0, 0, 0, Room.Layer.Background, new
 Fish("yellow_fish", 2, 2, 2, Room.Layer.Foreground)
 
 // public Decoration(string spriteGridName, int sprites, int animationSpeed, Rectangle dimension, Room.Layer layer, Color color)
- Decoration(new SpriteGrid("darkness", 1, 1), 1, new Rectangle(50, -100, 250, 200), Room.Layer.Foreground, new Color(0, 0, 0, 150));
+ Decoration(new SpriteGrid("darkness", 1, 1), 1, new Rectangle(70, -100, 250, 230), Room.Layer.Foreground, new Color(0, 0, 0, 200));
