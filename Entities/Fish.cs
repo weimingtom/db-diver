@@ -32,6 +32,7 @@ namespace DB.DoF.Entities
         Room.Layer layer;
         Vector2 position = new Vector2();
         int panicCooldown = 0;
+        bool dead = false;
 
         SmoothFloat xSpeed = new SmoothFloat(0, 0.06f), ySpeed = new SmoothFloat(0, 0.03f);
 
@@ -52,9 +53,13 @@ namespace DB.DoF.Entities
         {
 
             g.Begin();
+            SpriteEffects spriteEffects = xSpeed.Diff < 0 ? SpriteEffects.FlipHorizontally:SpriteEffects.None;
+            
+            if(dead)
+                spriteEffects |= SpriteEffects.FlipVertically;
 
             if (layer == Room.Layer.Player)
-                animationGrid.Draw(g, Position, ((int)animationGridFrame) % sprites, xSpeed.Diff < 0 ? SpriteEffects.FlipHorizontally:SpriteEffects.None);
+                animationGrid.Draw(g, Position, ((int)animationGridFrame) % sprites, spriteEffects);
 
             g.End();
         }
@@ -63,20 +68,39 @@ namespace DB.DoF.Entities
         public override void Update(State s, Room room)
         {
             base.Update(s, room);
-            bool panic = false;
-            if (panicCooldown > 0)
-            {
-                panicCooldown--;
-                if (panicCooldown == 0)
-                    TriggerNewSpeedTarget();
-                else
-                    panic = true;
-                
-                
-            }
-            
 
-            animationGridFrame += Math.Abs((xSpeed.Diff)) + 0.1;
+            if (dead)
+            {
+                animationGridFrame = 0;
+                if (position.Y < 0)
+                {
+                    room.RemoveEntity(this);
+                }
+
+                if (DiverGame.Random.Next(200) == 0)
+                {
+                    room.AddEntity(Particle.MakeTinyBubble(new Point(base.X + (xSpeed.Diff > 0 ? Width : 0), base.Y + Height / 2)));
+                }
+            }
+            else
+            {
+                bool panic = false;
+                if (panicCooldown > 0)
+                {
+                    panicCooldown--;
+                    if (panicCooldown == 0)
+                        TriggerNewSpeedTarget();
+                    else
+                        panic = true;
+                }
+
+                if ((DiverGame.Random.Next(400) == 0 || (panic && DiverGame.Random.Next(20) == 0)))
+                {
+                    TriggerNewSpeedTarget();
+                }
+
+                animationGridFrame += Math.Abs((xSpeed.Diff)) + 0.1;
+            }
 
             xSpeed.Update();
             ySpeed.Update();
@@ -87,11 +111,6 @@ namespace DB.DoF.Entities
             base.X = (int)position.X;
             base.Y = (int)position.Y;
 
-            if (DiverGame.Random.Next(400) == 0 || (panic && DiverGame.Random.Next(20) == 0))
-            {
-                TriggerNewSpeedTarget();
-            }
-             
             if (position.X < 0 && xSpeed.Target < 0 ||
                 position.X > room.TileMap.SizeInPixels.X && xSpeed.Diff > 0) xSpeed.Target *= -1;
             if (position.Y < 0 && ySpeed.Target < 0 ||
@@ -122,14 +141,24 @@ namespace DB.DoF.Entities
 
         public override void OnMessageReceived(string channel, string message, object obj)
         {
-            if (channel == "explosion")
+            if (channel == "explosion" && !dead)
             {
                 Bomb bomb = (Bomb)obj;
-                int impact =  bomb.CalculateImpact(this);
-                if (impact != 0)
+                float impact = bomb.CalculateImpact(this);
+                System.Console.WriteLine("fish damage: " + impact);
+                if (impact > 0.5f)
                 {
-                    panicCooldown = 150;
-                    TriggerNewSpeedTarget();
+                    if (impact > 5f)
+                    {
+                        dead = true;
+                        xSpeed.Target = 0f;
+                        ySpeed.Target = -0.1f;
+                    }
+                    else
+                    {
+                        panicCooldown = 150;
+                        TriggerNewSpeedTarget();
+                    }
                 }
             }
         }

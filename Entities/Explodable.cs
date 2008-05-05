@@ -62,7 +62,7 @@ namespace DB.DoF.Entities
             }
 
             Bomb bomb = (Bomb)obj;
-            health -= bomb.CalculateImpact(this);
+            health -= (int)bomb.CalculateImpact(this);
         }
     }
 }
