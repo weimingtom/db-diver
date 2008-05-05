@@ -100,7 +100,7 @@
     <Compile Include="TileMap.cs" />
     <Compile Include="Entities\TinyDriver.cs" />
     <Compile Include="ITool.cs" />
-    <Compile Include="Tools\Harpoon.cs" />
+    <Compile Include="Tools\HarpoonTool.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
