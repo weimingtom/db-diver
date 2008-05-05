@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using DB.DoF.Entities;
 using DB.Gui;
@@ -18,17 +20,19 @@ namespace DB.DoF.Tools
         };
 
         Texture2D icon;
+        Texture2D texture;
         public Texture2D Icon { get { return icon; } }
         Action action;
         int length;
         int direction;
-        const int maxLength = 70;
+        const int maxLength = 80;
         const int shootSpeed = 8;
         const int pullSpeed = 4;
 
         public HarpoonTool()
         {
             icon = DiverGame.DefaultContent.Load<Texture2D>("iconharpoon");
+            texture = DiverGame.DefaultContent.Load<Texture2D>("harpoon");
         }
 
         public void Update(Diver diver, Room room, State s)
@@ -37,8 +41,8 @@ namespace DB.DoF.Tools
             {
                 case Action.Shooting:
                     length += shootSpeed;
-                    int tipX = diver.Center.X + length * direction;
-                    int tipY = diver.Center.Y;
+                    int tipX = diver.X + diver.Width / 2 + length * direction;
+                    int tipY = diver.Y + diver.Height - 12;
                     if (room.TileMap.IsSolid(tipX / 16, tipY / 16))
                     {
                         action = Action.Pulling;
@@ -51,8 +55,10 @@ namespace DB.DoF.Tools
 
                 case Action.Pulling:
                     length -= pullSpeed;
-                    diver.X += direction * pullSpeed;
-                    if (length <= 0)
+                    diver.Velocity = new Point(direction * pullSpeed * Diver.Resolution, 0);
+                    diver.MoveWithCollision(room);
+                    diver.JumpVelocity = 0;
+                    if (length <= 0 || diver.Velocity.X == 0)
                     {
                         action = Action.None;
                         diver.Freeze = false;
@@ -86,9 +92,24 @@ namespace DB.DoF.Tools
 
         public void Draw(Graphics graphics, Diver diver)
         {
-            graphics.Begin();
+            if (action != Action.None)
+            {
+                int tipX = diver.X + diver.Width / 2 + length * direction;
+                int tipY = diver.Y + diver.Height - 12;
 
-            graphics.End();
+                if (direction < 0)
+                {
+                    graphics.Begin();
+                    graphics.Draw(texture, new Point(tipX, tipY - 4), new Rectangle(0, action == Action.Pulling ? 8 : 0, length, 8), Color.White);
+                    graphics.End();
+                }
+                else
+                {
+                    graphics.Begin();
+                    graphics.Draw(texture, new Rectangle(diver.X + diver.Width / 2, tipY - 4, length, 8), new Rectangle(0, action == Action.Pulling ? 8 : 0, length, 8), Color.White, 0.0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0.0f);
+                    graphics.End();
+                }
+            }
         }
     }
 }
