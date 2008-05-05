@@ -244,6 +244,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bomb.bmp">
+      <Name>bomb</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="debri.bmp">
+      <Name>debri</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="tool_selector.png">
       <Name>tool_selector</Name>
       <Importer>TextureImporter</Importer>
@@ -253,6 +267,20 @@
   <ItemGroup>
     <Compile Include="box.png">
       <Name>box</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="explodable.bmp">
+      <Name>explodable</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="iconbomb.bmp">
+      <Name>iconbomb</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
