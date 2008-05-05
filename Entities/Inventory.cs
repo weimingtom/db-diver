@@ -31,7 +31,7 @@ namespace DB.DoF.Entities
             font = DiverGame.DefaultContent.Load<SpriteFont>("Font");
             toolSelectorTexture = DiverGame.DefaultContent.Load<Texture2D>("tool_selector");
             backgroundTexture = DiverGame.DefaultContent.Load<Texture2D>("inventory");
-
+            /*
             tools.Add(new HarpoonTool());
             tools.Add(new HarpoonTool());
             tools.Add(new HarpoonTool());
@@ -52,6 +52,7 @@ namespace DB.DoF.Entities
             tools.Add(new BombTool());
             tools.Add(new HarpoonTool());
             tools.Add(new BombTool());
+            */
         }
 
         public Inventory(int x, int y, ITool[] tools)
@@ -145,30 +146,31 @@ namespace DB.DoF.Entities
                     isGUIActive = false;
                     room.Diver.Freeze = false;
                 }
-
-                if (s.Input.WasPressed(Input.Action.Right))
+                if (tools.Count != 0)
                 {
-                    inventorySelected = (inventorySelected + 1) % tools.Count;
-                }
-                if (s.Input.WasPressed(Input.Action.Left))
-                {
-                    inventorySelected = inventorySelected == 0 ? tools.Count-1:inventorySelected-1;
-                }
+                    if (s.Input.WasPressed(Input.Action.Right))
+                    {
+                        inventorySelected = (inventorySelected + 1) % tools.Count;
+                    }
+                    if (s.Input.WasPressed(Input.Action.Left))
+                    {
+                        inventorySelected = inventorySelected == 0 ? tools.Count - 1 : inventorySelected - 1;
+                    }
 
-                ITool selectedTool = tools[inventorySelected];
+                    ITool selectedTool = tools.Count != 0 ? tools[inventorySelected] : null;
 
-                if(s.Input.WasPressed(Input.Action.Item1))
-                {
-                    if (selectedTool == room.Diver.Tool2) room.Diver.Tool2 = room.Diver.Tool1;
-                    room.Diver.Tool1 = selectedTool;
+                    if (s.Input.WasPressed(Input.Action.Item1))
+                    {
+                        if (selectedTool == room.Diver.Tool2) room.Diver.Tool2 = room.Diver.Tool1;
+                        room.Diver.Tool1 = selectedTool;
+                    }
+
+                    if (s.Input.WasPressed(Input.Action.Item2))
+                    {
+                        if (selectedTool == room.Diver.Tool1) room.Diver.Tool1 = room.Diver.Tool2;
+                        room.Diver.Tool2 = selectedTool;
+                    }
                 }
-
-                if (s.Input.WasPressed(Input.Action.Item2))
-                {
-                    if (selectedTool == room.Diver.Tool1) room.Diver.Tool1 = room.Diver.Tool2;
-                    room.Diver.Tool2 = selectedTool;
-                }
-
                 //System.Console.WriteLine("GUI!! " + s.Time.TotalRealTime.Milliseconds);
             }
             else
