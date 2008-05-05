@@ -67,7 +67,12 @@ namespace DB.DoF.Entities
             if (panicCooldown > 0)
             {
                 panicCooldown--;
-                panic = true;
+                if (panicCooldown == 0)
+                    TriggerNewSpeedTarget();
+                else
+                    panic = true;
+                
+                
             }
             
 
