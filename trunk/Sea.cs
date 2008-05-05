@@ -257,7 +257,7 @@ namespace DB.DoF
             if(tool1 != null)
                 g.Draw(tool1.Icon, new Point(151, 6), Color.White);
             if (tool2 != null)
-                g.Draw(tool2.Icon, new Point(171, 6), Color.White);
+                g.Draw(tool2.Icon, new Point(183, 6), Color.White);
 
             g.End();
             g.PopClipRectangle();
