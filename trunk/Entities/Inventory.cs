@@ -59,16 +59,8 @@ namespace DB.DoF.Entities
         {
             int x = 0, y = 0;
             g.Begin();
-            foreach (ITool tool in tools)
-            {
-                x += 16;
-                if (x % 64 == 0)
-                {
-                    x = 0;
-                    y += 16;
-                }
-                g.Draw(tool.Icon, new Point(X + x, Y + y), Color.White);
-            }
+            g.Draw(DiverGame.White, this.Dimension, Color.White);
+
             if (diverInInventory)
             {
                 if (!isGUIActive)

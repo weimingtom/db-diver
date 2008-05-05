@@ -12,7 +12,7 @@ namespace DB.DoF.Entities
         SpriteGrid animationGrid;
         int frameCounter = 0;
         int animationFrame = 0;
-        public int Power = 20;
+        public int Power = 40;
 
         public Bomb(int x, int y)
         {
@@ -33,14 +33,14 @@ namespace DB.DoF.Entities
             }
         }
 
-        public int CalculateImpact(Entity e)
+        public float CalculateImpact(Entity e)
         {
             Vector2 bv = new Vector2(X, Y);
             Vector2 ev = new Vector2(e.X, e.Y);
             Vector2 d = bv - ev;
-            int distance = (int)(d.Length() / 16.0f);
+            float distance = (d.Length() / 16.0f);
 
-            return Power / (int)(Math.Pow(2, distance));
+            return Power / (float)(Math.Pow(2, distance));
         }
 
         public override void Update(State s, Room room)
