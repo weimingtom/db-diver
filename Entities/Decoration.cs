@@ -11,36 +11,41 @@ namespace DB.DoF.Entities
     {
         SpriteGrid animationGrid;
         int animationGridFrame;
-        int sprites;
         int animationSpeed;
         Color color;
 
         Room.Layer layer;
 
-        public Decoration(string spriteGridName, int sprites, int animationSpeed, int x, int y, Room.Layer layer)
+        public Decoration(SpriteGrid spriteGrid, int animationSpeed, int x, int y, Room.Layer layer)
             :
-            this(spriteGridName, sprites, animationSpeed, x, y, layer, Color.White)
+            this(spriteGrid, animationSpeed, x, y, layer, Color.White)
         { }
 
-        public Decoration(string spriteGridName, int sprites, int animationSpeed, int x, int y, Room.Layer layer, Color color)
+        public Decoration(SpriteGrid spriteGrid, int animationSpeed, int x, int y, Room.Layer layer, Color color)
+            :
+        this(spriteGrid, animationSpeed, new Rectangle(x, y, spriteGrid.FrameSize.X, spriteGrid.FrameSize.Y), layer, color)
+        { }
+
+        public Decoration(SpriteGrid spriteGrid, int animationSpeed, Rectangle dimension, Room.Layer layer, Color color)
         {
-            X = x * 16;
-            Y = y * 16;
+            X = dimension.X;
+            Y = dimension.Y;
+            Width = dimension.Width;
+            Height = dimension.Height;
             this.layer = layer;
-            this.sprites = sprites;
             this.animationSpeed = animationSpeed;
             this.color = color;
-            animationGrid = new SpriteGrid(spriteGridName, sprites, 1);
-            Width = animationGrid.FrameSize.X;
-            Height = animationGrid.FrameSize.Y;
+            animationGrid = spriteGrid;
         }
+
+
 
         public override void Draw(Graphics g, GameTime gameTime, Room.Layer layer)
         {
             g.Begin();
 
             if (layer == this.layer)
-                animationGrid.Draw(g, new Point(X, Y), animationGridFrame % sprites, color);
+                animationGrid.Draw(g, Dimension, animationGridFrame, color);
 
             g.End();
         }
