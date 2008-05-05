@@ -273,7 +273,7 @@ namespace DB.DoF
 
             if (s.Input.WasPressed(Input.Action.Item1))
             {
-                LoadState();
+                //LoadState();
             }
 
             foreach(KeyValuePair<string, Room> keyValuePair in rooms)
