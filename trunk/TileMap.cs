@@ -9,7 +9,7 @@ namespace DB.DoF
     public class TileMap
     {
         private string fileFormatMapping =     ".0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        private string tilePropertiesMapping = "0121111111111111111111111111111111111";
+        private string tilePropertiesMapping = "0123111111111111111111111111111111111";
         int[] tiles;
 
         public SpriteGrid TileSet;
@@ -39,6 +39,11 @@ namespace DB.DoF
         public bool IsSolid(int x, int y)
         {
             return tilePropertiesMapping[this[x,y]] == '1';
+        }
+
+        public bool IsLadder(int x, int y)
+        {
+            return tilePropertiesMapping[this[x, y]] == '3';
         }
         
         public TileMap(SpriteGrid tileSet, int width, int height)
@@ -95,7 +100,23 @@ namespace DB.DoF
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    if (this[x, y] != 0)
+                    if (this[x, y] != 0 && !IsLadder(x, y))
+                    {
+                        TileSet.Draw(g, new Point(x * TileSize.X, y * TileSize.Y), this[x, y]);
+                    }
+                }
+            }
+            g.End();
+        }
+
+        public void DrawLadders(Gui.Graphics g)
+        {
+            g.Begin();
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    if (IsLadder(x, y))
                     {
                         TileSet.Draw(g, new Point(x * TileSize.X, y * TileSize.Y), this[x, y]);
                     }

@@ -301,6 +301,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="speedy_climbing.bmp">
+      <Name>speedy_climbing</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="fatty_climbing.bmp">
+      <Name>fatty_climbing</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="darkness.png">
       <Name>darkness</Name>
       <Importer>TextureImporter</Importer>
@@ -310,6 +324,13 @@
   <ItemGroup>
     <Compile Include="inventory.png">
       <Name>inventory</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="tiny_climbing.bmp">
+      <Name>tiny_climbing</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

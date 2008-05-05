@@ -162,7 +162,12 @@ namespace DB.DoF
         public void Draw(Gui.Graphics g, GameTime gt)
         {
             foreach (Layer layer in Enum.GetValues(typeof(Layer)))
-            {              
+            {
+                if (layer == Layer.Player)
+                {
+                    TileMap.DrawLadders(g);
+                }
+
                 foreach (Entity entity in entities)
                 {
                     if (entity != Diver)
