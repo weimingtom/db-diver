@@ -15,6 +15,8 @@ namespace DB.DoF.Entities
         SpriteFont font;
 
         Texture2D toolSelectorTexture;
+        Texture2D backgroundTexture;
+
         int inventorySelected = 0;
 
         bool isGUIActive = false;
@@ -28,10 +30,26 @@ namespace DB.DoF.Entities
             this.Height = 20;
             font = DiverGame.DefaultContent.Load<SpriteFont>("Font");
             toolSelectorTexture = DiverGame.DefaultContent.Load<Texture2D>("tool_selector");
+            backgroundTexture = DiverGame.DefaultContent.Load<Texture2D>("inventory");
 
             tools.Add(new HarpoonTool());
             tools.Add(new HarpoonTool());
             tools.Add(new HarpoonTool());
+            tools.Add(new HarpoonTool());
+            tools.Add(new BombTool());
+            tools.Add(new HarpoonTool());
+            tools.Add(new BombTool());
+            tools.Add(new HarpoonTool());
+            tools.Add(new BombTool());
+            tools.Add(new HarpoonTool());
+            tools.Add(new BombTool());
+            tools.Add(new HarpoonTool());
+            tools.Add(new BombTool());
+            tools.Add(new HarpoonTool());
+            tools.Add(new BombTool());
+            tools.Add(new BombTool());
+            tools.Add(new HarpoonTool());
+            tools.Add(new BombTool());
             tools.Add(new HarpoonTool());
             tools.Add(new BombTool());
         }
@@ -76,28 +94,30 @@ namespace DB.DoF.Entities
 
             if (isGUIActive)
             {
-                Color c = new Color(0, 0, 0, 180);
+                Color c = new Color(255, 255, 255, 230);
+                x = 400/2 - backgroundTexture.Width / 2;
+                y = 300/2 - backgroundTexture.Height / 2;
 
-                g.Draw(DiverGame.White, new Rectangle(100, 100, 200, 100), c);
-                g.Draw(DiverGame.White, new Rectangle(110, 110, 180, 80), Color.White);
-                g.Draw(DiverGame.White, new Rectangle(111, 111, 178, 78), Color.Black);
-                g.Draw(DiverGame.White, new Rectangle(160, 100, 80, 20), Color.Black);
+                g.Draw(backgroundTexture, new Point(x, y), c);
+                y += 15;
+                g.DrawStringShadowed(font,
+                                     "Inventory",
+                                     new Rectangle(x, y, backgroundTexture.Width, 20),
+                                     TextAlignment.Center,
+                                     Color.White);
 
                 int spaceBetween = 30;
-                x = 0;
+                x += 30; y += 20;
+
+                int xOffs = 0;
                 foreach (ITool tool in tools)
                 {
-                    g.Draw(tool.Icon, new Point(124 + x, 124), Color.White);
-                    x += spaceBetween;
+                    g.Draw(tool.Icon, new Point(x + (xOffs%7)*spaceBetween + 4, y + (xOffs/7)*spaceBetween + 4), Color.White);
+                    xOffs += 1;
                 }
-                
-                g.DrawStringShadowed(font,
-                     "Inventory",
-                     new Rectangle(100, 100, 200, 20),
-                     TextAlignment.Center,
-                     Color.White);
 
-                g.Draw(toolSelectorTexture, new Point(spaceBetween*inventorySelected + 120, 120), Color.White);
+
+                g.Draw(toolSelectorTexture, new Point(spaceBetween*(inventorySelected%7) + x, y + (inventorySelected/7)*spaceBetween), Color.White);
 
             }
 
