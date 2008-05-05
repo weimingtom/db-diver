@@ -244,6 +244,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="tool_selector.png">
+      <Name>tool_selector</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="box.png">
       <Name>box</Name>
       <Importer>TextureImporter</Importer>

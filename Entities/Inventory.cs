@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using DB.Gui;
+using DB.DoF.Tools;
 
 namespace DB.DoF.Entities
 {
@@ -12,6 +13,9 @@ namespace DB.DoF.Entities
         List<ITool> tools = new List<ITool>();
 
         SpriteFont font;
+
+        Texture2D toolSelectorTexture;
+        int inventorySelected = 0;
 
         bool isGUIActive = false;
         bool diverInInventory = false;
@@ -23,6 +27,12 @@ namespace DB.DoF.Entities
             this.Width = 20;
             this.Height = 20;
             font = DiverGame.DefaultContent.Load<SpriteFont>("Font");
+            toolSelectorTexture = DiverGame.DefaultContent.Load<Texture2D>("tool_selector");
+
+            tools.Add(new Harpoon());
+            tools.Add(new Harpoon());
+            tools.Add(new Harpoon());
+            tools.Add(new Harpoon());
         }
 
         public Inventory(int x, int y, ITool[] tools)
@@ -60,15 +70,7 @@ namespace DB.DoF.Entities
             }
             if (diverInInventory)
             {
-                if (isGUIActive)
-                {
-                    g.DrawStringShadowed(font,
-                     "Press Space when finished",
-                     new Rectangle(0, 100, 400, 20),
-                     TextAlignment.Center,
-                     Color.White);
-                }
-                else
+                if (!isGUIActive)
                 {
                     g.DrawStringShadowed(font,
                      "Press Space to open inventory",
@@ -81,17 +83,28 @@ namespace DB.DoF.Entities
 
             if (isGUIActive)
             {
-                g.DrawStringShadowed(font,
-                                     "Equipt your diver!",
-                                     new Rectangle(0, 80, 400, 20),
-                                     TextAlignment.Center,
-                                     Color.White);
+                Color c = new Color(0, 0, 0, 180);
+
+                g.Draw(DiverGame.White, new Rectangle(100, 100, 200, 100), c);
+                g.Draw(DiverGame.White, new Rectangle(110, 110, 180, 80), Color.White);
+                g.Draw(DiverGame.White, new Rectangle(111, 111, 178, 78), Color.Black);
+                g.Draw(DiverGame.White, new Rectangle(160, 100, 80, 20), Color.Black);
+
+                int spaceBetween = 30;
                 x = 0;
                 foreach (ITool tool in tools)
                 {
-                    x += 16;
-                    g.Draw(tool.Icon, new Point(120 + x, 120), Color.White);
+                    g.Draw(tool.Icon, new Point(124 + x, 124), Color.White);
+                    x += spaceBetween;
                 }
+                
+                g.DrawStringShadowed(font,
+                     "Inventory",
+                     new Rectangle(100, 100, 200, 20),
+                     TextAlignment.Center,
+                     Color.White);
+
+                g.Draw(toolSelectorTexture, new Point(spaceBetween*inventorySelected + 120, 120), Color.White);
 
             }
 
@@ -118,6 +131,29 @@ namespace DB.DoF.Entities
                 {
                     isGUIActive = false;
                     room.Diver.Freeze = false;
+                }
+
+                if (s.Input.WasPressed(Input.Action.Right))
+                {
+                    inventorySelected = (inventorySelected + 1) % tools.Count;
+                }
+                if (s.Input.WasPressed(Input.Action.Left))
+                {
+                    inventorySelected = inventorySelected == 0 ? tools.Count-1:inventorySelected-1;
+                }
+
+                ITool selectedTool = tools[inventorySelected];
+
+                if(s.Input.WasPressed(Input.Action.Item1))
+                {
+                    if (selectedTool == room.Diver.Tool2) room.Diver.Tool2 = room.Diver.Tool1;
+                    room.Diver.Tool1 = selectedTool;
+                }
+
+                if (s.Input.WasPressed(Input.Action.Item2))
+                {
+                    if (selectedTool == room.Diver.Tool1) room.Diver.Tool1 = room.Diver.Tool2;
+                    room.Diver.Tool2 = selectedTool;
                 }
 
                 //System.Console.WriteLine("GUI!! " + s.Time.TotalRealTime.Milliseconds);
