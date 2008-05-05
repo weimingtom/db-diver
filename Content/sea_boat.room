@@ -18,5 +18,5 @@
 
 Decoration("clouds", 1, 1000, 0, 0, Room.Layer.Background)
 Decoration("sea", 1, 1000, 0, 12, Room.Layer.Foreground)
-Pickup(100, 180, new Harpoon(), "Harpoon get and you can have it")
+Pickup(100, 180, new HarpoonTool(), "Harpoon get and you can have it")
 Inventory(270, 180)
