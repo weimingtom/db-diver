@@ -19,6 +19,7 @@
 Decoration(new SpriteGrid("clouds", 1, 1), 1000, 0, 0, Room.Layer.Background)
 Decoration(new SpriteGrid("sea", 1, 1), 1000, 0, 12*16, Room.Layer.Foreground)
 Pickup(100, 180, new HarpoonTool(), "Harpoon get and you can have it")
+Pickup(120, 180, new BombTool(), "Harpoon get and you can have it")
 Inventory(270, 180)
 Bomb(150, 220)
 Explodable(9, 10);
