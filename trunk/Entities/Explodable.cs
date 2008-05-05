@@ -62,13 +62,7 @@ namespace DB.DoF.Entities
             }
 
             Bomb bomb = (Bomb)obj;
-
-            Vector2 bv = new Vector2(bomb.Position.X, bomb.Position.Y);
-            Vector2 ev = new Vector2(X, Y);
-            Vector2 d = bv - ev;
-            int distance = (int)(d.Length() / 16.0f);
-
-            health -= bomb.Power / (int)(Math.Pow(2, distance));
+            health -= bomb.CalculateImpact(this);
         }
     }
 }

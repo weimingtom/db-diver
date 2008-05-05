@@ -32,6 +32,7 @@ namespace DB.DoF.Entities
         int sprites;
         Room.Layer layer;
         Vector2 position = new Vector2();
+        int panicCooldown = 0;
 
         SmoothFloat xSpeed = new SmoothFloat(0, 0.06f), ySpeed = new SmoothFloat(0, 0.03f);
 
@@ -63,6 +64,13 @@ namespace DB.DoF.Entities
         public override void Update(State s, Room room)
         {
             base.Update(s, room);
+            bool panic = false;
+            if (panicCooldown > 0)
+            {
+                panicCooldown--;
+                panic = true;
+            }
+            
 
             animationGridFrame += Math.Abs((xSpeed.Diff)) + 0.1;
 
@@ -75,7 +83,7 @@ namespace DB.DoF.Entities
             base.X = (int)position.X;
             base.Y = (int)position.Y;
             
-            if (r.Next(400) == 0)
+            if (r.Next(400) == 0 || (panic && r.Next(5) == 0))
             {
                 TriggerNewSpeedTarget();
             }
@@ -88,15 +96,37 @@ namespace DB.DoF.Entities
         
         private void TriggerNewSpeedTarget()
         {
-            xSpeed.Target = (float)(r.NextDouble() * 1 - 0.5f);
-            ySpeed.Target = (float)(r.NextDouble() * 0.6 - 0.3f);
+            float xMax = 0.5f;
+            float yMax = 0.3f;
+            float xMin = 0.1f;
+            float yMin = 0.1f;
+
+            if (panicCooldown != 0)
+            {
+                xMax = 4f;
+                yMax = 2f;
+                xMin = 1f;
+                yMin = 1f;
+            }
+            xSpeed.Target = xMin + (float)(r.NextDouble() * (xMax - xMin));
+            ySpeed.Target = yMin + (float)(r.NextDouble() * (yMax - yMin));
+
+            if (r.Next(1) == 0) xSpeed.Target *= -1;
+            if (r.Next(1) == 0) ySpeed.Target *= -1;
+
         }
 
         public override void OnMessageReceived(string channel, string message, object obj)
         {
-            if (channel == "buttondown")
+            if (channel == "explosion")
             {
-                TriggerNewSpeedTarget();
+                Bomb bomb = (Bomb)obj;
+                int impact =  bomb.CalculateImpact(this);
+                if (impact != 0)
+                {
+                    panicCooldown = 150;
+                    TriggerNewSpeedTarget();
+                }
             }
         }
     }

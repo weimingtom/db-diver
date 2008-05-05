@@ -11,6 +11,7 @@ namespace DB.DoF.Tools
     {
         Texture2D icon;
         public Texture2D Icon { get { return icon; } }
+        int coolDown = 0;
 
         public BombTool()
         {
@@ -19,12 +20,17 @@ namespace DB.DoF.Tools
 
         public void Update(Diver diver, Room room, State s)
         {
+            if(coolDown > 0) coolDown--;
 
         }
 
         public void OnUse(Diver diver, Room room)
         {
-
+            if (coolDown <= 0)
+            {
+                room.AddEntity(new Bomb(diver.X, diver.Y));
+                coolDown = 200;
+            }
         }
 
         public void Draw(Graphics graphics, Diver diver)
@@ -33,5 +39,6 @@ namespace DB.DoF.Tools
 
             graphics.End();
         }
+
     }
 }
