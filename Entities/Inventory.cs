@@ -196,9 +196,9 @@ namespace DB.DoF.Entities
         {
             string[] toolConstructorStrings = new string[tools.Count];
 
+            int i = 0;
             foreach (ITool tool in tools)
-            {
-                int i = 0;               
+            {                
                 toolConstructorStrings[i] = "new " + tool.GetType().Name + "()";
                 i++;
             }

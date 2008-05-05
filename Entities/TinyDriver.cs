@@ -8,7 +8,8 @@ namespace DB.DoF.Entities
 {
     public class TinyDiver: Diver
     {
-        public TinyDiver()
+        public TinyDiver(ITool tool1, ITool tool2, int x, int y) :
+            base(tool1, tool2, x, y)
         {
             Size = new Point(16, 28);
             WalkingGrid = new SpriteGrid("tiny_walking", 6, 1);
@@ -16,6 +17,11 @@ namespace DB.DoF.Entities
             ClimbingGrid = new SpriteGrid("tiny_climbing", 2, 1);
             Name = "Tiny";
             originalBoatPosition = new Point(250, 224 - Height);
+        }
+
+        public TinyDiver() :
+            this(null, null, 50, 50)
+        {            
         }
 
         public override void Update(State s, Room room)

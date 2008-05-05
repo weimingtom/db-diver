@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DB.DoF.Entities
 {
-    public abstract class Diver: Entity
+    public abstract class Diver: PersistentEntity
     {
         public const int MaxOxygen = 10000;
         protected int MaxSpeed = 1 * Resolution;
@@ -34,6 +34,7 @@ namespace DB.DoF.Entities
         public ITool Tool1;
         public ITool Tool2;
 
+        public bool IsDead = false;
         int climbingGridFrame = 0;
         int walkingGridFrame = 3;
         public int JumpVelocity;
@@ -56,9 +57,19 @@ namespace DB.DoF.Entities
 
         public int Oxygen = MaxOxygen;
 
-        public Diver()
+        public Diver(ITool tool1, ITool tool2, int x, int y)
         {
             font = DiverGame.DefaultContent.Load<SpriteFont>("Font");
+            X = x;
+            Y = y;
+        }
+
+
+        protected override string[] GetConstructorArguments()
+        {
+            string t1 = Tool1 != null ? "new " + Tool1.GetType().Name + "()" : "null";
+            string t2 = Tool2 != null ? "new " + Tool2.GetType().Name + "()" : "null";
+            return new string[] { t1, t2, X.ToString(), Y.ToString() };
         }
 
         public override void Update(State s, Room room)
@@ -138,7 +149,8 @@ namespace DB.DoF.Entities
 
             if (Oxygen < 0)
             {
-                // DIE!!
+                Freeze = true;
+                IsDead = true;
             }
 
             if (Oxygen > MaxOxygen)

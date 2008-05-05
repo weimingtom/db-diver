@@ -8,7 +8,8 @@ namespace DB.DoF.Entities
 {
     public class FattyDiver: Diver
     {
-        public FattyDiver()
+        public FattyDiver(ITool tool1, ITool tool2, int x, int y) :
+            base(tool1, tool2, x, y)
         {
             Size = new Point(16, 40);
             WalkingGrid = new SpriteGrid("fatty_walking", 6, 1);
@@ -17,6 +18,11 @@ namespace DB.DoF.Entities
             Name = "Fatty";
             originalBoatPosition = new Point(200, 224 - Height);
             Strength = 20;
+        }
+
+        public FattyDiver() :
+            this(null, null, 50, 50)
+        {            
         }
 
         public override void Update(State s, Room room)

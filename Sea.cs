@@ -180,14 +180,13 @@ namespace DB.DoF
             fattyDiver.Y = 224 - fattyDiver.Height;
             tinyDiver.X = 230;
             tinyDiver.Y = 224 - tinyDiver.Height;
-
-            SaveState();
         }
 
         void OnLeftBoat(Entity entity)
         {
             if (entity == diver)
             {
+                SaveState();
                 MakeRoomActive(firstRoomX, firstRoomY);
                 entity.Y = -entity.Height + 1;
                 entity.X = boat.Size.X / 2 - entity.Width / 2;
@@ -255,14 +254,12 @@ namespace DB.DoF
             ITool tool2 = currentRoom.Diver.Tool2;
 
             if(tool1 != null)
-                g.Draw(tool1.Icon, new Point(151, 6), Color.White);
+                g.Draw(tool1.Icon, new Point(151, 7), Color.White);
             if (tool2 != null)
-                g.Draw(tool2.Icon, new Point(183, 6), Color.White);
+                g.Draw(tool2.Icon, new Point(183, 7), Color.White);
 
             g.End();
-            g.PopClipRectangle();
-
-            
+            g.PopClipRectangle();            
 
             if (isMiniMapShowing)
             {
@@ -276,7 +273,7 @@ namespace DB.DoF
 
             if (s.Input.WasPressed(Input.Action.Item1))
             {
-                // LoadState();
+                LoadState();
             }
 
             foreach(KeyValuePair<string, Room> keyValuePair in rooms)

@@ -10,7 +10,8 @@ namespace DB.DoF.Entities
 {
     public class SpeedyDiver: Diver
     {
-        public SpeedyDiver()
+        public SpeedyDiver(ITool tool1, ITool tool2, int x, int y) :
+            base(tool1, tool2, x, y)
         {
             Size = new Point(16, 40);
             WalkingGrid = new SpriteGrid("speedy_walking", 6, 1);
@@ -18,6 +19,11 @@ namespace DB.DoF.Entities
             ClimbingGrid = new SpriteGrid("speedy_climbing", 2, 1);
             Name = "Speedy";
             originalBoatPosition = new Point(150, 224 - Height);
+        }
+
+        public SpeedyDiver() :
+            this(null, null, 50, 50)
+        {            
         }
 
         public override void Update(State s, Room room)

@@ -95,7 +95,7 @@ namespace DB.DoF
 
             foreach (Entity e in entities)
             {
-                if (e is PersistentEntity)
+                if (e is PersistentEntity && e != Diver)
                 {
                     persistents.Add((PersistentEntity)e);
                 }
@@ -146,7 +146,7 @@ namespace DB.DoF
             CompilerResults cr = cdp.CompileAssemblyFromSource(compilerParameters, sb.ToString());
             if (cr.Errors.Count > 0)
             {
-                throw new Exception(cr.Errors[0].ErrorText);
+                throw new Exception(cr.Errors[0].ErrorText + " : " + sb.ToString().Split("\n".ToCharArray())[cr.Errors[0].Line - 1]);
             }
 
             Assembly a = cr.CompiledAssembly;
