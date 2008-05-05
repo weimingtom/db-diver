@@ -272,6 +272,21 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="harpoon.png">
+      <Name>harpoon</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="sea_1_1.room">
+      <Name>sea_1_1</Name>
+      <Importer>XmlImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="explodable.bmp">
       <Name>explodable</Name>
       <Importer>TextureImporter</Importer>

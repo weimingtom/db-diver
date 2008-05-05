@@ -206,6 +206,9 @@ namespace DB.DoF.Entities
         {
             if (layer == Room.Layer.Player)
             {
+                if (Tool1 != null) Tool1.Draw(g, this);
+                if (Tool2 != null) Tool2.Draw(g, this);
+
                 Point pos = new Point(Position.X - 2, Position.Y);
                 g.Begin();
                 if (collisionWithDiver && !Enabled)
