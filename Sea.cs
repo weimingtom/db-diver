@@ -206,24 +206,24 @@ namespace DB.DoF
             {
                 if (room.IsEntityLeftOfRoom(entity))
                 {
-                    MakeRoomActive(1 - room.SeaX, room.SeaY);
+                    MakeRoomActive(room.SeaX - 1, room.SeaY);
                     entity.X = room.Size.X - 2;
                 }
 
                 if (room.IsEntityRightOfRoom(entity))
                 {
-                    MakeRoomActive(1 + room.SeaX, room.SeaY);
+                    MakeRoomActive(room.SeaX + 1, room.SeaY);
                     entity.X = -entity.Width + 1;
                 }
 
                 if (room.IsEntityBelowRoom(entity))
                 {
-                    MakeRoomActive(room.SeaX, 1 + room.SeaY);
+                    MakeRoomActive(room.SeaX, room.SeaY + 1);
                     entity.Y = -entity.Height + 1;
                 }
                 if (room.IsEntityAboveRoom(entity))
                 {
-                    MakeRoomActive(room.SeaX, 1 - room.SeaY);
+                    MakeRoomActive(room.SeaX, room.SeaY - 1);
                     entity.Y = room.Size.Y - 2;
                 }
 
