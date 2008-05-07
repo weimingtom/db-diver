@@ -182,11 +182,12 @@ namespace DB.DoF
             }
 
 
+            /*
             g.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState);
             g.GraphicsDevice.RenderState.SourceBlend = Blend.DestinationColor;
             g.GraphicsDevice.RenderState.DestinationBlend = Blend.Zero;
             g.Draw(glowTexture, new Rectangle(-300, -300, 400 + 600, 300 + 600), new Color(255,255,255,128));
-            g.End();
+            g.End();*/
         }
 
         public void Update(State s, bool isActive)
