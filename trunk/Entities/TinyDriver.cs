@@ -12,7 +12,7 @@ namespace DB.DoF.Entities
             base(tool1, tool2, x, y)
         {
             Size = new Point(16, 28);
-            WalkingGrid = new SpriteGrid("tiny_walking", 6, 1);
+            WalkingGrid = new SpriteGrid("tiny_walking", 12, 1);
             JumpingGrid = new SpriteGrid("tiny_jumping", 1, 1);
             ClimbingGrid = new SpriteGrid("tiny_climbing", 2, 1);
             Name = "Tiny";
