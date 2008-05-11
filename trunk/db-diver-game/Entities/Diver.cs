@@ -21,6 +21,7 @@ namespace DB.DoF.Entities
         protected int Strength = 10;
 
         public Point AppliedForce;
+        protected SpriteGrid StandingGrid;
         protected SpriteGrid WalkingGrid;
         protected SpriteGrid JumpingGrid;
         protected SpriteGrid ClimbingGrid;
@@ -37,6 +38,8 @@ namespace DB.DoF.Entities
         public bool IsDead = false;
         int climbingGridFrame = 0;
         int walkingGridFrame = 3;
+        int standingGridFrame = 0;
+        int jumpingGridFrame = 0;
         public int JumpVelocity;
         bool isOnGround = true;
         public bool OxygenDecrease = true;
@@ -46,6 +49,7 @@ namespace DB.DoF.Entities
         bool disabledThisFrame;
         bool enabled;
         bool climbing = false;
+        int frameCounter = 0;
 
         public bool Enabled
         {
@@ -74,6 +78,7 @@ namespace DB.DoF.Entities
 
         public override void Update(State s, Room room)
         {
+            frameCounter++;
             if (!Enabled)
             {
                 collisionWithDiver = Dimension.Intersects(room.Diver.Dimension);
@@ -98,7 +103,11 @@ namespace DB.DoF.Entities
             }
 
             isOnGround = IsTileSolidBelow(room) || IsSpecialLadderCase(room) ;
+
             
+            if (frameCounter % 60 == 0)
+                standingGridFrame++;
+ 
             if (!Freeze && climbing)
             {
                 UpdateClimbingMovement(s, room);
@@ -274,13 +283,35 @@ namespace DB.DoF.Entities
             if ((s.Input.WasReleased(Input.Action.Jump) && JumpVelocity < 0) || isOnGround)
             {
                 JumpVelocity = 0;
+                jumpingGridFrame = 0;
             }
+
+            if (JumpVelocity < 0 && JumpVelocity + Resolution / 8 >= 0)
+                jumpingGridFrame = 3;
 
             JumpVelocity += Resolution / 8;
 
             Velocity.Y = Math.Max(Math.Min(JumpVelocity, isOnGround?0:MaxFallSpeed), -MaxJumpSpeed);
 
             MoveWithCollision(room);
+
+            if (Velocity.Y < 0 && jumpingGridFrame < 3 && frameCounter % 6 == 0)
+            {
+                jumpingGridFrame++;
+            }
+
+            if (Velocity.Y > 0 && jumpingGridFrame < 5 && frameCounter % 6 == 0)
+            {
+                if (jumpingGridFrame < 4)
+                    jumpingGridFrame = 4;
+                else
+                    jumpingGridFrame++;
+            }
+
+            if (Velocity.Y == 0 && isOnGround)
+            {
+                jumpingGridFrame = 0;
+            }
 
             // Bumped head
             if (Velocity.Y == 0)
@@ -312,10 +343,12 @@ namespace DB.DoF.Entities
 
                 if (climbing)
                     ClimbingGrid.Draw(g, new Point(pos.X, pos.Y - (ClimbingGrid.FrameSize.Y - Height)), climbingGridFrame / ClimbAnimationSpeed, spriteEffects);
+                else if (isOnGround && Velocity.X != 0)
+                    WalkingGrid.Draw(g, new Point(Center.X - WalkingGrid.FrameSize.X / 2, pos.Y - (WalkingGrid.FrameSize.Y - Height)), walkingGridFrame / WalkAnimationSpeed, spriteEffects);
                 else if (isOnGround)
-                    WalkingGrid.Draw(g, new Point(pos.X, pos.Y - (WalkingGrid.FrameSize.Y - Height)), walkingGridFrame / WalkAnimationSpeed, spriteEffects);
+                    StandingGrid.Draw(g, new Point(Center.X - StandingGrid.FrameSize.X / 2, pos.Y - (StandingGrid.FrameSize.Y - Height)), standingGridFrame, spriteEffects);
                 else
-                    JumpingGrid.Draw(g, new Point(pos.X, pos.Y - (JumpingGrid.FrameSize.Y - Height)), 1, spriteEffects);
+                    JumpingGrid.Draw(g, new Point(Center.X - JumpingGrid.FrameSize.X / 2, pos.Y - (JumpingGrid.FrameSize.Y - Height) + 5), jumpingGridFrame, spriteEffects);
                 g.End();
             }
 

@@ -12,8 +12,9 @@ namespace DB.DoF.Entities
             base(tool1, tool2, x, y)
         {
             Size = new Point(16, 28);
+            StandingGrid = new SpriteGrid("tiny_standing", 2, 1);
             WalkingGrid = new SpriteGrid("tiny_walking", 12, 1);
-            JumpingGrid = new SpriteGrid("tiny_jumping", 1, 1);
+            JumpingGrid = new SpriteGrid("tiny_jumping", 6, 1);
             ClimbingGrid = new SpriteGrid("tiny_climbing", 2, 1);
             Name = "Tiny";
             originalBoatPosition = new Point(250, 224 - Height);
